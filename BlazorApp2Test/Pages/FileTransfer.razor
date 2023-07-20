@@ -4,6 +4,8 @@
 <InputFile OnChange="HandleSelection" />
 <button @onclick="UploadFile" disabled="@(!fileSelected)">Upload</button>
 
+<button @onclick="RefreshPage">Refresh</button>
+
 @if (error != null)
 {
     <p class="text-danger">@error</p>
@@ -61,9 +63,15 @@
             }
 
             var buffer = new byte[selectedFile.Size];
-            await selectedFile.OpenReadStream().ReadAsync(buffer);
+            await selectedFile.OpenReadStream(maxFileSize).ReadAsync(buffer);
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), selectedFile.Name);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UploadFile");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            filePath = Path.Combine(filePath, selectedFile.Name);
             await System.IO.File.WriteAllBytesAsync(filePath, buffer);
 
             // If the code has reached this point without returning, it was successful
@@ -73,5 +81,10 @@
         {
             error = $"An error occurred while uploading the file: {e.Message}";
         }
+    }
+
+    private void RefreshPage()
+    {
+        StateHasChanged();
     }
 }
