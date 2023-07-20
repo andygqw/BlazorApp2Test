@@ -1,35 +1,39 @@
 ﻿@page "/filetransfer"
+
 @using Microsoft.AspNetCore.Components.Forms
+@using BlazorApp2Test.FileAccess
+
 
 <InputFile OnChange="HandleSelection" />
-<button @onclick="UploadFile" disabled="@(!fileSelected)">Upload</button>
+<button @onclick="Upload" disabled="@(!fileSelected)">Upload</button>
 
 <button @onclick="RefreshPage">Refresh</button>
 
-@if (error != null)
+@if (_file.error != null)
 {
-    <p class="text-danger">@error</p>
+    <p class="text-danger">@_file.error</p>
 }
 
-@if (isUploaded)
+@if (_file.isUploaded)
 {
     <p class="text-success">File uploaded successfully.</p>
 
     @code
     {
-        //TODO: provide download here:
+    //TODO: provide download here:
 
-    }
+}
 
 }
 
 
 
 @code {
+
     private IBrowserFile selectedFile;
     private bool fileSelected = false;
-    private bool isUploaded = false;
-    private string error;
+    private FileAccess _file = new FileAccess();
+
 
     void HandleSelection(InputFileChangeEventArgs e)
     {
@@ -40,47 +44,9 @@
         }
     }
 
-    private async Task UploadFile()
+    private async Task Upload()
     {
-        try
-        {
-            // Reset the states
-            error = null;
-            isUploaded = false;
-
-            if (selectedFile == null)
-            {
-                error = "Please select a file.";
-                return;
-            }
-
-            // File size validation - 5MB limit in this example
-            var maxFileSize = 1024 * 1024 * 5;
-            if (selectedFile.Size > maxFileSize)
-            {
-                error = "File size must not exceed 5MB.";
-                return;
-            }
-
-            var buffer = new byte[selectedFile.Size];
-            await selectedFile.OpenReadStream(maxFileSize).ReadAsync(buffer);
-
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UploadFile");
-            if (!Directory.Exists(filePath))
-            {
-                Directory.CreateDirectory(filePath);
-            }
-
-            filePath = Path.Combine(filePath, selectedFile.Name);
-            await System.IO.File.WriteAllBytesAsync(filePath, buffer);
-
-            // If the code has reached this point without returning, it was successful
-            isUploaded = true;
-        }
-        catch (Exception e)
-        {
-            error = $"An error occurred while uploading the file: {e.Message}";
-        }
+         await _file.UploadFile(selectedFile);
     }
 
     private void RefreshPage()
