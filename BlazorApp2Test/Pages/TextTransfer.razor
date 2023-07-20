@@ -1,0 +1,23 @@
+﻿@page "/texttransfer"
+@using BlazorApp2Test.Data;
+
+@inject TextData _textData
+
+
+<h3>TextTransfer</h3>
+
+<pre>
+    <textarea rows="8" class="form-control" @bind="@text"></textarea>
+</pre>
+
+<button @onclick="Submit">Submit</button>
+
+@code {
+    private string? text;
+
+    private void Submit()
+    {
+
+        _textData.Text = text;
+    }
+}

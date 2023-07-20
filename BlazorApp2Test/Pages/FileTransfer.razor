@@ -1,0 +1,77 @@
+﻿@page "/filetransfer"
+@using Microsoft.AspNetCore.Components.Forms
+
+<InputFile OnChange="HandleSelection" />
+<button @onclick="UploadFile" disabled="@(!fileSelected)">Upload</button>
+
+@if (error != null)
+{
+    <p class="text-danger">@error</p>
+}
+
+@if (isUploaded)
+{
+    <p class="text-success">File uploaded successfully.</p>
+
+    @code
+    {
+        //TODO: provide download here:
+
+    }
+
+}
+
+
+
+@code {
+    private IBrowserFile selectedFile;
+    private bool fileSelected = false;
+    private bool isUploaded = false;
+    private string error;
+
+    void HandleSelection(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        if (selectedFile != null)
+        {
+            fileSelected = true;
+        }
+    }
+
+    private async Task UploadFile()
+    {
+        try
+        {
+            // Reset the states
+            error = null;
+            isUploaded = false;
+
+            if (selectedFile == null)
+            {
+                error = "Please select a file.";
+                return;
+            }
+
+            // File size validation - 5MB limit in this example
+            var maxFileSize = 1024 * 1024 * 5;
+            if (selectedFile.Size > maxFileSize)
+            {
+                error = "File size must not exceed 5MB.";
+                return;
+            }
+
+            var buffer = new byte[selectedFile.Size];
+            await selectedFile.OpenReadStream().ReadAsync(buffer);
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), selectedFile.Name);
+            await System.IO.File.WriteAllBytesAsync(filePath, buffer);
+
+            // If the code has reached this point without returning, it was successful
+            isUploaded = true;
+        }
+        catch (Exception e)
+        {
+            error = $"An error occurred while uploading the file: {e.Message}";
+        }
+    }
+}

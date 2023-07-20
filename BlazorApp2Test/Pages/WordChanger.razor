@@ -1,0 +1,36 @@
+﻿@page "/wordchanger"
+
+@using BlazorApp2Test.Models;
+
+
+<h3>Word Changer</h3>
+
+<EditForm Model="@input" OnValidSubmit="@Change">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputTextArea rows="8" class="form-control" @bind-Value="input.Content" placeholder="enter content"></InputTextArea>
+    <InputText @bind-Value="input.WordWas" placeholder="enter changin word" /> 
+    <InputText @bind-Value="input.WordWill" placeholder="enter word going to be" />
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+
+</EditForm>
+
+
+<pre class="wrapped-text">
+        @result
+</pre>
+
+@code {
+
+    private WordChangeModel input = new WordChangeModel();
+
+    private string? result;
+
+    public void Change()
+    {
+        result = input.Result();
+    }
+}
