@@ -3,10 +3,13 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using BlazorApp2Test.FileAccess
 
+@inject IWebHostEnvironment Environment
 
-<InputFile OnChange="HandleSelection" />
+
+<InputFile OnChange="HandleSelection" /><br />
 <button @onclick="Upload" disabled="@(!fileSelected)">Upload</button>
-
+<br />
+<br />
 <button @onclick="RefreshPage">Refresh</button>
 
 @if (_file.error != null)
@@ -18,12 +21,15 @@
 {
     <p class="text-success">File uploaded successfully.</p>
 
-    @code
+
+    @if (System.IO.File.Exists(_file.filePath))
     {
-    //TODO: provide download here:
-
-}
-
+        <a href="/UploadFile/@_file.fileName" download>@_file.fileName</a>
+    }
+    else
+    {
+        <p>Sorry, that file does not exist.</p>
+    }
 }
 
 
@@ -32,8 +38,9 @@
 
     private IBrowserFile selectedFile;
     private bool fileSelected = false;
-    private FileAccess _file = new FileAccess();
 
+    // new file obj instance
+    private FileAccess _file = new FileAccess();
 
     void HandleSelection(InputFileChangeEventArgs e)
     {
