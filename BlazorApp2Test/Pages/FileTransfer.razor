@@ -24,16 +24,17 @@
         <p class="text-success">File uploaded successfully.</p>
     }
 
-    @if (System.IO.File.Exists(_file.FilePath))
-    {
-        <a href="/UploadFile/iis.png" download="@_file.FileName">@_file.FilePath</a>
-    }
-    else
-    {
-        <p>Sorry, that file does not exist.</p>
-    }
-}
+    <p>Current downloadable files:</p>
 
+    @foreach (var file in Directory.GetFiles("wwwroot/UploadFile"))
+    {
+        var fileName = Path.GetFileName(file);
+        <p>
+            <a href="UploadFile\@fileName" download>@fileName</a>
+        </p>
+    }
+
+}
 
 @code {
 
