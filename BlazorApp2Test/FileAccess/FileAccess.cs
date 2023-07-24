@@ -56,5 +56,14 @@ namespace BlazorApp2Test.FileAccess
                 Error = $"An error occurred while uploading the file: {e.Message}";
             }
         }
+
+        public void DeleteFile(string fName)
+        {
+            if(fName != null)
+            {
+                var filePath = Path.Combine("wwwroot/UploadFile", fName);
+                File.Delete(filePath);
+            }
+        }
     }
 }

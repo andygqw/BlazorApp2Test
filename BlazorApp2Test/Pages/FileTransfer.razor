@@ -32,6 +32,7 @@
         <p>
             <a href="UploadFile\@fileName" download>@fileName</a>
         </p>
+        <button @onclick="(() => DeleteHandler(fileName))">delete @fileName</button>
     }
 
 }
@@ -55,7 +56,12 @@
 
     private async Task Upload()
     {
-         await _file.UploadFile(selectedFile);
+        await _file.UploadFile(selectedFile);
+    }
+
+    private void DeleteHandler(string f)
+    {
+        _file.DeleteFile(f);
     }
 
     private void RefreshPage()
