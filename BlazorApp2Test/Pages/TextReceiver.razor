@@ -2,19 +2,17 @@
 @using BlazorApp2Test.Data
 
 @inject TextData _textData
+@inherits Component
 
 
 <h3>TextReceiver</h3>
 
 <pre class="wrapped-text">@_textData.Text</pre>
 
-<button @onclick="Refresh">Refresh</button>
+<button @onclick="RefreshPage">Refresh</button>
 
 @code {
 
-    private void Refresh()
-    {
-        StateHasChanged();
-    }
+  
 
 }

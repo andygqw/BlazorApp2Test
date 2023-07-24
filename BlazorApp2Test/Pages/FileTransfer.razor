@@ -4,13 +4,15 @@
 @using BlazorApp2Test.FileAccess
 
 @inject IWebHostEnvironment Environment
+@inherits Component
 
-
-<InputFile OnChange="HandleSelection" /><br />
-<button @onclick="Upload" disabled="@(!fileSelected)">Upload</button>
-<br />
-<br />
 <button @onclick="RefreshPage">Refresh</button>
+<br />
+<br />
+
+<InputFile OnChange="HandleSelection" />
+<button @onclick="Upload" disabled="@(!fileSelected)">Upload</button>
+
 
 @if(_file != null)
 {
@@ -24,16 +26,20 @@
         <p class="text-success">File uploaded successfully.</p>
     }
 
-    <p>Current downloadable files:</p>
+    
+    <div class="pt-4">
+        Current downloadable files:
 
-    @foreach (var file in Directory.GetFiles("wwwroot/UploadFile"))
-    {
-        var fileName = Path.GetFileName(file);
-        <p>
-            <a href="UploadFile\@fileName" download>@fileName</a>
-        </p>
-        <button @onclick="(() => DeleteHandler(fileName))">delete @fileName</button>
-    }
+        @foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+        {
+            //NOTE: In Helper, @fileName is added to DownloadPath
+            var fileName = Path.GetFileName(file);
+            <p>
+                <a href= "@Helper.DownloadPath" download>@fileName</a>
+                <button @onclick="(() => DeleteHandler(fileName))">delete @fileName</button>
+            </p>
+        }
+    </div>
 
 }
 
@@ -64,8 +70,5 @@
         _file.DeleteFile(f);
     }
 
-    private void RefreshPage()
-    {
-        StateHasChanged();
-    }
+  
 }

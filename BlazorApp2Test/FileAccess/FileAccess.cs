@@ -33,7 +33,7 @@ namespace BlazorApp2Test.FileAccess
                     return;
                 }
 
-                FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UploadFile");
+                FilePath = Path.Combine(Directory.GetCurrentDirectory(), Helper.UploadFolderPath);
                 if (!Directory.Exists(FilePath))
                 {
                     Directory.CreateDirectory(FilePath);
@@ -61,7 +61,7 @@ namespace BlazorApp2Test.FileAccess
         {
             if(fName != null)
             {
-                var filePath = Path.Combine("wwwroot/UploadFile", fName);
+                var filePath = Path.Combine(Helper.UploadFolderPath, fName);
                 File.Delete(filePath);
             }
         }
