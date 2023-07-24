@@ -12,26 +12,27 @@
 <br />
 <button @onclick="RefreshPage">Refresh</button>
 
-@if (_file.error != null)
+@if(_file != null)
 {
-    <p class="text-danger">@_file.error</p>
-}
-
-@if (_file.isUploaded)
-{
-    <p class="text-success">File uploaded successfully.</p>
-
-
-    @if (System.IO.File.Exists(_file.filePath))
+    @if (_file.Error != null)
     {
-        <a href="/UploadFile/@_file.fileName" download>@_file.fileName</a>
+        <p class="text-danger">@_file.Error</p>
+    }
+
+    @if (_file.IsUploaded)
+    {
+        <p class="text-success">File uploaded successfully.</p>
+    }
+
+    @if (System.IO.File.Exists(_file.FilePath))
+    {
+        <a href="/UploadFile/iis.png" download="@_file.FileName">@_file.FilePath</a>
     }
     else
     {
         <p>Sorry, that file does not exist.</p>
     }
 }
-
 
 
 @code {

@@ -5,34 +5,23 @@ namespace BlazorApp2Test.FileAccess
 {
     public class FileAccess
     {
+        public string? Error { get; set; }
 
-        public IBrowserFile selectedFile { get; set; }
+        public bool IsUploaded { get; set; }
 
-        public string? error { get; set; }
+        public string? FilePath { get; set; }
 
-        public bool isUploaded { get; set; }
+        public string? FileName { get; set; }
 
-        public string? filePath { get; set; }
-
-        public string? fileName { get; set; }
-
-
-        public FileAccess() 
-        {
-            error = null;
-            isUploaded = false;
-            filePath = null;
-        }
 
         public async Task UploadFile(IBrowserFile selectedFile)
         {
             try
             {
-                // Reset the states
 
                 if (selectedFile == null)
                 {
-                    error = "Please select a file.";
+                    Error = "Please select a file.";
                     return;
                 }
 
@@ -40,31 +29,31 @@ namespace BlazorApp2Test.FileAccess
                 var maxFileSize = 1024 * 1024 * 5;
                 if (selectedFile.Size > maxFileSize)
                 {
-                    error = "File size must not exceed 5MB.";
+                    Error = "File size must not exceed 5MB.";
                     return;
                 }
 
-                filePath = Path.Combine(Directory.GetCurrentDirectory(), "UploadFile");
-                if (!Directory.Exists(filePath))
+                FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UploadFile");
+                if (!Directory.Exists(FilePath))
                 {
-                    Directory.CreateDirectory(filePath);
+                    Directory.CreateDirectory(FilePath);
                 }
-                fileName = selectedFile.Name;
-                filePath = Path.Combine(filePath, selectedFile.Name);
 
-                var buffer = new byte[selectedFile.Size];
-                await using FileStream fs = new(filePath, FileMode.Create);
+                FileName = selectedFile.Name;
+                FilePath = Path.Combine(FilePath, selectedFile.Name);
 
-                await selectedFile.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                await using FileStream fs = new(FilePath, FileMode.Create);
 
-                await System.IO.File.WriteAllBytesAsync(filePath, buffer);
+                await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
+
+                fs.Close();
 
                 // If the code has reached this point without returning, it was successful
-                isUploaded = true;
+                IsUploaded = true;
             }
             catch (Exception e)
             {
-                error = $"An error occurred while uploading the file: {e.Message}";
+                Error = $"An error occurred while uploading the file: {e.Message}";
             }
         }
     }
