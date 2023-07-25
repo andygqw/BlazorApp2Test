@@ -629,6 +629,7 @@ div.dataTables_wrapper div.dataTables_paginate {
 .wrapped-text{
     word-wrap: break-word;
     white-space: pre-wrap;
+
 }
 
 #blazor-error-ui {

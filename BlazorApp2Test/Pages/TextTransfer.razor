@@ -12,10 +12,16 @@
 
 <div class="mx-4 pb-3">  
     <pre>
-        <textarea rows="8" class="px-4 form-control bg-light rounded" @bind="@text"></textarea>
+        <textarea rows="8" class="px-4 form-control bg-light rounded" @bind="@text">@_textData.Text</textarea>
     </pre>
 
     <button class="rounded" @onclick="Submit">Submit</button>
+    @if(_textData.Text != null)
+    {
+        <label class="text-success">
+            Successfully Submitted!
+        </label>
+    }
 </div>
 
 
