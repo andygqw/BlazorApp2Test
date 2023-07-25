@@ -5,14 +5,24 @@
 @inherits Component
 
 
-<h3>TextReceiver</h3>
+<div class="row px-4 pt-2 mt-2">
+    <div class="col-12 col-sm-6 col-md-8 py-2">
+        <p class="section-name">Text Transfer - Receiver</p>
+    </div>
+</div>
 
-<pre class="wrapped-text">@_textData.Text</pre>
+<div class="mx-4 pb-3 bg-light rounded">
 
-<button @onclick="RefreshPage">Refresh</button>
+    <div class="me-5 pe-5 px-3">
+        <pre rows="8" class="pt-3 wrapped-text bg-light rounded">@_textData.Text</pre>
+    </div>
+</div>
+<div class="mx-4 py-3">
+    <button class="rounded" @onclick="RefreshPage">Refresh</button>
+</div>
 
 @code {
 
-  
+
 
 }

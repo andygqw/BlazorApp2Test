@@ -1,15 +1,27 @@
-﻿@inherits LayoutComponentBase
+﻿@inject NavigationManager _navigationManager
+
+
+@inherits LayoutComponentBase
 
 <PageTitle>GWTools</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<header class="container-fluid">
+    <div class="row agency-banner px-4 py-2">
+        <div class="col-8 banner-content">
+            <p class="app-title-text">GWTool</p>
+        </div>
     </div>
+    <NavMenu />
+</header>
 
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+<div role="main" class="px-4 pt-0 pb-2">
+    <div class="container-fluid px-2 bg-primary rounded">
+        @Body   
+    </div>
 </div>
+
+<footer class="border-top footer text-muted">
+    <div class="container-fluid text-center">
+        <span class="fw-bold" title="">&copy; 2023 - Guanqiao Wang</span>
+    </div>
+</footer>

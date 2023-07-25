@@ -1,49 +1,38 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">GWTools</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light fw-bold pt-3 px-3 mt-2">
+    <div class="app-logo-placeholder"></div>
+    <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon">
+        </span>
+    </button>
+    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between col-auto">
+        <ul class="navbar-nav px-3">
+            <li class="nav-item">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Home
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="TextTransfer">
+                    <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Sender
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="TextReceiver">
+                    <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receiver
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="wordchanger">
+                    <span class="oi oi-transfer" aria-hidden="true"></span> Word Changer
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="filetransfer">
+                    <span class="oi oi-document" aria-hidden="true"></span> file transfer
+                </NavLink>
+            </li>
+        </ul>
     </div>
-</div>
+</nav>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="TextTransfer">
-                <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Sender
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="TextReceiver">
-                <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Receiver
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="wordchanger">
-                <span class="oi oi-transfer" aria-hidden="true"></span> Word Changer
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="filetransfer">
-                <span class="oi oi-document" aria-hidden="true"></span> file transfer
-            </NavLink>
-        </div>
-    </nav>
-</div>
 
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}

@@ -6,42 +6,55 @@
 @inject IWebHostEnvironment Environment
 @inherits Component
 
-<button @onclick="RefreshPage">Refresh</button>
-<br />
-<br />
+<div class="row px-4 pt-2 mt-2">
+    <div class="col-12 col-sm-6 col-md-8 py-2">
+        <p class="section-name">File Transfer</p>
+    </div>
+</div>
 
-<InputFile OnChange="HandleSelection" />
-<button @onclick="Upload" disabled="@(!fileSelected)">Upload</button>
+<div class="mx-4 pb-3 rounded">
 
+    <div class="py-3 ps-2">
+        <button class="rounded" @onclick="RefreshPage">Refresh</button>
+    </div>
+    <div class="rounded py-3 ps-2">
+        <InputFile OnChange="HandleSelection" />
+        <button class="rounded" @onclick="Upload" disabled="@(!fileSelected)">Upload</button>
+    </div>
 
-@if(_file != null)
-{
-    @if (_file.Error != null)
-    {
-        <p class="text-danger">@_file.Error</p>
-    }
-
-    @if (_file.IsUploaded)
-    {
-        <p class="text-success">File uploaded successfully.</p>
-    }
-
-    
-    <div class="pt-4">
-        Current downloadable files:
-
-        @foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+    <div class="ps-2">
+        @if (_file != null)
         {
-            //NOTE: In Helper, @fileName is added to DownloadPath
-            var fileName = Path.GetFileName(file);
-            <p>
-                <a href= "@Helper.DownloadPath" download>@fileName</a>
-                <button @onclick="(() => DeleteHandler(fileName))">delete @fileName</button>
-            </p>
+            @if (_file.Error != null)
+            {
+                <p class="text-danger">@_file.Error</p>
+            }
+
+            @if (_file.IsUploaded)
+            {
+                <p class="text-success">File uploaded successfully.</p>
+            }
+
+            <div class="mt-4 mb-3 ps-2 py-1 pb-2 bg-light rounded">
+
+                <p class="pt-2">Current downloadable files:</p>
+
+                @foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+                {
+                    //NOTE: In Helper, @fileName is added to DownloadPath
+                    var fileName = Path.GetFileName(file);
+                    <p>
+                        <a href="@Helper.DownloadPath" download>@fileName</a>
+                        <button class="rounded" @onclick="(() => DeleteHandler(fileName))">delete @fileName</button>
+                    </p>
+                }
+            </div>
         }
     </div>
 
-}
+</div>
+
+
 
 @code {
 
@@ -69,6 +82,4 @@
     {
         _file.DeleteFile(f);
     }
-
-  
 }

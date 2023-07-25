@@ -3,25 +3,40 @@
 @using BlazorApp2Test.Models;
 
 
-<h3>Word Changer</h3>
+<div class="row px-4 pt-2 mt-2">
+    <div class="col-12 col-sm-6 col-md-8 py-2">
+        <p class="section-name">Word Changer</p>
+    </div>
+</div>
 
-<EditForm Model="@input" OnValidSubmit="@Change">
+<div class="mx-4 pb-4">
+    
+    <EditForm Model="@input" OnValidSubmit="@Change">
 
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-    <InputTextArea rows="8" class="form-control" @bind-Value="input.Content" placeholder="enter content"></InputTextArea>
-    <InputText @bind-Value="input.WordWas" placeholder="enter changin word" /> 
-    <InputText @bind-Value="input.WordWill" placeholder="enter word going to be" />
+        <InputTextArea rows="8" class="mb-3 pb-3 form-control rounded bg-light" @bind-Value="input.Content" placeholder="enter content"></InputTextArea>
+        <InputText class="rounded bg-light" @bind-Value="input.WordWas" placeholder="enter changin word" /> 
+        <InputText class="rounded bg-light" @bind-Value="input.WordWill" placeholder="enter word going to be" />
 
-    <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="rounded" type="submit">Submit</button>
 
-</EditForm>
+    </EditForm>
 
 
-<pre class="wrapped-text">
-        @result
-</pre>
+    @if(result != null)
+    {
+        <div class="mt-4 bg-light rounded">
+
+            <div class="me-5 pe-5 px-3 py-2">
+                <pre rows="8" class="pt-3 wrapped-text bg-light rounded">@result</pre>
+            </div>
+
+        </div>
+    }
+
+</div>
 
 @code {
 
