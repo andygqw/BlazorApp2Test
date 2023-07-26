@@ -38,6 +38,7 @@
             <div class="mt-4 mb-3 ps-2 py-1 pb-2 bg-light rounded">
 
                 <p class="pt-2">Current downloadable files:</p>
+                <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
 
                 @foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
                 {
@@ -57,6 +58,8 @@
 
 
 @code {
+
+    //TODO: refactor this so file list instead of this nonsence
 
     private IBrowserFile selectedFile;
     private bool fileSelected = false;
@@ -81,5 +84,14 @@
     private void DeleteHandler(string f)
     {
         _file.DeleteFile(f);
+    }
+
+    private void DeleteAll()
+    {
+        foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+        {
+            _file.DeleteFile(Path.GetFileName(file));
+        }
+
     }
 }
