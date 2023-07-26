@@ -6,3 +6,16 @@
 }
 
 <component type="typeof(App)" render-mode="ServerPrerendered" />
+
+<script>
+    function copyClipboard(ID) {
+        /* Get the text field */
+        var copyText = document.getElementById(ID);
+        /* Select the text field */
+        copyText.select();
+        /* Copy the text inside the text field */
+        document.execCommand("copy");
+        /* Alert the copied text */
+        alert("Text Copied!");
+    }
+</script>

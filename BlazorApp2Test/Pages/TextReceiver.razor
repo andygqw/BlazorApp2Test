@@ -2,6 +2,8 @@
 @using BlazorApp2Test.Data
 
 @inject TextData _textData
+@inject IJSRuntime JSRuntime
+
 @inherits Component
 
 
@@ -13,16 +15,26 @@
 
 <div class="mx-4 pb-3 bg-light rounded">
 
-    <div class="me-5 pe-5 px-3">
-        <pre rows="8" class="pt-3 wrapped-text bg-light rounded">@_textData.Text</pre>
+    <div>
+        <textArea id=@Helper.TextReceiverID rows="8" class="form-control rounded" readonly type="text" value="@_textData.Text" />
     </div>
 </div>
 <div class="mx-4 py-3">
+    <button type="button" class="rounded" @onclick="CopyTextToClipboard">Copy</button>
     <button class="rounded" @onclick="RefreshPage">Refresh</button>
+    <button class="rounded" @onclick="Clean">Clean</button>
 </div>
 
 @code {
 
+        private async Task CopyTextToClipboard()
+        {
+            await JSRuntime.InvokeVoidAsync("copyClipboard", Helper.TextReceiverID);
+        }
 
+        private void Clean()
+        {
+            _textData.Text = null;   
+        }
 
 }

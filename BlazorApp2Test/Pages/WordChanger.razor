@@ -2,6 +2,11 @@
 
 @using BlazorApp2Test.Models;
 
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+@inherits Component
+
 
 <div class="row px-4 pt-2 mt-2">
     <div class="col-12 col-sm-6 col-md-8 py-2">
@@ -22,6 +27,8 @@
 
         <button class="rounded" type="submit">Submit</button>
 
+        <button class="rounded" @onclick="Clean">Clean</button>
+
     </EditForm>
 
 
@@ -29,10 +36,12 @@
     {
         <div class="mt-4 bg-light rounded">
 
-            <div class="me-5 pe-5 px-3 py-2">
-                <pre rows="8" class="pt-3 wrapped-text bg-light rounded">@result</pre>
+            <div class="px-3 py-2 pt-3">
+                <textArea id=@Helper.WordChangerID rows="8" class="form-control rounded" readonly type="text" value="@result" />
+                <div class="mt-2">
+                    <button type="button" class="rounded" @onclick="CopyTextToClipboard">Copy</button>
+                </div>
             </div>
-
         </div>
     }
 
@@ -47,5 +56,15 @@
     public void Change()
     {
         result = input.Result();
+    }
+
+    private async Task CopyTextToClipboard()
+    {
+        await JSRuntime.InvokeVoidAsync("copyClipboard", Helper.WordChangerID);
+    }
+
+    private void Clean()
+    {
+        NavigationManager.NavigateTo("/wordchanger", true);
     }
 }
