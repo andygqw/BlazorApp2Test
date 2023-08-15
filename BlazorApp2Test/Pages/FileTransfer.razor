@@ -2,8 +2,12 @@
 
 @using Microsoft.AspNetCore.Components.Forms
 @using BlazorApp2Test.FileAccess
+@using BlazorApp2Test.Pages
+@using Blazored.Modal
 
+@inject IJSRuntime JSRuntime
 @inject IWebHostEnvironment Environment
+
 @inherits Component
 
 <div class="row px-4 pt-2 mt-2">
@@ -46,7 +50,7 @@
                     var fileName = Path.GetFileName(file);
                     <p>
                         <a href="@Helper.DownloadPath" download>@fileName</a>
-                        <button class="rounded" @onclick="(() => DeleteHandler(fileName))">delete @fileName</button>
+                        <button class="rounded" @onclick="OpenConfirmation">delete @fileName</button>
                     </p>
                 }
             </div>
@@ -55,7 +59,29 @@
 
 </div>
 
-
+@if (ask)
+{
+    <p>HAHA</p>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
 
@@ -63,6 +89,7 @@
 
     private IBrowserFile selectedFile;
     private bool fileSelected = false;
+    private bool ask = false;
 
     // new file obj instance
     private FileAccess _file = new FileAccess();
@@ -81,6 +108,11 @@
         await _file.UploadFile(selectedFile);
     }
 
+    private void OpenConfirmation()
+    {
+        ask = true;
+    }
+
     private void DeleteHandler(string f)
     {
         _file.DeleteFile(f);
@@ -94,4 +126,5 @@
         }
 
     }
+
 }
