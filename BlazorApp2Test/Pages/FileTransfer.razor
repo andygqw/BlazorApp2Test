@@ -50,7 +50,7 @@
                     var fileName = Path.GetFileName(file);
                     <p>
                         <a href="@Helper.DownloadPath" download>@fileName</a>
-                        <button class="rounded" @onclick="OpenConfirmation">delete @fileName</button>
+                        <button class="rounded" @onclick="() => ShowDeleteConfirmation(fileName)">delete @fileName</button>
                     </p>
                 }
             </div>
@@ -58,29 +58,28 @@
     </div>
 </div>
 
-@if (ask)
-{
-    <p>HAHA</p>
-    <div class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Modal body text goes here.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete @aimed_file?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
             </div>
         </div>
     </div>
-}
+</div>
+
+
 
 @code {
 
@@ -89,6 +88,7 @@
     private IBrowserFile selectedFile;
     private bool fileSelected = false;
     private bool ask = false;
+    private string? aimed_file;
 
     // new file obj instance
     private FileAccess _file = new FileAccess();
@@ -107,10 +107,6 @@
         await _file.UploadFile(selectedFile);
     }
 
-    private void OpenConfirmation()
-    {
-        ask = true;
-    }
 
     private void DeleteHandler(string f)
     {
@@ -123,6 +119,18 @@
         {
             _file.DeleteFile(Path.GetFileName(file));
         }
-
     }
+
+    private async Task ShowDeleteConfirmation(string f)
+    {
+        aimed_file = f;
+        await JSRuntime.InvokeVoidAsync("showModal", "deleteConfirmationModal");
+    }
+
+    private void ConfirmDelete()
+    {
+        DeleteHandler(aimed_file);
+        JSRuntime.InvokeVoidAsync("hideModal", "deleteConfirmationModal");
+    }
+
 }
