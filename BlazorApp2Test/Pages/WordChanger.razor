@@ -37,9 +37,16 @@
         <div class="mt-4 bg-light rounded">
 
             <div class="px-3 py-2 pt-3">
-                <textArea id=@Helper.WordChangerID rows="8" class="form-control rounded" readonly type="text" value="@result" />
+                <textArea rows="8" class="form-control rounded" readonly type="text" value="@result" />
                 <div class="mt-2">
-                    <button type="button" class="rounded" @onclick="CopyTextToClipboard">Copy</button>
+                    @if (copied == true)
+                    {
+                        <button type="button" class="rounded btn-secondary-active" color="green" @onclick="CopyTextToClipboard">Copied!</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="rounded" @onclick="CopyTextToClipboard">Copy</button>
+                    }
                 </div>
             </div>
         </div>
@@ -52,6 +59,7 @@
     private WordChangeModel input = new WordChangeModel();
 
     private string? result;
+    private bool copied = false;
 
     public void Change()
     {
@@ -60,7 +68,11 @@
 
     private async Task CopyTextToClipboard()
     {
-        await JSRuntime.InvokeVoidAsync("copyClipboard", Helper.WordChangerID);
+        if (result != null)
+        {
+            await JSRuntime.InvokeVoidAsync("copyToClipboard", result);
+            copied = true;
+        }
     }
 
     private void Clean()
