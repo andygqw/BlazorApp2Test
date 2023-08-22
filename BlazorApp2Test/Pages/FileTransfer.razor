@@ -113,12 +113,9 @@
         _file.DeleteFile(f);
     }
 
-    private void DeleteAll()
+    private async void DeleteAll()
     {
-        foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
-        {
-            _file.DeleteFile(Path.GetFileName(file));
-        }
+        await ShowDeleteConfirmation("ALL");
     }
 
     private async Task ShowDeleteConfirmation(string f)
@@ -129,8 +126,19 @@
 
     private void ConfirmDelete()
     {
-        DeleteHandler(aimed_file);
+        if(aimed_file == "ALL")
+        {
+            foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+            {
+                _file.DeleteFile(Path.GetFileName(file));
+            }
+        }
+        else
+        {
+            DeleteHandler(aimed_file);
+        }
         JSRuntime.InvokeVoidAsync("hideModal", "deleteConfirmationModal");
+        aimed_file = null;
     }
 
 }
