@@ -11,6 +11,6 @@ namespace BlazorApp2Test
 
         public const string WordChangerID = "WCresult";
 
-        public const string TextReceiverID = "TRresult";
+        //public const string TextReceiverID = "TRresult";
     }
 }

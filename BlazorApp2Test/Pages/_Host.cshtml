@@ -8,14 +8,33 @@
 <component type="typeof(App)" render-mode="ServerPrerendered" />
 
 <script>
-    function copyClipboard(ID) {
-        /* Get the text field */
-        var copyText = document.getElementById(ID);
-        /* Select the text field */
-        copyText.select();
-        /* Copy the text inside the text field */
-        document.execCommand("copy");
-        /* Alert the copied text */
-        alert("Text Copied!");
+    //function copyClipboard(ID) {
+    //    /* Get the text field */
+    //    var copyText = document.getElementById(ID);
+    //    /* Select the text field */
+    //    copyText.select();
+    //    /* Copy the text inside the text field */
+    //    document.execCommand("copy");
+    //    /* Alert the copied text */
+    //    alert("Text Copied!");
+    //}
+    window.copyToClipboard = function (text) {
+
+        var textarea = document.createElement("textarea");
+        textarea.textContent = text;
+        textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+        }
+        catch (ex) {
+            console.warn("Copy to clipboard failed.", ex);
+            return false;
+        }
+        finally {
+            document.body.removeChild(textarea);
+        }
     }
+
 </script>
