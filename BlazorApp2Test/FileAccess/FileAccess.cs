@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using System.IO;
 
 namespace BlazorApp2Test.FileAccess
@@ -14,7 +15,7 @@ namespace BlazorApp2Test.FileAccess
         public string? FileName { get; set; }
 
 
-        public async Task UploadFile(IBrowserFile selectedFile)
+        public async Task UploadFile(IBrowserFile selectedFile, bool Rep)
         {
             try
             {
@@ -39,8 +40,52 @@ namespace BlazorApp2Test.FileAccess
                     Directory.CreateDirectory(FilePath);
                 }
 
-                FileName = selectedFile.Name;
-                FilePath = Path.Combine(FilePath, selectedFile.Name);
+                if (Rep)
+                {
+                    FileName = selectedFile.Name;
+                }
+                else
+                {
+                    FileName = selectedFile.Name;
+
+                    foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+                    {
+                        if (Path.GetFileName(f) == FileName)
+                        {
+                            char separator = '.';
+                            string[] parts = FileName.Split(separator);
+                            parts[0] = parts[0] + "(1).";
+                            FileName = parts[0] + parts[1];
+                            break;
+                        }
+                    }
+
+                    int i = 2;
+
+                    bool cont = true;
+
+                    while (cont)
+                    {
+                        cont = false;
+                        foreach(var f in Directory.GetFiles(Helper.UploadFolderPath))
+                        {
+                            if (Path.GetFileName(f) == FileName)
+                            {
+                                char separator = '.';
+                                string[] parts = FileName.Split(separator);
+                                
+                                separator = '(';
+                                string[] parts2 = FileName.Split(separator);
+                                FileName = parts2[0] + '(' + i.ToString() + ")" + '.' + parts[1];
+
+                                cont = true;
+                            }
+                        }
+                        i++;
+                    }
+                }
+                
+                FilePath = Path.Combine(FilePath, FileName);
 
                 await using FileStream fs = new(FilePath, FileMode.Create);
 

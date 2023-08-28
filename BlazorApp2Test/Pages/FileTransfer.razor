@@ -130,18 +130,19 @@
             }
         }
 
-        await _file.UploadFile(selectedFile);
+        await _file.UploadFile(selectedFile, true);
     }
 
     private async Task DupHandler()
     {
-        await _file.UploadFile(selectedFile);
+        await _file.UploadFile(selectedFile, false);
+        await JSRuntime.InvokeVoidAsync("hideModal", "fileNameDupModal");
     }
 
     private async Task RepHandler()
     {
         _file.DeleteFile(selectedFile.Name);
-        await _file.UploadFile(selectedFile);
+        await _file.UploadFile(selectedFile, true);
         await JSRuntime.InvokeVoidAsync("hideModal", "fileNameDupModal");
     }
 
