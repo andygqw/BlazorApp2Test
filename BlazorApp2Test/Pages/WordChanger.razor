@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="mx-4 pb-4">
+<div class="mx-4 pb-3">
     
     <EditForm Model="@input" OnValidSubmit="@Change">
 
@@ -25,9 +25,16 @@
         <InputText class="rounded bg-light" @bind-Value="input.WordWas" placeholder="enter changin word" /> 
         <InputText class="rounded bg-light" @bind-Value="input.WordWill" placeholder="enter word going to be" />
 
+
+        <div class="my-3 form-check form-switch rounded">
+            <label class="form-check-label px-2 me-5 move-left rounded bg-light" for="flexSwitchCheckChecked">Case Sensitive</label>
+            <input class="form-check-input" type="checkbox" @bind-value="input.caseSensitive" checked>
+        </div>
+
+
         <button class="rounded" type="submit">Submit</button>
 
-        <button class="rounded" @onclick="Clean">Clean</button>
+        <button class="rounded" @onclick="Clean">Clear</button>
 
     </EditForm>
 

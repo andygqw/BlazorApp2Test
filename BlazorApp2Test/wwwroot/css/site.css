@@ -369,6 +369,10 @@ a.btn.btn-dark {
         text-decoration: underline !important;
     }
 
+.move-left {
+    margin-left: -18px; /* Adjust this value as needed */
+}
+
 .border-light {
     border-color: #fff !important;
     background-color: #fff !important;

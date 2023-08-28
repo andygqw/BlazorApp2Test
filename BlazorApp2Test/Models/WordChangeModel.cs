@@ -12,6 +12,8 @@ namespace BlazorApp2Test.Models
 
         public string? WordWill { get; set; }
 
+        public bool caseSensitive = true;
+
         public string? Result() => Content.Replace(WordWas, WordWill);
     }
 }
