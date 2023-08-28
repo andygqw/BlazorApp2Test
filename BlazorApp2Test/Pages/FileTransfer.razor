@@ -79,11 +79,31 @@
     </div>
 </div>
 
+<div class="modal fade" id="fileNameDupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exModalLabel">File Duplicated</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                File @(selectedFile?.Name ?? "unknown") already exists, do you want to replace it?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="DupHandler">Cancel</button>
+                <button type="button" class="btn btn-danger" @onclick="RepHandler">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 @code {
 
-    private IBrowserFile selectedFile;
+    private IBrowserFile? selectedFile;
     private bool fileSelected = false;
     private string? aimed_file;
 
@@ -101,9 +121,29 @@
 
     private async Task Upload()
     {
+        foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+        {
+            if (Path.GetFileName(f) == selectedFile.Name)
+            {
+                await JSRuntime.InvokeVoidAsync("showModal", "fileNameDupModal");
+                return;
+            }
+        }
+
         await _file.UploadFile(selectedFile);
     }
 
+    private async Task DupHandler()
+    {
+        await _file.UploadFile(selectedFile);
+    }
+
+    private async Task RepHandler()
+    {
+        _file.DeleteFile(selectedFile.Name);
+        await _file.UploadFile(selectedFile);
+        await JSRuntime.InvokeVoidAsync("hideModal", "fileNameDupModal");
+    }
 
     private void DeleteHandler(string f)
     {
