@@ -27,7 +27,7 @@ namespace BlazorApp2Test.FileAccess
                 }
 
                 // File size validation - 5MB limit in this example
-                var maxFileSize = 1024 * 1024 * 5;
+                var maxFileSize = 1024 * 1024 * 30;
                 if (selectedFile.Size > maxFileSize)
                 {
                     Error = "File size must not exceed 5MB.";
