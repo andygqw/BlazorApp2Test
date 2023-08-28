@@ -1,6 +1,8 @@
 ﻿@page "/wordchanger"
 
 @using BlazorApp2Test.Models;
+@using System.Text.RegularExpressions;
+
 
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
@@ -70,7 +72,22 @@
 
     public void Change()
     {
-        result = input.Result();
+        if(input.Content != null && input.WordWas != null)
+        {
+            // Create a regex pattern to match the exact word
+            string pattern = $@"\b{Regex.Escape(input.WordWas)}\b";
+
+            // Replace exact word matches with the desired word
+            if (input.caseSensitive)
+            {
+                result = Regex.Replace(input.Content, pattern, input.WordWill);
+            }
+            else
+            {
+                result = Regex.Replace(input.Content, pattern, input.WordWill, RegexOptions.IgnoreCase);
+            }
+
+        }
     }
 
     private async Task CopyTextToClipboard()
