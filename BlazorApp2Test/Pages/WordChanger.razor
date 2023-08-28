@@ -77,6 +77,11 @@
             // Create a regex pattern to match the exact word
             string pattern = $@"\b{Regex.Escape(input.WordWas)}\b";
 
+            if (input.WordWill == null)
+            {
+                input.WordWill = "";
+            }
+
             // Replace exact word matches with the desired word
             if (input.caseSensitive)
             {
