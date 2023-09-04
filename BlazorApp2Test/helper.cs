@@ -5,9 +5,9 @@ namespace BlazorApp2Test
 {
     public class Helper
     {
-        public const string UploadFolderPath = "wwwroot/UploadFile";
+        public const string UploadFolderPath = "C:\\Users\\Public\\Downloads";
 
-        public const string DownloadPath = "UploadFile\\@fileName";
+        public const string DownloadPath = "C:\\Users\\Public\\Downloads\\@fileName";
 
     }
 }
