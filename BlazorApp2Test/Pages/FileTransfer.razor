@@ -54,7 +54,7 @@
                     //NOTE: In Helper, @fileName is added to DownloadPath
                     var fileName = Path.GetFileName(file);
                     <p>
-                        <a href="@Helper.DownloadPath" download>@fileName</a>
+                        <a href="UploadFile/@fileName" download>@fileName</a>
                         <button class="rounded" @onclick="() => ShowDeleteConfirmation(fileName)">delete @fileName</button>
                     </p>
                 }
