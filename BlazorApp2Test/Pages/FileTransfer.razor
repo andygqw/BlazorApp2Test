@@ -43,11 +43,9 @@
             <div class="mt-4 mb-3 ps-2 py-1 pb-2 bg-light rounded">
 
                 <p class="pt-2">Current downloadable files:</p>
-
-                @if (Directory.EnumerateFileSystemEntries(Helper.UploadFolderPath).Any())
-                {
-                    <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
-                }
+             
+                <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
+                
 
                 @foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
                 {
