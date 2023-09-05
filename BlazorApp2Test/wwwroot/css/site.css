@@ -160,6 +160,7 @@ div[role=main] {
     font-size: 2rem;
     margin: 0;
     padding: 0;
+    align-items: center;
 }
 
 .app-title-sub-text {
@@ -402,7 +403,18 @@ a.btn.btn-dark {
 .navbar-nav {
     background: #efefef;
     border-radius: 6px;
+
 }
+.move-left{
+
+    margin-right: -29px;
+}
+
+.move-up {
+    position: relative;
+    top: -7px; /* Adjust the value as needed */
+}
+
 
 select:disabled {
     appearance: none;
