@@ -145,7 +145,7 @@ div[role=main] {
 
 .app-title-text {
    font-weight: 600;
-   font-size: 4rem;
+   font-size: 3rem;
    justify-content: flex-end; /* Pushes child content to the bottom */
 }
 
@@ -183,15 +183,19 @@ h4.panel-title {
 }
 
 .section-name {
-    font-size: 1.3rem;
+    font-size: 2rem;
     font-weight: 600;
-    /*    position: absolute;   */
     margin: 15px 0 0;
 }
 
 .section-sub-title {
     font-weight: 600;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+}
+
+.section-text {
+   font-weight: 500;
+   font-size: 1.2rem;
 }
 
 .table-1 tbody tr {
