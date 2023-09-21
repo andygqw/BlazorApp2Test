@@ -307,27 +307,31 @@ a.btn.btn-dark {
     box-shadow: none;
 }
 
-    .btn-light:hover,
-    .btn-light:active,
-    .btn-light:focus {
-        background: #a4b4c9;
-        border: none;
-        box-shadow: none;
-    }
+   .btn-light:hover,
+   .btn-light:active,
+   .btn-light:focus {
+      background: #a4b4c9;
+      border: none;
+      box-shadow: none;
+   }
 
 .btn-primary {
-    background: #cff;
-    color: #334359;
-    border: none;
+   background: #ff9999;
+   color: white;
+   font-weight: bold;
+   border: none;
+   border-radius: 0;
 }
 
-    .btn-primary:hover,
-    .btn-primary:active,
-    .btn-primary:focus {
-        background: #31aca6;
-        color: #334359;
-        box-shadow: none;
-    }
+   .btn-primary:hover,
+   .btn-primary:active,
+   .btn-primary:focus {
+      background: #ff5050;
+      color: white;
+      font-weight: bold;
+      box-shadow: none;
+      border-radius: 0;
+   }
 
 .border-primary {
     background-color: #42c6bf !important;

@@ -9,5 +9,9 @@ namespace BlazorApp2Test
 
         public const string DownloadPath = "UploadFile/@fileName";
 
+        public const string MemoFilePath = "Memos/memos.json";
+
+        public const string AddMemoPagePath = "./kiskis/addmemo";
+
     }
 }

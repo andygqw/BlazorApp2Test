@@ -1,0 +1,42 @@
+﻿@page "/kiskis"
+
+@using BlazorApp2Test.Data;
+@using BlazorApp2Test.Models;
+
+@inject MemoData _memoData
+@inject NavigationManager Navigation
+
+
+<div class="col-12 my-5">
+
+    @if (memoList.Count > 0)
+    {
+
+
+    }
+    else
+    {
+        <div class="section-sub-title text-center">
+            这里空空如也哦！<br>
+            试着添加一个留言吧！
+        </div>
+        <button class="btn btn-primary" @onclick="(_ => Navigation.NavigateTo(Helper.AddMemoPagePath))">Add A Memo</button>
+
+    }
+</div>
+
+
+@code {
+
+
+    private List<MemoData> memoList = new List<MemoData>();
+
+    private MemoModel newMemo = new MemoModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var memoList = await _memoData.LoadMemos();
+    }
+
+
+}
