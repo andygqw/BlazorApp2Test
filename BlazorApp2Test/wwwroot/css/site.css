@@ -132,13 +132,22 @@ div[role=main] {
    background-image: url('../images/main_page_bg.jpg');
    background-size: cover; /* Ensure the image covers the full width of its container */
    background-repeat: no-repeat; /* Prevent the image from repeating if it's too small for the container */
-   height: 40vh; /* Set the height to 1/3 of the viewport height */
+   height: 35vh; /* Set the height to 1/3 of the viewport height */
+   position: fixed; /* This will fix the header at the top */
+   top: 0;
+   left: 0;
+   right: 0;
+   z-index: 1000;
 }
 
 .top-banner-container {
    display: flex; /* Enables flexbox layout */
    flex-direction: column; /* Elements stack vertically */
    justify-content: flex-end; /* Pushes child content to the bottom */
+}
+
+.body-position{
+   padding-top: 35vh;
 }
 
 /* ------------------ text styles ------------------ */
