@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlazorApp2Test.Models
@@ -19,14 +20,18 @@ namespace BlazorApp2Test.Models
 
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "A memo title is required")]
+        [DisplayName("Title")]
         public string? Name { get; set; }
 
+        [DisplayName("Content")]
         public string? Description { get; set; }
 
         public string? Image { get; set; }
 
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)] 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
+        [DisplayName("Uplaoded Time")]
         public DateTime Time { get; set; }
     }
 }

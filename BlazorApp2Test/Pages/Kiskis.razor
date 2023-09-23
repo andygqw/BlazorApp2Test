@@ -1,42 +1,178 @@
 ﻿@page "/kiskis"
 
-@using BlazorApp2Test.Data;
-@using BlazorApp2Test.Models;
+@using BlazorApp2Test.Data
+@using BlazorApp2Test.Models
+@using BlazorApp2Test.Pages
+@using System
 
+@inject IJSRuntime JSRuntime
 @inject MemoData _memoData
 @inject NavigationManager Navigation
 
 
 <div class="col-12 my-5">
 
+   <div class="flex-container mb-4">
+       <button class="btn btn-primary" @onclick="(_ => showAddModal = true)">
+           Add A Memo
+       </button>
+    </div>
+
     @if (memoList.Count > 0)
     {
+        <div class="row">
+            <!-- Add this row container outside the loop -->
+            @foreach (var m in memoList)
+            {
+                <div class="col-4 my-3">
+                    <div class="memo-card d-flex py-5 px-5">
+                        <!-- d-flex is a Bootstrap class for display: flex -->
+                        @if (m.Image != null)
+                        {
+                            <img class="memo-img" src="@m.Image" />
+                        }
 
+                        <div class="ml-3 text-white fw-bold d-flex flex-column" style="flex: 1;">
+                            <div class="flex-grow-1 d-flex align-items-center">
+                                <!-- This flex container centers the title & description -->
+                                <div>
+                                    <div class="section-sub-title">
+                                        @m.Name
+                                    </div>
 
+                                    @if (m.Description != null)
+                                    {
+                                        <div class="section-text mt-2">
+                                            @m.Description
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div>
+                                @m.Time
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div> <!-- Close the row container -->
     }
+
+
     else
     {
         <div class="section-sub-title text-center">
             这里空空如也哦！<br>
             试着添加一个留言吧！
         </div>
-        <button class="btn btn-primary" @onclick="(_ => Navigation.NavigateTo(Helper.AddMemoPagePath))">Add A Memo</button>
-
     }
+</div>
+
+
+<div class="modal" id="addModal" style="@($"display: {(showAddModal ? "block" : "none")}")">
+    <div class="modal-content text-center fw-bold">
+        <span class="close" @onclick="CloseModal">&times;</span>
+        <EditForm Model="newMemo" OnValidSubmit="SubmitHandler">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="name">Title</label>
+                    <InputText id="name" @bind-Value="newMemo.Name" class="form-control" />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="description">Main body</label>
+                    <InputTextArea id="description" @bind-Value="newMemo.Description" class="form-control" style="height:300px;" />
+                </div>
+            </div>
+            <div class="col-12 mb-3 d-flex flex-column justify-content-center align-items-center">
+                <label for="img">Upload an image</label>
+
+                <div class="my-2">
+                    <InputFile id="img" @ref="inputFile" OnChange="@ShowPreview" />
+                </div>
+                <img style="max-width:200px;max-height:200px" @ref="previewImageElem" />
+            </div>
+
+            
+            <button class="btn btn-secondary" @onclick="@CloseModal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+        
+
+    </div>
 </div>
 
 
 @code {
 
-
-    private List<MemoData> memoList = new List<MemoData>();
+    private List<MemoModel> memoList = new List<MemoModel>();
 
     private MemoModel newMemo = new MemoModel();
 
+    //Modal switch
+    private bool showAddModal = false;
+
+    //File upload and img preview:
+    private IBrowserFile? selectedFile;
+    private InputFile? inputFile;
+    private ElementReference previewImageElem;
+
     protected override async Task OnInitializedAsync()
     {
-        var memoList = await _memoData.LoadMemos();
+        memoList = await _memoData.LoadMemos();
+        newMemo = new MemoModel();
     }
 
+    private async Task SubmitHandler()
+    {
+        try
+        {
+            if (selectedFile != null)
+            {
+                // Read the content of the file
+                Stream fileStream = selectedFile.OpenReadStream();
+                MemoryStream memoryStream = new MemoryStream();
+                await fileStream.CopyToAsync(memoryStream);
 
+                // Determine the path to save the file
+                var path = Path.Combine(Helper.MemoImgPath, selectedFile.Name);
+                newMemo.Image = Path.Combine(Helper.MemoImgDownload, selectedFile.Name);
+
+                // Save the file to the server's local folder
+                await File.WriteAllBytesAsync(path, memoryStream.ToArray());
+            }
+            newMemo.Time = DateTime.Now;
+
+            await _memoData.SaveMemo(newMemo);
+            memoList = await _memoData.LoadMemos();
+
+        }catch(Exception ex)
+        {
+            
+        }
+
+        CloseModal();
+    }
+
+    private async Task ShowPreview(InputFileChangeEventArgs e)
+    {
+        await JSRuntime.InvokeVoidAsync("previewImage", inputFile!.Element, previewImageElem);
+        selectedFile = e.File;
+    }
+
+    private void ShowModal()
+    {
+        showAddModal = true;
+    }
+
+    private void CloseModal()
+    {
+        newMemo = new MemoModel();
+        showAddModal = false;
+    }
 }

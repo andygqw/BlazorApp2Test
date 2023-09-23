@@ -132,12 +132,12 @@ div[role=main] {
    background-image: url('../images/main_page_bg.jpg');
    background-size: cover; /* Ensure the image covers the full width of its container */
    background-repeat: no-repeat; /* Prevent the image from repeating if it's too small for the container */
-   height: 35vh; /* Set the height to 1/3 of the viewport height */
+   height: 30vh; /* Set the height to 1/3 of the viewport height */
    position: fixed; /* This will fix the header at the top */
    top: 0;
    left: 0;
    right: 0;
-   z-index: 1000;
+   z-index: 1;
 }
 
 .top-banner-container {
@@ -339,9 +339,10 @@ a.btn.btn-dark {
 }
 
 .btn-secondary {
-    border: 1px solid #fff;
-    background: #333;
-    color: #fff;
+   border: 1px solid #fff;
+   background: #333;
+   color: #fff;
+   border-radius: 0;
 }
 
     .btn-secondary:hover,
@@ -427,6 +428,7 @@ select:disabled {
 .card-header {
     background: #eaeff5;
 }
+
 
 /* ------------------ Comments Section ----------------------*/
 
@@ -668,3 +670,54 @@ div.dataTables_wrapper div.dataTables_paginate {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+/* ------------------Self-design-tmp-use  ------------------ */
+
+.flex-container {
+   display: flex;
+   justify-content: center; /* Aligns items horizontally to the center */
+   align-items: center; /* Aligns items vertically to the center */
+}
+
+.modal {
+   display: none;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.7);
+   z-index: 2;
+}
+
+.modal-content {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   width: 33%;
+   transform: translate(-50%, -50%);
+   background-color: #f4f4f4;
+   padding: 20px;
+   z-index: 3;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+   color: #aaa;
+   float: right;
+   font-size: 28px;
+   cursor: pointer;
+   align-self: flex-end;
+}
+
+.memo-img {
+   max-width: 50%;
+   height: auto;
+   flex: 1;
+   border-radius: 20px;
+}
+
+.memo-card {
+   background: #ff9999;
+   border-radius: 25px;
+}
