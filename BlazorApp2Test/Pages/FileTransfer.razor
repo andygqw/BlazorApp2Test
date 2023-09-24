@@ -66,31 +66,32 @@
 
 <!-- Modal -->
 <div class="modal" id="deleteConfirmationModal" style="@($"display: {(DeleteConfirm ? "block" : "none")}")">
-      <div class="modal-content text-center fw-bold">
-         <span class="close" @onclick="CloseModal">&times;</span>
-         <div class="mb-2 mx-4">
-            Do you really want to delete @aimed_file?
-         </div>
-         <div>
-            <button class="btn btn-secondary" @onclick="@CloseModal">Cancel</button>
-            <button class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
-         </div>
-            
+   <div class="modal-content text-center fw-bold">
+      <span class="close" @onclick="CloseModal">&times;</span>
+      <div class="mb-2 mx-4">
+         Do you really want to delete @aimed_file?
       </div>
+      <div>
+         <button class="btn btn-secondary" @onclick="@CloseModal">Cancel</button>
+         <button class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
+      </div>
+            
+   </div>
 </div>
 
-@* <div class="modal" id="fileNameDupModal">
-        <div class="modal-content">
-                <h5 class="modal-title" id="exModalLabel">File Duplicated</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                File @(selectedFile?.Name ?? "unknown") already exists, do you want to replace it?
-                <button type="button" class="btn btn-secondary" @onclick="DupHandler">No</button>
-                <button type="button" class="btn btn-danger" @onclick="RepHandler">Yes</button>
-        </div>
+<div class="modal" id="fileNameDupModal" style="@($"display: {(DupConfirm ? "block" : "none")}")">
+   <div class="modal-content text-center fw-bold">
+      <span class="close" @onclick="CloseModal">&times;</span>
+      <div class="mb-2 mx-4">
+            File @(selectedFile?.Name ?? "unknown") already exists, do you want to replace it?
+      </div>
+      <div>
+            <button class="btn btn-secondary" @onclick="DupHandler">No</button>
+            <button class="btn btn-danger" @onclick="RepHandler">Yes</button>
+      </div>
+   </div>
 </div>
- *@
+
 
 
 @code {
@@ -104,6 +105,7 @@
 
 
     private bool DeleteConfirm = false;
+    private bool DupConfirm = false;
 
     void HandleSelection(InputFileChangeEventArgs e)
     {
@@ -120,7 +122,7 @@
         {
             if (Path.GetFileName(f) == selectedFile.Name)
             {
-                await JSRuntime.InvokeVoidAsync("showModal", "fileNameDupModal");
+                DupConfirm = true;
                 return;
             }
         }
@@ -131,12 +133,14 @@
     private async Task DupHandler()
     {
         await _file.UploadFile(selectedFile, false);
+        CloseModal();
     }
 
     private async Task RepHandler()
     {
         _file.DeleteFile(selectedFile.Name);
         await _file.UploadFile(selectedFile, true);
+        CloseModal();
     }
 
     private void DeleteHandler(string f)
@@ -175,5 +179,6 @@
     private void CloseModal()
     {
         DeleteConfirm = false;
+        DupConfirm = false;
     }
 }
