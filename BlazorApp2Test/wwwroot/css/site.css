@@ -694,7 +694,7 @@ div.dataTables_wrapper div.dataTables_paginate {
    position: fixed;
    top: 50%;
    left: 50%;
-   width: 33%;
+   width: auto;
    transform: translate(-50%, -50%);
    background-color: #f4f4f4;
    padding: 20px;
@@ -720,4 +720,8 @@ div.dataTables_wrapper div.dataTables_paginate {
 .memo-card {
    background: #ff9999;
    border-radius: 25px;
+}
+
+.memo-textbox {
+   min-width: 550px;
 }

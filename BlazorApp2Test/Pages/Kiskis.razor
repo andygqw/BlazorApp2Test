@@ -50,7 +50,6 @@
                                     }
                                 </div>
                             </div>
-
                             <div>
                                 @m.Time
                             </div>
@@ -60,8 +59,6 @@
             }
         </div> <!-- Close the row container -->
     }
-
-
     else
     {
         <div class="section-sub-title text-center">
@@ -82,7 +79,7 @@
             <div class="col-12">
                 <div class="form-group">
                     <label for="name">Title</label>
-                    <InputText id="name" @bind-Value="newMemo.Name" class="form-control" />
+                    <InputText id="name" @bind-Value="newMemo.Name" class="form-control memo-textbox" />
                 </div>
             </div>
             <div class="col-12">
@@ -142,8 +139,8 @@
                 await fileStream.CopyToAsync(memoryStream);
 
                 // Determine the path to save the file
-                var path = Path.Combine(Helper.MemoImgPath, selectedFile.Name);
-                newMemo.Image = Path.Combine(Helper.MemoImgDownload, selectedFile.Name);
+                var path = Path.Combine(Helper.MemoImgset, selectedFile.Name);
+                newMemo.Image = Path.Combine(Helper.MemoImgget, selectedFile.Name);
 
                 // Save the file to the server's local folder
                 await File.WriteAllBytesAsync(path, memoryStream.ToArray());

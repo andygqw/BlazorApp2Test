@@ -14,11 +14,12 @@ namespace BlazorApp2Test.Data
             List<MemoModel> memos = new List<MemoModel>();
 
             // If the file exists, read its content
-            if (File.Exists(Helper.MemoFilePath))
+            if (File.Exists(Helper.MemoJSONset))
             {
-                var existingData = File.ReadAllText(Helper.MemoFilePath);
+                var existingData = File.ReadAllText(Helper.MemoJSONset);
                 memos = JsonSerializer.Deserialize<List<MemoModel>>(existingData) ?? new List<MemoModel>();
             }
+
 
             MemoModel lastElement;
 
@@ -39,14 +40,15 @@ namespace BlazorApp2Test.Data
 
             // Serialize and save the updated list
             var serializedData = JsonSerializer.Serialize(memos);
-            await File.WriteAllTextAsync(Helper.MemoFilePath, serializedData);
+            await File.WriteAllTextAsync(Helper.MemoJSONset, serializedData);
+
         }
 
         public async Task<List<MemoModel>> LoadMemos()
         {
-            if (File.Exists(Helper.MemoFilePath))
+            if (File.Exists(Helper.MemoJSONset))
             {
-                var jsonString = await File.ReadAllTextAsync(Helper.MemoFilePath);
+                var jsonString = await File.ReadAllTextAsync(Helper.MemoJSONset);
                 if (string.IsNullOrWhiteSpace(jsonString))
                 {
                     return new List<MemoModel>();

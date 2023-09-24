@@ -7,13 +7,13 @@ namespace BlazorApp2Test
     {
         public const string UploadFolderPath = "wwwroot/UploadFile";
 
-        public const string DownloadPath = "UploadFile/@fileName";
+        public const string DownloadPath = "UploadFile/@filename";
 
-        public const string MemoFilePath = "wwwroot/Memos/memos.json";
 
-        public const string MemoImgPath = "wwwroot/images";
+        public const string MemoImgset = "wwwroot/Memos";
+        public const string MemoImgget = "/Memos";
 
-        public const string MemoImgDownload = "images";
 
+        public const string MemoJSONset = "wwwroot/Memos/memos.JSON";
     }
 }
