@@ -35,9 +35,9 @@ a.page-link {
     color: #146588;
 }
 
-div[role=main] {
+/*div[role=main] {
     min-width: 640px;
-}
+}*/
 
 .footer {
     position: absolute;
@@ -205,6 +205,7 @@ h4.panel-title {
 .section-text {
    font-weight: 500;
    font-size: 1.2rem;
+   word-wrap: break-word;
 }
 
 .table-1 tbody tr {
