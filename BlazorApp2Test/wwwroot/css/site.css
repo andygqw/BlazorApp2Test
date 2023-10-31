@@ -711,16 +711,25 @@ div.dataTables_wrapper div.dataTables_paginate {
    align-self: flex-end;
 }
 
+.memo-container{
+   display: flex;
+   flex-wrap: wrap;
+}
+
 .memo-img {
-   max-width: 50%;
+   max-width: 375px;
    height: auto;
-   flex: 1;
-   border-radius: 20px;
+   flex: none;
+   border-radius: 25px;
 }
 
 .memo-card {
    background: #ff9999;
    border-radius: 25px;
+   flex-grow: 1;
+   flex-basis: 200;
+   display: flex;
+   align-items: center;
 }
 
 .memo-textbox {

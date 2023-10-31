@@ -22,21 +22,18 @@
 
     @if (memoList.Count > 0)
     {
-        <div class="row">
+        <div class="memo-container">
             <!-- Add this row container outside the loop -->
             @foreach (var m in memoList)
             {
-                <div class="col-4 my-3">
-                    <div class="memo-card d-flex py-5 px-5">
-                        <!-- d-flex is a Bootstrap class for display: flex -->
-                        @if (m.Image != null)
-                        {
-                            <img class="memo-img" src="@m.Image" />
-                        }
+                <div class="memo-card m-3">
+                    
+                    @if (m.Image != null)
+                    {
+                        <img class="memo-img p-4 m-2" src="@m.Image" />
 
-                        <div class="ml-3 text-white fw-bold d-flex flex-column" style="flex: 1;">
-                            <div class="flex-grow-1 d-flex align-items-center">
-                                <!-- This flex container centers the title & description -->
+                        <div style="flex: 1; justify-content: center;">
+                            <div class="flex-grow-1 d-flex align-items-center text-white">
                                 <div>
                                     <div class="section-sub-title">
                                         @m.Name
@@ -54,10 +51,34 @@
                                 @m.Time
                             </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div style="flex: none;" class="align-items-center m-2 p-4">
+                            <div class="flex-grow-1 d-flex align-items-center text-white">
+                                <div>
+                                    <div class="section-sub-title">
+                                        @m.Name
+                                    </div>
+
+                                    @if (m.Description != null)
+                                    {
+                                        <div class="section-text mt-2">
+                                            @m.Description
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div>
+                                @m.Time
+                            </div>
+                        </div>
+                    }
+
+                     
                 </div>
             }
-        </div> <!-- Close the row container -->
+        </div>
     }
     else
     {
