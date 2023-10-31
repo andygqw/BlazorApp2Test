@@ -40,54 +40,93 @@ namespace BlazorApp2Test.FileAccess
                     Directory.CreateDirectory(FilePath);
                 }
 
-                if (Rep)
+                FileName = selectedFile.Name;
+
+                if (!Rep)
                 {
-                    FileName = selectedFile.Name;
-                }
-                else
-                {
-                    FileName = selectedFile.Name;
-
-                    foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+                    if (FileName.Contains("."))
                     {
-                        if (Path.GetFileName(f) == FileName)
-                        {
-                            char separator = '.';
-                            string[] parts = FileName.Split(separator);
-                            parts[parts.Length - 2] = parts[parts.Length - 2] + "(1)";
-                            FileName = "";
-                            foreach (var part in parts)
-                            {
-                                FileName += part;
-                                FileName += ".";
-                            }
-                            FileName = FileName.Substring(0, FileName.Length - 1);
-                            break;
-                        }
-                    }
 
-                    int i = 2;
-
-                    bool cont = true;
-
-                    while (cont)
-                    {
-                        cont = false;
-                        foreach(var f in Directory.GetFiles(Helper.UploadFolderPath))
+                        foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
                         {
                             if (Path.GetFileName(f) == FileName)
                             {
                                 char separator = '.';
                                 string[] parts = FileName.Split(separator);
-                                
-                                separator = '(';
-                                string[] parts2 = parts[parts.Length - 2].Split(separator);
-                                FileName = parts2[0] + '(' + i.ToString() + ")" + '.' + parts[parts.Length - 1];
-
-                                cont = true;
+                                parts[parts.Length - 2] = parts[parts.Length - 2] + "(1)";
+                                FileName = "";
+                                foreach (var part in parts)
+                                {
+                                    FileName += part;
+                                    FileName += ".";
+                                }
+                                FileName = FileName.Substring(0, FileName.Length - 1);
+                                break;
                             }
                         }
-                        i++;
+
+                        int i = 2;
+
+                        bool cont = true;
+
+                        while (cont)
+                        {
+                            cont = false;
+                            foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+                            {
+                                if (Path.GetFileName(f) == FileName)
+                                {
+                                    char separator = '.';
+                                    string[] parts = FileName.Split(separator);
+
+                                    separator = '(';
+                                    string[] parts2 = parts[parts.Length - 2].Split(separator);
+                                    parts[parts.Length - 2] = parts2[0] + "(" + i.ToString() + ")";
+                                    FileName = "";
+                                    foreach(var part in parts)
+                                    {
+                                        FileName += part;
+                                        FileName += ".";
+                                    }
+                                    FileName = FileName.Substring(0, FileName.Length - 1);
+
+                                    cont = true;
+                                }
+                            }
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        
+                        int i = 2;
+
+                        bool cont = true;
+
+                        while (cont)
+                        {
+                            cont = false;
+                            foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+                            {
+                                if (Path.GetFileName(f) == FileName)
+                                {
+                                    char separator = '(';
+                                    string[] parts = FileName.Split(separator);
+                                    if(parts.Length == 1)
+                                    {
+                                        FileName += "(1)";
+                                    }
+                                    else
+                                    {
+                                        parts[0] += "(" + i.ToString() + ")";
+                                        FileName = parts[0];
+                                    }
+
+                                    cont = true;
+                                }
+                            }
+                            i++;
+                        }
                     }
                 }
                 
