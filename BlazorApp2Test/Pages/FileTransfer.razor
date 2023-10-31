@@ -69,8 +69,15 @@
    <div class="modal-content text-center fw-bold">
       <span class="close" @onclick="CloseModal">&times;</span>
       <div class="mb-2 mx-4">
-         Do you really want to delete @aimed_file?
-      </div>
+            @if(aimed_file == Helper.FileTransfer_DeleteAll)
+            {
+                <div>Do you really want to delete all files?</div>
+            }
+            else
+            {
+                <div>Do you really want to delete @aimed_file ?</div>
+            }
+        </div>
       <div>
          <button class="btn btn-secondary" @onclick="@CloseModal">Cancel</button>
          <button class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
@@ -154,7 +161,7 @@
 
     private async void DeleteAll()
     {
-        ShowDeleteConfirmation("ALL");
+        ShowDeleteConfirmation(Helper.FileTransfer_DeleteAll);
     }
 
     private void ShowDeleteConfirmation(string f)
@@ -165,7 +172,7 @@
 
     private void ConfirmDelete()
     {
-        if(aimed_file == "ALL")
+        if (aimed_file == Helper.FileTransfer_DeleteAll)
         {
             foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
             {
