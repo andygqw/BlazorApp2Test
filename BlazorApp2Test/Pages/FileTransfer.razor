@@ -40,7 +40,7 @@
 
             @if (_file.IsUploaded)
             {
-                <p class="text-success">File uploaded successfully.</p>
+                <p class="text-success">@_file.FileName uploaded successfully.</p>
             }
 
             <div class="mt-4 mb-3 ps-2 py-1 pb-2 bg-light rounded">
@@ -109,6 +109,7 @@
 
     void HandleSelection(InputFileChangeEventArgs e)
     {
+        _file = new FileAccess();
         selectedFile = e.File;
         if (selectedFile != null)
         {
@@ -128,12 +129,14 @@
         }
 
         await _file.UploadFile(selectedFile, true);
+        fileSelected = false;
     }
 
     private async Task DupHandler()
     {
         await _file.UploadFile(selectedFile, false);
         CloseModal();
+        fileSelected = false;
     }
 
     private async Task RepHandler()
@@ -141,6 +144,7 @@
         _file.DeleteFile(selectedFile.Name);
         await _file.UploadFile(selectedFile, true);
         CloseModal();
+        fileSelected = false;
     }
 
     private void DeleteHandler(string f)
