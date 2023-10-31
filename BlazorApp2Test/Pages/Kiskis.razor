@@ -89,6 +89,10 @@
     }
 </div>
 
+@if(ErrMsg != null)
+{
+    <div class="alert-danger">@ErrMsg</div>
+}
 
 <div class="memo-modal" id="addModal" style="@($"display: {(showAddModal ? "block" : "none")}")">
     <div class="memo-modal-content text-center fw-bold">
@@ -117,7 +121,6 @@
                 </div>
                 <img style="max-width:200px;max-height:200px" @ref="previewImageElem" />
             </div>
-
             
             <button class="btn btn-secondary" @onclick="@CloseModal">Cancel</button>
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -140,6 +143,8 @@
     private InputFile? inputFile;
     private ElementReference previewImageElem;
 
+    private string ErrMsg;
+
     protected override async Task OnInitializedAsync()
     {
         memoList = await _memoData.LoadMemos();
@@ -152,17 +157,17 @@
         {
             if (selectedFile != null)
             {
-                // Read the content of the file
-                Stream fileStream = selectedFile.OpenReadStream();
-                MemoryStream memoryStream = new MemoryStream();
-                await fileStream.CopyToAsync(memoryStream);
-
+                
                 // Determine the path to save the file
                 var path = Path.Combine(Helper.MemoImgset, selectedFile.Name);
                 newMemo.Image = Path.Combine(Helper.MemoImgget, selectedFile.Name);
 
                 // Save the file to the server's local folder
-                await File.WriteAllBytesAsync(path, memoryStream.ToArray());
+                await using FileStream fs = new(path, FileMode.Create);
+             
+                await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
+
+                fs.Close();
             }
             newMemo.Time = DateTime.Now;
 
@@ -171,7 +176,7 @@
 
         }catch(Exception ex)
         {
-            
+            ErrMsg = ex.Message;
         }
 
         CloseModal();
