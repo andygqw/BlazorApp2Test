@@ -680,6 +680,46 @@ div.dataTables_wrapper div.dataTables_paginate {
    align-items: center; /* Aligns items vertically to the center */
 }
 
+.memo-modal {
+   display: none;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.7);
+   z-index: 2;
+}
+
+.memo-modal-content {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   width: 70%;
+   max-height: 700px;
+   max-width: 600px;
+   transform: translate(-50%, -50%);
+   background-color: #f4f4f4;
+   padding: 20px;
+   z-index: 3;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   overflow-y: scroll;
+}
+
+@media (max-height: 800px) {
+   .memo-modal-content {
+      height: 90%;
+      max-height: none;
+   }
+}
+
+@media (max-width: 700px) {
+   .memo-modal-content {
+      width: 90%;
+      max-width: none;
+   }
+}
+
 .modal {
    display: none;
    position: fixed;
@@ -709,6 +749,8 @@ div.dataTables_wrapper div.dataTables_paginate {
    font-size: 28px;
    cursor: pointer;
    align-self: flex-end;
+   z-index: 4;
+   position: relative;
 }
 
 .memo-container{
@@ -730,8 +772,4 @@ div.dataTables_wrapper div.dataTables_paginate {
    flex-basis: 200;
    display: flex;
    align-items: center;
-}
-
-.memo-textbox {
-   min-width: 550px;
 }

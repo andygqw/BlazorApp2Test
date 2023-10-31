@@ -90,8 +90,8 @@
 </div>
 
 
-<div class="modal" id="addModal" style="@($"display: {(showAddModal ? "block" : "none")}")">
-    <div class="modal-content text-center fw-bold">
+<div class="memo-modal" id="addModal" style="@($"display: {(showAddModal ? "block" : "none")}")">
+    <div class="memo-modal-content text-center fw-bold">
         <span class="close" @onclick="CloseModal">&times;</span>
         <EditForm Model="newMemo" OnValidSubmit="SubmitHandler">
             <DataAnnotationsValidator />
@@ -100,7 +100,7 @@
             <div class="col-12">
                 <div class="form-group">
                     <label for="name">Title</label>
-                    <InputText id="name" @bind-Value="newMemo.Name" class="form-control memo-textbox" />
+                    <InputText id="name" @bind-Value="newMemo.Name" class="form-control" />
                 </div>
             </div>
             <div class="col-12">
@@ -122,8 +122,6 @@
             <button class="btn btn-secondary" @onclick="@CloseModal">Cancel</button>
             <button type="submit" class="btn btn-primary">Submit</button>
         </EditForm>
-        
-
     </div>
 </div>
 
