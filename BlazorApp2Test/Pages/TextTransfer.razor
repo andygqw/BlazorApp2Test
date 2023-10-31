@@ -2,6 +2,9 @@
 @using BlazorApp2Test.Data;
 
 @inject TextData _textData
+@inject IJSRuntime JSRuntime
+
+@inherits Component
 
 <PageTitle>GWTool - Sender</PageTitle>
 
@@ -26,13 +29,48 @@
     }
 </div>
 
+<div class="mx-4 bg-light rounded">
+
+    <div>
+        <textArea rows="8" class="form-control rounded" readonly type="text" value="@_textData.Text" />
+    </div>
+</div>
+<div class="mx-4 py-3">
+    @if (copied == true)
+    {
+        <button type="button" class="rounded btn-secondary-active" color="green" @onclick="CopyTextToClipboard">Copied!</button>
+    }
+    else
+    {
+        <button type="button" class="rounded" @onclick="CopyTextToClipboard">Copy</button>
+    }
+    <button class="rounded" @onclick="RefreshPage">Refresh</button>
+    <button class="rounded" @onclick="Clean">Clean</button>
+</div>
 
 @code {
+
     private string? text;
+
+    private bool copied = false;
 
     private void Submit()
     {
-
         _textData.Text = text;
+    }
+
+    private async Task CopyTextToClipboard()
+    {
+        if (_textData.Text != null)
+        {
+            await JSRuntime.InvokeVoidAsync("copyToClipboard", _textData.Text);
+            copied = true;
+        }
+    }
+
+    private void Clean()
+    {
+        _textData.Text = null;
+        copied = false;
     }
 }
