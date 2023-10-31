@@ -54,8 +54,14 @@ namespace BlazorApp2Test.FileAccess
                         {
                             char separator = '.';
                             string[] parts = FileName.Split(separator);
-                            parts[0] = parts[0] + "(1).";
-                            FileName = parts[0] + parts[1];
+                            parts[parts.Length - 2] = parts[parts.Length - 2] + "(1)";
+                            FileName = "";
+                            foreach (var part in parts)
+                            {
+                                FileName += part;
+                                FileName += ".";
+                            }
+                            FileName = FileName.Substring(0, FileName.Length - 1);
                             break;
                         }
                     }
@@ -75,8 +81,8 @@ namespace BlazorApp2Test.FileAccess
                                 string[] parts = FileName.Split(separator);
                                 
                                 separator = '(';
-                                string[] parts2 = FileName.Split(separator);
-                                FileName = parts2[0] + '(' + i.ToString() + ")" + '.' + parts[1];
+                                string[] parts2 = parts[parts.Length - 2].Split(separator);
+                                FileName = parts2[0] + '(' + i.ToString() + ")" + '.' + parts[parts.Length - 1];
 
                                 cont = true;
                             }
