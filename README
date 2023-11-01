@@ -1,1 +1,6 @@
 It's a .NET core blazor web application. Aiming simple tools that could be helpful in daily production.
+
+TODO:
+1. Memo image click feature
+2. Memo reply feature
+3. Memo delete feature
