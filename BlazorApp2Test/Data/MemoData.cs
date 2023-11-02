@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Xml;
@@ -60,6 +61,23 @@ namespace BlazorApp2Test.Data
                 }
             }
             return new List<MemoModel>();
+        }
+
+        public async Task DeleteMemo(MemoModel memo)
+        {
+            var MemoList = await LoadMemos();
+
+            if (MemoList.Contains(memo))
+            {
+                MemoList.Remove(memo);
+
+                var serializedData = JsonSerializer.Serialize(MemoList);
+                await File.WriteAllTextAsync(Helper.MemoJSONset, serializedData);
+            }
+            else
+            {
+                throw new Exception("Delete Memo which doesn't exist");
+            }
         }
     }
 }

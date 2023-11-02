@@ -30,7 +30,7 @@
                     
                     @if (m.Image != null)
                     {
-                        <img class="memo-img p-4 m-2" src="@m.Image" />
+                        <img class="memo-img p-4 m-2" style="cursor: pointer;" src="@m.Image" @onclick="@(() => ShowImg(m.Image))"/>
 
                         <div style="flex: 1; justify-content: center;">
                             <div class="flex-grow-1 d-flex align-items-center text-white">
@@ -128,6 +128,9 @@
     </div>
 </div>
 
+<div class="modal" style="@($"display: {(showImgModal ? "block" : "none")}")" @onclick="CloseModal">
+    <img src="@currentImg"class="modal-img"/>
+</div>
 
 @code {
 
@@ -137,11 +140,15 @@
 
     //Modal switch
     private bool showAddModal = false;
+    private bool showImgModal = false;
 
     //File upload and img preview:
     private IBrowserFile? selectedFile;
     private InputFile? inputFile;
     private ElementReference previewImageElem;
+
+    // Image preview
+    private string currentImg;
 
     private string ErrMsg;
 
@@ -188,6 +195,13 @@
         selectedFile = e.File;
     }
 
+    private void ShowImg(string ImgUrl)
+    {
+        showImgModal = true;
+        currentImg = ImgUrl;
+
+    }
+
     private void ShowModal()
     {
         showAddModal = true;
@@ -196,6 +210,8 @@
     private void CloseModal()
     {
         newMemo = new MemoModel();
+        currentImg = "";
         showAddModal = false;
+        showImgModal = false;
     }
 }
