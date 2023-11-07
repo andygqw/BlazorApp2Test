@@ -12,15 +12,7 @@ namespace BlazorApp2Test.Data
 
         public async Task SaveMemo(MemoModel memo)
         {
-            List<MemoModel> memos = new List<MemoModel>();
-
-            // If the file exists, read its content
-            if (File.Exists(Helper.MemoJSONset))
-            {
-                var existingData = File.ReadAllText(Helper.MemoJSONset);
-                memos = JsonSerializer.Deserialize<List<MemoModel>>(existingData) ?? new List<MemoModel>();
-            }
-
+            var memos = await LoadMemos();
 
             MemoModel lastElement;
 

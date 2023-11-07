@@ -17,7 +17,6 @@ namespace BlazorApp2Test.Models
             Time = model.Time;
         }
 
-
         public int Id { get; set; }
 
         [Required(ErrorMessage = "A memo title is required")]
@@ -31,7 +30,7 @@ namespace BlazorApp2Test.Models
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
-        [DisplayName("Uplaoded Time")]
+        [DisplayName("Uploaded Time")]
         public DateTime Time { get; set; }
     }
 }

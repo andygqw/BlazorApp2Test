@@ -16,14 +16,16 @@
 </div>
 
 <div class="mx-4 pb-3">  
+
     <pre>
-        <textarea rows="8" class="px-4 form-control bg-light rounded" @bind="@text">@_textData.Text</textarea>
+        <textarea rows="8" class="px-4 form-control bg-light rounded" @bind="@text">@text</textarea>
     </pre>
 
     <button class="rounded" @onclick="Submit">Submit</button>
+    <button class="rounded" @onclick="Clean">Clean</button>
     @if(_textData.Text != null)
     {
-        <label class="text-success">
+        <label class="text-success ms-1">
             Successfully Submitted!
         </label>
     }
@@ -34,19 +36,21 @@
     <div>
         <textArea rows="8" class="form-control rounded" readonly type="text" value="@_textData.Text" />
     </div>
+
 </div>
 
 <div class="mx-4 py-3">
+
     @if (copied == true)
     {
-        <button type="button" class="rounded btn-secondary-active" color="green" @onclick="CopyTextToClipboard">Copied!</button>
+        <button type="button" class="rounded btn-secondary-active me-1" color="green" @onclick="CopyTextToClipboard">Copied!</button>
     }
     else
     {
         <button type="button" class="rounded me-1" @onclick="CopyTextToClipboard">Copy</button>
     }
+
     <button class="rounded" @onclick="RefreshPage">Refresh</button>
-    <button class="rounded" @onclick="Clean">Clean</button>
 </div>
 
 @code {
@@ -58,6 +62,7 @@
     private void Submit()
     {
         _textData.Text = text;
+        copied = false;
     }
 
     private async Task CopyTextToClipboard()
@@ -72,6 +77,7 @@
     private void Clean()
     {
         _textData.Text = null;
+        text = null;
         copied = false;
     }
 }
