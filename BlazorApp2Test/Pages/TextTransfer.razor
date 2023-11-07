@@ -18,7 +18,8 @@
 <div class="mx-4 pb-3">  
 
     <pre>
-        <textarea rows="8" class="px-4 form-control bg-light rounded" @bind="@text">@text</textarea>
+        <textarea rows="8" class="px-4 form-control bg-light rounded" 
+            @bind="@text" placeholder="Enter text here and then hit submit ...">@text</textarea>
     </pre>
 
     <button class="rounded" @onclick="Submit">Submit</button>
@@ -34,7 +35,8 @@
 <div class="mx-4 bg-light rounded">
 
     <div>
-        <textArea rows="8" class="form-control rounded" readonly type="text" value="@_textData.Text" />
+        <textArea rows="8" class="form-control rounded" readonly type="text" 
+            value="@_textData.Text" placeholder="Enter Text to above text box, then hit refresh ..." />
     </div>
 
 </div>
