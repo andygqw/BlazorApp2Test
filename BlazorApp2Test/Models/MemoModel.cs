@@ -8,7 +8,7 @@ namespace BlazorApp2Test.Models
     {
         public MemoModel() { }
 
-        public MemoModel(MemoModel model) 
+        public MemoModel(MemoModel model)
         {
             Id = model.Id;
             Name = model.Name;
@@ -16,7 +16,6 @@ namespace BlazorApp2Test.Models
             Image = model.Image;
             Time = model.Time;
         }
-
 
         public int Id { get; set; }
 
@@ -31,7 +30,7 @@ namespace BlazorApp2Test.Models
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
-        [DisplayName("Uplaoded Time")]
+        [DisplayName("Uploaded Time")]
         public DateTime Time { get; set; }
     }
 }
