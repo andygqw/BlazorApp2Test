@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Xml;
 using BlazorApp2Test.Models;
 
 namespace BlazorApp2Test.Data
@@ -59,12 +57,28 @@ namespace BlazorApp2Test.Data
         {
             var MemoList = await LoadMemos();
 
-            if (MemoList.Contains(memo))
+            // Dunno why List.Contains() and .Remove() doesnt work
+            if (MemoList.Any(m => m.Id == memo.Id))
             {
-                MemoList.Remove(memo);
+                int index = MemoList.FindIndex(m => m.Id == memo.Id);
+
+                MemoList.RemoveAt(index);
+
+                if(MemoList.Any(m => m.Id == memo.Id))
+                {
+                    throw new Exception("Remove failed");
+                }
 
                 var serializedData = JsonSerializer.Serialize(MemoList);
                 await File.WriteAllTextAsync(Helper.MemoJSONset, serializedData);
+
+                char separator = '\\';
+                string[] parts = memo.Image.Split(separator);
+                var name = parts[parts.Length - 1];
+
+                var filePath = Helper.MemoImgset + '/' + name;
+
+                File.Delete(filePath);
             }
             else
             {

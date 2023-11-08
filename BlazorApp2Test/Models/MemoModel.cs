@@ -8,7 +8,7 @@ namespace BlazorApp2Test.Models
     {
         public MemoModel() { }
 
-        public MemoModel(MemoModel model) 
+        public MemoModel(MemoModel model)
         {
             Id = model.Id;
             Name = model.Name;

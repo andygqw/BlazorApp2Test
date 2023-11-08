@@ -11,6 +11,8 @@
 @inject MemoData _memoData
 @inject NavigationManager Navigation
 
+@inherits Component
+
 <PageTitle>GWTool - KisKis</PageTitle>
 
 <div class="col-12 my-5">
@@ -76,7 +78,7 @@
                         </div>
                     }
 
-                     
+                    <button class="btn btn-clear text-black" @onclick="(() => DeleteHandler(m))">delete</button>
                 </div>
             }
         </div>
@@ -133,6 +135,21 @@
     <img src="@currentImg"class="modal-img"/>
 </div>
 
+<div class="modal" style="@($"display: {(showDeleteModal ? "block" : "none")}")" @onclick="CloseModal">
+    <div class="modal-content text-center fw-bold">
+        <span class="close" @onclick="CloseModal">&times;</span>
+        <div class="mb-2 mx-4">
+            Do you really want to delete this memo?<br />
+            This can't be undo.
+        </div>
+        
+        <div>
+            <button class="btn btn-secondary rounded-2" @onclick="@CloseModal">Cancel</button>
+            <button @onclick="DeleteMemo" class="btn btn-danger">Yes</button>
+        </div>
+    </div>
+</div>
+
 @code {
 
     private List<MemoModel> memoList = new List<MemoModel>();
@@ -142,6 +159,7 @@
     //Modal switch
     private bool showAddModal = false;
     private bool showImgModal = false;
+    private bool showDeleteModal = false;
 
     //File upload and img preview:
     private IBrowserFile? selectedFile;
@@ -155,8 +173,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        memoList = await _memoData.LoadMemos();
+        await LoadData();
         newMemo = new MemoModel();
+    }
+
+    private async Task LoadData()
+    {
+        memoList = await _memoData.LoadMemos();
     }
 
     private async Task SubmitHandler()
@@ -165,14 +188,15 @@
         {
             if (selectedFile != null)
             {
-                
+                //NOTE: potential error - if image name exists
+
                 // Determine the path to save the file
                 var path = Path.Combine(Helper.MemoImgset, selectedFile.Name);
                 newMemo.Image = Path.Combine(Helper.MemoImgget, selectedFile.Name);
 
                 // Save the file to the server's local folder
                 await using FileStream fs = new(path, FileMode.Create);
-             
+
                 await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
 
                 fs.Close();
@@ -190,6 +214,29 @@
         CloseModal();
     }
 
+    private void DeleteHandler(MemoModel memo)
+    {
+        newMemo = memo;
+        showDeleteModal = true;
+    }
+
+    private async Task DeleteMemo()
+    {
+        try
+        {
+            await _memoData.DeleteMemo(newMemo);
+        }
+        catch (Exception ex)
+        {
+            ErrMsg = ex.Message;
+        }
+        finally
+        {
+            CloseModal();
+            await Task.Run(() => LoadData());
+        }
+    }
+
     private async Task ShowPreview(InputFileChangeEventArgs e)
     {
         await JSRuntime.InvokeVoidAsync("previewImage", inputFile!.Element, previewImageElem);
@@ -200,7 +247,6 @@
     {
         showImgModal = true;
         currentImg = ImgUrl;
-
     }
 
     private void ShowModal()
@@ -214,5 +260,6 @@
         currentImg = "";
         showAddModal = false;
         showImgModal = false;
+        showDeleteModal = false;
     }
 }

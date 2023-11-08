@@ -72,7 +72,7 @@
             }
         </div>
       <div>
-         <button class="btn btn-secondary" @onclick="@CloseModal">Cancel</button>
+         <button class="btn btn-secondary rounded-2" @onclick="@CloseModal">Cancel</button>
          <button class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
       </div>
             
@@ -86,7 +86,7 @@
             File @(selectedFile?.Name ?? "unknown") already exists, do you want to replace it?
       </div>
       <div>
-            <button class="btn btn-secondary" @onclick="DupHandler">No</button>
+            <button class="btn btn-secondary rounded-2" @onclick="DupHandler">No</button>
             <button class="btn btn-danger" @onclick="RepHandler">Yes</button>
       </div>
    </div>
