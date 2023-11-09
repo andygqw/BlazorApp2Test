@@ -72,13 +72,16 @@ namespace BlazorApp2Test.Data
                 var serializedData = JsonSerializer.Serialize(MemoList);
                 await File.WriteAllTextAsync(Helper.MemoJSONset, serializedData);
 
-                char separator = '\\';
-                string[] parts = memo.Image.Split(separator);
-                var name = parts[parts.Length - 1];
+                if (memo.Image != null)
+                {
+                    char separator = '\\';
+                    string[] parts = memo.Image.Split(separator);
+                    var name = parts[parts.Length - 1];
 
-                var filePath = Helper.MemoImgset + '/' + name;
+                    var filePath = Helper.MemoImgset + '/' + name;
 
-                File.Delete(filePath);
+                    File.Delete(filePath);
+                }
             }
             else
             {

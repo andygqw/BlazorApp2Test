@@ -33,52 +33,35 @@
                     
                     @if (m.Image != null)
                     {
-                        <img class="memo-img p-4 m-2" style="cursor: pointer;" src="@m.Image" @onclick="@(() => ShowImg(m.Image))"/>
-
-                        <div style="flex: 1; justify-content: center;">
-                            <div class="flex-grow-1 d-flex align-items-center text-white">
-                                <div>
-                                    <div class="section-sub-title">
-                                        @m.Name
-                                    </div>
-
-                                    @if (m.Description != null)
-                                    {
-                                        <div class="section-text mt-2">
-                                            @m.Description
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                            <div>
-                                @m.Time
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div style="flex: none;" class="align-items-center m-2 p-4">
-                            <div class="flex-grow-1 d-flex align-items-center text-white">
-                                <div>
-                                    <div class="section-sub-title">
-                                        @m.Name
-                                    </div>
-
-                                    @if (m.Description != null)
-                                    {
-                                        <div class="section-text mt-2">
-                                            @m.Description
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                            <div>
-                                @m.Time
-                            </div>
-                        </div>
+                        <img class="memo-img p-4" style="cursor: pointer;" src="@m.Image" @onclick="@(() => ShowImg(m.Image))"/>
                     }
 
-                    <button class="btn btn-clear text-black" @onclick="(() => DeleteHandler(m))">delete</button>
+                     <div class="memo-content p-4">
+                        <div class="flex-grow-1 d-flex align-items-center text-white">
+                           <div>
+                              <div class="section-sub-title">
+                                    @m.Name
+                              </div>
+
+                              @if (m.Description != null)
+                              {
+                                    <div class="section-text mt-2">
+                                       @m.Description
+                                    </div>
+                              }
+                           </div>
+                        </div>
+                        <div class="memo-info">
+                           <div class="pt-2">
+                                 @m.Time
+                           </div>
+                           <div>
+                              <button class="btn btn-clear text-black" @onclick="(() => DeleteHandler(m))">
+                                 delete
+                              </button>
+                           </div>
+                        </div>
+                     </div>
                 </div>
             }
         </div>
@@ -258,6 +241,7 @@
     {
         newMemo = new MemoModel();
         currentImg = "";
+        selectedFile = null;
         showAddModal = false;
         showImgModal = false;
         showDeleteModal = false;
