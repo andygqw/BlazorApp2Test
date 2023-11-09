@@ -25,7 +25,8 @@
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <InputTextArea rows="8" class="mb-3 pb-3 form-control rounded bg-light" @bind-Value="input.Content" placeholder="enter content"></InputTextArea>
+        <InputTextArea rows="8" class="mb-3 pb-3 form-control rounded bg-light" @bind-Value="input.Content"
+                        @oninput="CountWords" placeholder="enter content"></InputTextArea>
         <InputText class="rounded bg-light" @bind-Value="input.WordWas" placeholder="enter changin word" /> 
         <InputText class="rounded bg-light" @bind-Value="input.WordWill" placeholder="enter word going to be" />
 
@@ -34,7 +35,7 @@
             <label class="form-check-label px-2 me-5 move-left rounded bg-light" for="flexSwitchCheckChecked">Case Sensitive</label>
             <input class="form-check-input" type="checkbox" @bind-value="input.caseSensitive" checked>
             <label class="text-success">
-                Word Count: @CountWords(input.Content)
+                Word Count: @wordCount
             </label>
         </div>
 
@@ -73,6 +74,7 @@
 
     private string? result;
     private bool copied = false;
+    private int wordCount = 0;
 
     public void Change()
     {
@@ -99,22 +101,16 @@
         }
     }
 
-    public static int CountWords(string input)
+    public void CountWords(ChangeEventArgs e)
     {
-
-        // Check if the string is null or empty
-        if (String.IsNullOrEmpty(input))
-        {
-            return 0;
-        }
+        string value = e.Value.ToString();
 
         // Trim the input to avoid counting leading/trailing spaces
-        input = input.Trim();
+        var parts = value.Trim();
 
         // Split the string on whitespace characters and count the words
-        int wordCount = input.Split(new char[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length;
+        wordCount = parts.Split(new char[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length;
 
-        return wordCount;
     }
 
     private async Task CopyTextToClipboard()
