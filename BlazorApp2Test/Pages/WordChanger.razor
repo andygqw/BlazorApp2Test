@@ -45,6 +45,19 @@
 
     </EditForm>
 
+    @if (result != input.Content && showMsg)
+    {
+        <label class="text-success ms-1">
+            Changed Success!
+        </label>
+    }
+    else if (showMsg)
+    {
+        <label class="text-warning ms-1">
+            Word "@input.WordWas"" doesn't exist
+        </label>
+    }
+
 
     @if(result != null)
     {
@@ -76,6 +89,8 @@
     private bool copied = false;
     private int wordCount = 0;
 
+    private bool showMsg = false;
+
     public void Change()
     {
         if(input.Content != null && input.WordWas != null)
@@ -99,6 +114,7 @@
             }
 
             copied = false;
+            showMsg = true;
         }
     }
 
