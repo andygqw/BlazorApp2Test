@@ -794,3 +794,7 @@ div.dataTables_wrapper div.dataTables_paginate {
    display: flex;
    justify-content: space-between;
 }
+
+.no-underline:hover {
+   text-decoration: none; /* This removes the underline */
+}
