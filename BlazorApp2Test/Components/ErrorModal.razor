@@ -1,0 +1,45 @@
+﻿@inject ErrorService _errorService
+
+
+@if (isVisible)
+{
+    <div class="error-modal">
+        <div class="error-content">
+            <span class="close" @onclick="CloseError">&times;</span>
+            <p class="error-text">@message</p>
+        </div>
+    </div>
+}
+
+
+@code {
+
+    private bool isVisible = false;
+    private string? message = null;
+
+    protected override void OnInitialized()
+    {
+        _errorService.OnShow += ShowError;
+        _errorService.OnClose += CloseError;
+    }
+
+    private void ShowError(string msg)
+    {
+        message = msg;
+        isVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void CloseError()
+    {
+        isVisible = false;
+        message = null;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        _errorService.OnShow -= ShowError;
+        _errorService.OnClose -= CloseError;
+    }
+}

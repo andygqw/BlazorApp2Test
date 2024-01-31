@@ -1,3 +1,4 @@
+using BlazorApp2Test.Components;
 using BlazorApp2Test.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -7,9 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<TextData>(); 
 builder.Services.AddSingleton<MemoData>();
+builder.Services.AddSingleton<ErrorService>();
 
 var app = builder.Build();
 

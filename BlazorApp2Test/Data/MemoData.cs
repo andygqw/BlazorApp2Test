@@ -7,7 +7,6 @@ namespace BlazorApp2Test.Data
 {
     public class MemoData
     {
-
         public async Task SaveMemo(MemoModel memo)
         {
             var memos = await LoadMemos();

@@ -1,7 +1,49 @@
 ﻿namespace BlazorApp2Test.Data
 {
-    public class TextData
+    internal class TextData
     {
-        public string? Text { get; set; }
+        private string? text;
+
+        public TextData()
+        {
+            text = null;
+        }
+
+        internal void AssignText(string? txt)
+        {
+            if (txt != null && txt.Trim().Length > 0)
+            {
+                if (txt.Length > 16000)
+                {
+                    throw new IOException("Maximum text transfer size is 16000 character");
+                }
+                else
+                {
+                    text = txt;
+                }
+            }
+            else
+            {
+                throw new IOException("Text field is empty when submit");
+            }
+        }
+
+        internal string? GetText()
+        {
+
+            if (text != null && text.Trim().Length > 0)
+            {
+                return text;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        internal void CleanText()
+        {
+            text = null;
+        }
     }
 }

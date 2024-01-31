@@ -1,7 +1,9 @@
 ﻿@page "/texttransfer"
+
 @using BlazorApp2Test.Data;
 
 @inject TextData _textData
+@inject ErrorService _errorService
 @inject IJSRuntime JSRuntime
 
 @inherits Component
@@ -24,7 +26,7 @@
 
     <button class="rounded" @onclick="Submit">Submit</button>
     <button class="rounded" @onclick="Clean">Clean</button>
-    @if(_textData.Text != null)
+    @if(_textData.GetText() != null)
     {
         <label class="text-success ms-1">
             Successfully Submitted!
@@ -36,7 +38,7 @@
 
     <div>
         <textArea rows="8" class="form-control rounded" readonly type="text" 
-            value="@_textData.Text" placeholder="Enter Text to above text box, then hit refresh ..." />
+            value="@_textData.GetText()" placeholder="Enter Text to above text box, then hit refresh ..." />
     </div>
 
 </div>
@@ -63,22 +65,28 @@
 
     private void Submit()
     {
-        _textData.Text = text;
-        copied = false;
+        try
+        {
+            _textData.AssignText(text);
+        }
+        catch(Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
     }
 
     private async Task CopyTextToClipboard()
     {
-        if (_textData.Text != null)
+        if (_textData.GetText != null)
         {
-            await JSRuntime.InvokeVoidAsync("copyToClipboard", _textData.Text);
+            await JSRuntime.InvokeVoidAsync("copyToClipboard", _textData.GetText());
             copied = true;
         }
     }
 
     private void Clean()
     {
-        _textData.Text = null;
+        _textData.CleanText();
         text = null;
         copied = false;
     }

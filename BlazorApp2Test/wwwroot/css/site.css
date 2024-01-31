@@ -798,3 +798,36 @@ div.dataTables_wrapper div.dataTables_paginate {
 .no-underline:hover {
    text-decoration: none; /* This removes the underline */
 }
+
+.error-modal {
+   position: fixed; /* Stay in place */
+   z-index: 1; /* Sit on top */
+   left: 0;
+   top: 0;
+   width: 100%; /* Full width */
+   height: 100%; /* Full height */
+   overflow: auto; /* Enable scroll if needed */
+   background-color: rgba(0,0,0,0.4); /* Black w/ opacity for the background */
+}
+
+.error-content {
+   background-color: #FFB6C1; /* Pink background for error */
+   margin: 10% auto; /* 15% from the top and centered horizontally */
+   padding: 10px;
+   width:max-content;
+   border: 3px solid;
+   border-color: rgb(240, 128, 128);
+   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); /* Adding some shadow for depth */
+   border-radius: 20px; /* Optional: for rounded corners */
+   text-align: center;
+}
+
+.error-text {
+   padding-top: 25px;
+   color: white; /* White text color */
+   font-size: 16px; /* Adjust the font size as needed */
+   font-weight: bold;
+   white-space: nowrap;
+   margin-left: 20px;
+   margin-right: 20px;
+}
