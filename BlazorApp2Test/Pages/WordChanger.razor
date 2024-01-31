@@ -1,7 +1,8 @@
 ﻿@page "/wordchanger"
 
-@using BlazorApp2Test.Models;
 @using System.Text.RegularExpressions;
+@using BlazorApp2Test.Data;
+@using BlazorApp2Test.Models;
 
 
 @inject IJSRuntime JSRuntime
@@ -21,22 +22,19 @@
 
 <div class="mx-4 pb-3">
     
-    <EditForm Model="@input" OnValidSubmit="@Change">
+    <EditForm Model="@searchModel" OnValidSubmit="@Change">
 
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <InputTextArea rows="8" class="mb-3 pb-3 form-control rounded bg-light" @bind-Value="input.Content"
+        <InputTextArea rows="8" class="mb-3 pb-3 form-control rounded bg-light" @bind-Value="@searchModel.Content"
         @oninput="HandleInput" placeholder="enter content" maxlength="@Helper.TextAreaMaxLength"></InputTextArea>
-        <InputText class="rounded bg-light" @bind-Value="input.WordWas" placeholder="enter changin word" /> 
-        <InputText class="rounded bg-light" @bind-Value="input.WordWill" placeholder="enter word going to be" />
+        <InputText class="rounded bg-light" @bind-Value="searchModel.WordWas" placeholder="enter changin word" /> 
+        <InputText class="rounded bg-light" @bind-Value="searchModel.WordWill" placeholder="enter word going to be" />
 
 
         <div class="my-3 form-check form-switch rounded">
             <label class="form-check-label px-2 me-5 move-left rounded bg-light" for="flexSwitchCheckChecked">Case Sensitive</label>
-            <input class="form-check-input" type="checkbox" @bind-value="input.caseSensitive" checked>
+            <input class="form-check-input" type="checkbox" @bind-value="searchModel.CaseSensitive" checked>
             <label style="color:@wordCountColor;">
-                Word Count: @wordCount
+                Word Count: @wordCount/@Helper.TextMaxLength
             </label>
         </div>
 
@@ -46,18 +44,6 @@
 
     </EditForm>
 
-    @if (result != input.Content && showMsg)
-    {
-        <label class="text-success ms-1">
-            Changed Success!
-        </label>
-    }
-    else if (showMsg)
-    {
-        <label class="text-warning ms-1">
-            Word "@input.WordWas"" doesn't exist
-        </label>
-    }
 
 
     @if(result != null)
@@ -84,41 +70,57 @@
 
 @code {
 
-    private WordChangeModel input = new WordChangeModel();
+    WordChangeSearchModel searchModel = new WordChangeSearchModel();
 
-    private string? result;
+    private string? result = null;
+
+
     private bool copied = false;
     private int wordCount = 0;
 
-    private bool showMsg = false;
     private bool disableSubmit = false;
     private string wordCountColor => wordCount > Helper.TextMaxLength ? "red" : "green";
 
 
     private void Change()
     {
-        if(input.Content != null && input.WordWas != null)
+        try
         {
-            // Create a regex pattern to match the exact word
-            string pattern = $@"\b{Regex.Escape(input.WordWas)}\b";
-
-            if (input.WordWill == null)
+            if (!string.IsNullOrEmpty(searchModel.Content) && !string.IsNullOrEmpty(searchModel.WordWas))
             {
-                input.WordWill = "";
-            }
+                // Create a regex pattern to match the exact word
+                string pattern = $@"\b{Regex.Escape(searchModel.WordWas)}\b";
 
-            // Replace exact word matches with the desired word
-            if (input.caseSensitive)
-            {
-                result = Regex.Replace(input.Content, pattern, input.WordWill);
+                if (searchModel.WordWill == null)
+                {
+                    searchModel.WordWill = "";
+                }
+
+                // Replace exact word matches with the desired word
+                if (searchModel.CaseSensitive)
+                {
+                    result = Regex.Replace(searchModel.Content, pattern, searchModel.WordWill);
+                }
+                else
+                {
+                    result = Regex.Replace(searchModel.Content, pattern, searchModel.WordWill, RegexOptions.IgnoreCase);
+                }
+
+                copied = false;
+
+                if (result == searchModel.Content)
+                {
+                    result = null;
+                    throw new Exception($"Word \"{searchModel.WordWas}\" doesn't exist");
+                }
             }
             else
             {
-                result = Regex.Replace(input.Content, pattern, input.WordWill, RegexOptions.IgnoreCase);
+                throw new IOException("Content and WordWas can't be empty");
             }
-
-            copied = false;
-            showMsg = true;
+        }catch(Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
         }
     }
 
@@ -126,8 +128,8 @@
     {
         try
         {
-            input.Content = e.Value?.ToString();
-            wordCount = Helper.CountWords(input.Content);
+            searchModel.Content = e.Value?.ToString();
+            wordCount = Helper.CountWords(searchModel.Content);
 
             if (wordCount > Helper.TextMaxLength)
             {
@@ -146,15 +148,32 @@
 
     private async Task CopyTextToClipboard()
     {
-        if (result != null)
+        try
         {
-            await JSRuntime.InvokeVoidAsync("copyToClipboard", result);
-            copied = true;
+            if (result != null)
+            {
+                await JSRuntime.InvokeVoidAsync("copyToClipboard", result);
+                copied = true;
+            }
+            else
+            {
+                throw new Exception("Can't copy to clipboard if result is empty");
+            }
+        }catch(Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
         }
     }
 
     private void Clean()
     {
-        NavigationManager.NavigateTo("/wordchanger", true);
+        try
+        {
+            NavigationManager.NavigateTo("/wordchanger", true);
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace BlazorApp2Test.Models
 {
-    public class WordChangeModel
+    public class WordChangeSearchModel
     {
         [Required(ErrorMessage = "Empty Content")]
         public string? Content { get; set; }
@@ -12,7 +12,6 @@ namespace BlazorApp2Test.Models
 
         public string? WordWill { get; set; }
 
-        public bool caseSensitive = true;
-
+        public bool CaseSensitive = true;
     }
 }
