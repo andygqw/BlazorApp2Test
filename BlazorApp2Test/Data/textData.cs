@@ -13,7 +13,7 @@
         {
             if (txt != null && txt.Trim().Length > 0)
             {
-                if (txt.Length > 16000)
+                if (txt.Length > Helper.TextAreaMaxLength)
                 {
                     throw new IOException("Maximum text transfer size is 16000 character");
                 }

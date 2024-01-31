@@ -22,5 +22,15 @@ namespace BlazorApp2Test
         // Limits:
         public const int TextMaxLength = 1400;
         public const int TextAreaMaxLength = 15000;
+
+
+        public static int CountWords(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return 0;
+
+            return input.Split(new[] { ' ', '\n', '\r', '\t' },
+                               StringSplitOptions.RemoveEmptyEntries).Length;
+        }
     }
 }

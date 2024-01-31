@@ -93,7 +93,7 @@
         try
         {
             text = e.Value?.ToString();
-            wordCount = CountWords(text);
+            wordCount = Helper.CountWords(text);
 
             if (wordCount > Helper.TextMaxLength)
             {
@@ -108,15 +108,6 @@
         {
             _errorService.ShowModal(ex.Message);
         }
-    }
-
-    private int CountWords(string? input)
-    {
-        if (string.IsNullOrWhiteSpace(input))
-            return 0;
-
-        return input.Split(new[] { ' ', '\n', '\r', '\t' },
-                           StringSplitOptions.RemoveEmptyEntries).Length;
     }
 
     private async Task CopyTextToClipboard()

@@ -5,6 +5,7 @@
 
 
 @inject IJSRuntime JSRuntime
+@inject ErrorService _errorService
 @inject NavigationManager NavigationManager
 
 @inherits Component
@@ -26,7 +27,7 @@
         <ValidationSummary />
 
         <InputTextArea rows="8" class="mb-3 pb-3 form-control rounded bg-light" @bind-Value="input.Content"
-                        @oninput="CountWords" placeholder="enter content"></InputTextArea>
+        @oninput="HandleInput" placeholder="enter content" maxlength="@Helper.TextAreaMaxLength"></InputTextArea>
         <InputText class="rounded bg-light" @bind-Value="input.WordWas" placeholder="enter changin word" /> 
         <InputText class="rounded bg-light" @bind-Value="input.WordWill" placeholder="enter word going to be" />
 
@@ -34,12 +35,12 @@
         <div class="my-3 form-check form-switch rounded">
             <label class="form-check-label px-2 me-5 move-left rounded bg-light" for="flexSwitchCheckChecked">Case Sensitive</label>
             <input class="form-check-input" type="checkbox" @bind-value="input.caseSensitive" checked>
-            <label class="text-success">
+            <label style="color:@wordCountColor;">
                 Word Count: @wordCount
             </label>
         </div>
 
-        <button class="rounded" type="submit">Submit</button>
+        <button class="rounded" type="submit" disabled="@disableSubmit">Submit</button>
 
         <button class="rounded" @onclick="Clean">Clear</button>
 
@@ -90,8 +91,11 @@
     private int wordCount = 0;
 
     private bool showMsg = false;
+    private bool disableSubmit = false;
+    private string wordCountColor => wordCount > Helper.TextMaxLength ? "red" : "green";
 
-    public void Change()
+
+    private void Change()
     {
         if(input.Content != null && input.WordWas != null)
         {
@@ -118,16 +122,26 @@
         }
     }
 
-    public void CountWords(ChangeEventArgs e)
+    private void HandleInput(ChangeEventArgs e)
     {
-        string value = e.Value.ToString();
+        try
+        {
+            input.Content = e.Value?.ToString();
+            wordCount = Helper.CountWords(input.Content);
 
-        // Trim the input to avoid counting leading/trailing spaces
-        var parts = value.Trim();
-
-        // Split the string on whitespace characters and count the words
-        wordCount = parts.Split(new char[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length;
-
+            if (wordCount > Helper.TextMaxLength)
+            {
+                disableSubmit = true;
+            }
+            else
+            {
+                disableSubmit = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
     }
 
     private async Task CopyTextToClipboard()
