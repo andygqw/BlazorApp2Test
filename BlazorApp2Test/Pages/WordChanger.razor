@@ -36,6 +36,9 @@
             <label style="color:@wordCountColor;">
                 Word Count: @wordCount/@Helper.TextMaxLength
             </label>
+            <label style="color:@charCountColor;">
+                Character Count: @charCount/@Helper.TextAreaMaxLength
+            </label>
         </div>
 
         <button class="rounded" type="submit" disabled="@disableSubmit">Submit</button>
@@ -77,9 +80,12 @@
 
     private bool copied = false;
     private int wordCount = 0;
+    private int charCount = 0;
 
     private bool disableSubmit = false;
     private string wordCountColor => wordCount > Helper.TextMaxLength ? "red" : "green";
+    private string charCountColor => charCount > Helper.TextAreaMaxLength ? "red" : "green";
+
 
 
     private void Change()
@@ -130,6 +136,7 @@
         {
             searchModel.Content = e.Value?.ToString();
             wordCount = Helper.CountWords(searchModel.Content);
+            charCount = Helper.CountCharacters(searchModel.Content);
 
             if (wordCount > Helper.TextMaxLength)
             {

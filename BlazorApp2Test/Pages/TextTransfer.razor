@@ -27,7 +27,8 @@
      
     <button class="rounded" @onclick="Submit" disabled="@disableSubmit">Submit</button>
     <button class="rounded" @onclick="Clean">Clean</button>
-    <p style="color:@wordCountColor;">Word count: @wordCount/@Helper.TextMaxLength</p>
+    <label style="color:@wordCountColor;">Word Count: @wordCount/@Helper.TextMaxLength</label>
+    <label style="color:@charCountColor;">Character Count: @charCount/@Helper.TextAreaMaxLength</label>
     @if(_textData.GetText() != null)
     {
         <label class="text-success ms-1">
@@ -63,8 +64,10 @@
 
     private string? text;
     private int wordCount = 0;
+    private int charCount = 0;
 
     private string wordCountColor => wordCount > Helper.TextMaxLength? "red" : "green";
+    private string charCountColor => charCount > Helper.TextAreaMaxLength ? "red" : "green";
 
     private bool disableSubmit = false;
 
@@ -94,6 +97,7 @@
         {
             text = e.Value?.ToString();
             wordCount = Helper.CountWords(text);
+            charCount = Helper.CountCharacters(text);
 
             if (wordCount > Helper.TextMaxLength)
             {

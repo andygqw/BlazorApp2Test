@@ -32,5 +32,16 @@ namespace BlazorApp2Test
             return input.Split(new[] { ' ', '\n', '\r', '\t' },
                                StringSplitOptions.RemoveEmptyEntries).Length;
         }
+
+        public static int CountCharacters(string? input)
+        {
+            if (input == null)
+            {
+                return 0;
+            }
+
+            return input.Length;
+        }
+
     }
 }
