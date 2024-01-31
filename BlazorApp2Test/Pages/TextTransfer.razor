@@ -20,12 +20,14 @@
 <div class="mx-4 pb-3">  
 
     <pre>
-        <textarea rows="8" class="px-4 form-control bg-light rounded" 
-            @bind="@text" placeholder="Enter text here and then hit submit ...">@text</textarea>
+        <textarea rows="8" class="px-4 form-control bg-light rounded"
+        @bind="@text" @oninput="HandleInput" maxlength="@Helper.TextAreaMaxLength"
+        placeholder="Enter text here and then hit submit ...">@text</textarea>
     </pre>
-
-    <button class="rounded" @onclick="Submit">Submit</button>
+     
+    <button class="rounded" @onclick="Submit" disabled="@disableSubmit">Submit</button>
     <button class="rounded" @onclick="Clean">Clean</button>
+    <p style="color:@wordCountColor;">Word count: @wordCount/@Helper.TextMaxLength</p>
     @if(_textData.GetText() != null)
     {
         <label class="text-success ms-1">
@@ -60,6 +62,11 @@
 @code {
 
     private string? text;
+    private int wordCount = 0;
+
+    private string wordCountColor => wordCount > Helper.TextMaxLength? "red" : "green";
+
+    private bool disableSubmit = false;
 
     private bool copied = false;
 
@@ -67,12 +74,49 @@
     {
         try
         {
+            if (text == null)
+            {
+                throw new IOException("No input detected");
+
+            }
+            _textData.CleanText();
             _textData.AssignText(text);
         }
         catch(Exception ex)
         {
             _errorService.ShowModal(ex.Message);
         }
+    }
+
+    private void HandleInput(ChangeEventArgs e)
+    {
+        try
+        {
+            text = e.Value?.ToString();
+            wordCount = CountWords(text);
+
+            if (wordCount > Helper.TextMaxLength)
+            {
+                disableSubmit = true;
+                _textData.CleanText();
+            }
+            else
+            {
+                disableSubmit = false;
+            }
+        }catch(Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
+    }
+
+    private int CountWords(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return 0;
+
+        return input.Split(new[] { ' ', '\n', '\r', '\t' },
+                           StringSplitOptions.RemoveEmptyEntries).Length;
     }
 
     private async Task CopyTextToClipboard()
@@ -87,6 +131,7 @@
     private void Clean()
     {
         _textData.CleanText();
+        wordCount = 0;
         text = null;
         copied = false;
     }
