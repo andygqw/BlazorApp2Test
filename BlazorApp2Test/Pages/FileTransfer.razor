@@ -1,11 +1,13 @@
 ﻿@page "/filetransfer"
 
 @using Microsoft.AspNetCore.Components.Forms
-@using BlazorApp2Test.FileAccess
 @using BlazorApp2Test.Pages
+@using BlazorApp2Test.FileAccess
 @using Blazored.Modal
 @using System
 
+@inject ErrorService _errorService
+@inject FileAccesses _file
 
 @inherits Component
 
@@ -25,25 +27,17 @@
     </div>
 
     <div class="ps-2">
-        @if (_file != null)
-        {
-            @if (_file.Error != null)
-            {
-                <p class="text-danger">@_file.Error</p>
-            }
 
-            @if (_file.IsUploaded)
-            {
-                <p class="text-success">@_file.FileName uploaded successfully.</p>
-            }
-        }
+         @if (isUploadSuccess && selectedFile != null)
+         {
+            <p class="text-success">@selectedFile.Name uploaded successfully.</p>
+         }
         <div class="mt-4 mb-3 ps-2 py-1 pb-2 bg-light rounded">
 
             <p class="pt-2">Current downloadable files:</p>
 
             @foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
             {
-                //NOTE: In Helper, @fileName is added to DownloadPath
                 var fileName = Path.GetFileName(file);
                 <p>
                     <a href="UploadFile/@fileName" download>@fileName</a>
@@ -62,7 +56,7 @@
    <div class="modal-content text-center fw-bold flex-grow">
       <span class="close" @onclick="CloseModal">&times;</span>
       <div class="mb-2 mx-4">
-            @if(aimed_file == Helper.FileTransfer_DeleteAll)
+            @if(isDeleteAll)
             {
                 <div>Do you really want to delete all files?</div>
             }
@@ -73,7 +67,7 @@
         </div>
       <div>
          <button class="btn btn-secondary rounded-2" @onclick="@CloseModal">Cancel</button>
-         <button class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
+            <button class="btn btn-danger" @onclick="isDeleteAll ? ConfirmDeleteAll : ConfirmDelete">Delete</button>
       </div>
             
    </div>
@@ -96,85 +90,153 @@
 
     private IBrowserFile? selectedFile;
     private bool fileSelected = false;
-    private string? aimed_file;
+    private string? aimed_file = null;
 
-    // new file obj instance
-    private FileAccess _file = new FileAccess();
 
     private bool DeleteConfirm = false;
     private bool DupConfirm = false;
+    private bool isDeleteAll = false;
+    private bool isUploadSuccess = false;
 
     void HandleSelection(InputFileChangeEventArgs e)
     {
-        _file = new FileAccess();
         selectedFile = e.File;
         if (selectedFile != null)
         {
             fileSelected = true;
         }
+        else
+        {
+            _errorService.ShowModal("Selected file doesn't exist");
+        }
     }
 
     private async Task Upload()
     {
-        foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+        try
         {
-            if (Path.GetFileName(f) == selectedFile.Name)
+            fileSelected = false;
+
+            if (selectedFile == null)
             {
-                DupConfirm = true;
-                return;
+                throw new Exception("Something wrong with file selection");
+            }
+
+            foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+            {
+                if (Path.GetFileName(f) == selectedFile.Name)
+                {
+                    DupConfirm = true;
+                    return;
+                }
+            }
+
+            if(await _file.UploadFile(selectedFile, true) == Helper.ReturnGood)
+            {
+                isUploadSuccess = true;
+            }
+            else
+            {
+                isUploadSuccess = false;
             }
         }
-
-        await _file.UploadFile(selectedFile, true);
-        fileSelected = false;
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
     }
 
     private async Task DupHandler()
     {
-        await _file.UploadFile(selectedFile, false);
-        CloseModal();
-        fileSelected = false;
+        try
+        {
+            if (selectedFile == null)
+            {
+                throw new Exception("Something wrong with file selection");
+            }
+
+            CloseModal();
+            await _file.UploadFile(selectedFile, false);
+            fileSelected = false;
+
+        }catch(Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
     }
 
     private async Task RepHandler()
     {
-        _file.DeleteFile(selectedFile.Name);
-        await _file.UploadFile(selectedFile, true);
-        CloseModal();
-        fileSelected = false;
+        try
+        {
+            if (selectedFile == null)
+            {
+                throw new Exception("Something wrong with file selection");
+            }
+            CloseModal();
+            _file.DeleteFile(selectedFile.Name);
+            await _file.UploadFile(selectedFile, true);
+            fileSelected = false;
+
+        }catch(Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
+    }
+
+    private void ShowDeleteConfirmation(string fName)
+    {
+        aimed_file = fName;
+        DeleteConfirm = true;
     }
 
     private void DeleteHandler(string f)
     {
-        _file.DeleteFile(f);
+        try
+        {
+            _file.DeleteFile(f);
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
     }
 
     private void DeleteAll()
     {
-        ShowDeleteConfirmation(Helper.FileTransfer_DeleteAll);
-    }
-
-    private void ShowDeleteConfirmation(string f)
-    {
-        aimed_file = f;
+        isDeleteAll = true;
         DeleteConfirm = true;
     }
 
     private void ConfirmDelete()
     {
-        if (aimed_file == Helper.FileTransfer_DeleteAll)
+        try
         {
-            foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+            if (aimed_file == null)
             {
-                _file.DeleteFile(Path.GetFileName(file));
+                throw new Exception("File aimed failed");
             }
+            CloseModal();
+            _file.DeleteFile(aimed_file);
         }
-        else
+        catch (Exception ex)
         {
-            DeleteHandler(aimed_file);
+            _errorService.ShowModal(ex.Message);
         }
-        CloseModal();
-        aimed_file = null;
+    }
+
+    private void ConfirmDeleteAll()
+    {
+        try
+        {
+            CloseModal();
+            aimed_file = null;
+            _file.DeleteAllFiles();
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
     }
 
     private void CloseModal()

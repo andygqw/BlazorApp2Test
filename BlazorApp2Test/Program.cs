@@ -1,5 +1,6 @@
 using BlazorApp2Test.Components;
 using BlazorApp2Test.Data;
+using BlazorApp2Test.FileAccess;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -11,6 +12,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<TextData>(); 
 builder.Services.AddSingleton<MemoData>();
 builder.Services.AddSingleton<ErrorService>();
+builder.Services.AddSingleton<FileAccesses>();
 
 var app = builder.Build();
 

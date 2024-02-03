@@ -22,7 +22,11 @@ namespace BlazorApp2Test
         // Limits:
         public const int TextMaxLength = 1400;
         public const int TextAreaMaxLength = 15000;
+        public const int FileMaxSize = 1024 * 1024 * 30;//- 30MB
 
+        // Error code:
+        public const int ReturnGood = 40;
+        public const int ReturnFailed = 50;
 
         public static int CountWords(string? input)
         {
@@ -42,6 +46,5 @@ namespace BlazorApp2Test
 
             return input.Length;
         }
-
     }
 }
