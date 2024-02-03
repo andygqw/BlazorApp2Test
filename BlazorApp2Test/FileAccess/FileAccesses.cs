@@ -151,5 +151,31 @@ namespace BlazorApp2Test.FileAccess
                 DeleteFile(Path.GetFileName(file));
             }
         }
+
+        public List<string> GetAllFileNames()
+        {
+            List<string> files = new List<string>();
+
+            foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+            {
+                files.Add(Path.GetFileName(file));
+            }
+
+            return files;
+        }
+
+        public string GetFileSize(string fName)
+        {
+            var filePath = Path.Combine(Helper.UploadFolderPath, fName);
+            var fileInfo = new FileInfo(filePath);
+            if (fileInfo.Exists)
+            {
+                return (fileInfo.Length).ToString(); //size in bytes
+            }
+            else
+            {
+                throw new Exception("Something happened during get file info: " + fName);
+            }
+        }
     }
 }

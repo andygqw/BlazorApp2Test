@@ -34,19 +34,23 @@
          }
         <div class="mt-4 mb-3 ps-2 py-1 pb-2 bg-light rounded">
 
-            <p class="pt-2">Current downloadable files:</p>
-
-            @foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+            @if(fileList != null && fileList.Count > 0)
             {
-                var fileName = Path.GetFileName(file);
-                <p>
-                    <a href="UploadFile/@fileName" download>@fileName</a>
-                    <button class="rounded" @onclick="() => ShowDeleteConfirmation(fileName)">delete @fileName</button>
-                </p>
+                <p class="pt-2">Current downloadable files:</p>
+                @foreach (var file in fileList)
+                {
+                    <p>
+                        <a href="UploadFile/@file" download>@file</a> <label>@_file.GetFileSize(file) bytes</label>
+                        <button class="rounded" @onclick="() => ShowDeleteConfirmation(file)">delete @file</button>
+                    </p>
+                }
+
+                <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
             }
-
-            <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
-
+            else
+            {
+                <p class="pt-2">Currently no downloadable files on server</p>
+            }
         </div>
     </div>
 </div>
@@ -87,7 +91,7 @@
 </div>
 
 @code {
-
+    private List<string>? fileList;
     private IBrowserFile? selectedFile;
     private bool fileSelected = false;
     private string? aimed_file = null;
@@ -98,7 +102,25 @@
     private bool isDeleteAll = false;
     private bool isUploadSuccess = false;
 
-    void HandleSelection(InputFileChangeEventArgs e)
+    protected override Task OnInitializedAsync()
+    {
+        GetFiles();
+        return base.OnInitializedAsync();
+    }
+
+    private void GetFiles()
+    {
+        try
+        {
+            fileList = _file.GetAllFileNames();
+
+        }catch(Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
+    }
+
+    private void HandleSelection(InputFileChangeEventArgs e)
     {
         selectedFile = e.File;
         if (selectedFile != null)
@@ -134,6 +156,8 @@
             if(await _file.UploadFile(selectedFile, true) == Helper.ReturnGood)
             {
                 isUploadSuccess = true;
+                GetFiles();
+                RefreshPage();
             }
             else
             {
@@ -158,6 +182,8 @@
             CloseModal();
             await _file.UploadFile(selectedFile, false);
             fileSelected = false;
+            GetFiles();
+            RefreshPage();
 
         }catch(Exception ex)
         {
@@ -177,6 +203,8 @@
             _file.DeleteFile(selectedFile.Name);
             await _file.UploadFile(selectedFile, true);
             fileSelected = false;
+            GetFiles();
+            RefreshPage();
 
         }catch(Exception ex)
         {
@@ -188,18 +216,6 @@
     {
         aimed_file = fName;
         DeleteConfirm = true;
-    }
-
-    private void DeleteHandler(string f)
-    {
-        try
-        {
-            _file.DeleteFile(f);
-        }
-        catch (Exception ex)
-        {
-            _errorService.ShowModal(ex.Message);
-        }
     }
 
     private void DeleteAll()
@@ -218,6 +234,8 @@
             }
             CloseModal();
             _file.DeleteFile(aimed_file);
+            GetFiles();
+            RefreshPage();
         }
         catch (Exception ex)
         {
@@ -232,6 +250,8 @@
             CloseModal();
             aimed_file = null;
             _file.DeleteAllFiles();
+            GetFiles();
+            RefreshPage();
         }
         catch (Exception ex)
         {
