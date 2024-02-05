@@ -23,6 +23,11 @@ namespace BlazorApp2Test.FileAccess
                 throw new IOException("Selected file exceeds limit of " + Helper.FileMaxSize / (1024 * 1024) + "MB");
             }
 
+            if (selectedFile.Size == 0)
+            {
+                throw new IOException("Something wrong uploading file to the server: 0 byte");
+            }
+
             // Check file path exists
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), Helper.UploadFolderPath);
             if (!Directory.Exists(filePath))
@@ -170,7 +175,26 @@ namespace BlazorApp2Test.FileAccess
             var fileInfo = new FileInfo(filePath);
             if (fileInfo.Exists)
             {
-                return (fileInfo.Length).ToString(); //size in bytes
+                // Size in bytes
+                long bytes = fileInfo.Length;
+
+                // Convert size to more readable format
+                if (bytes < 1024)
+                {
+                    return bytes + " Bytes";
+                }
+                else if (bytes < 1024 * 1024)
+                {
+                    return (bytes / 1024.0).ToString("0.00") + " KB";
+                }
+                else if (bytes < 1024 * 1024 * 1024)
+                {
+                    return (bytes / (1024.0 * 1024.0)).ToString("0.00") + " MB";
+                }
+                else
+                {
+                    return (bytes / (1024.0 * 1024.0 * 1024.0)).ToString("0.00") + " GB";
+                }
             }
             else
             {
