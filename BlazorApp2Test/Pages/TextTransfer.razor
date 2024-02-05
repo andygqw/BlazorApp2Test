@@ -27,7 +27,7 @@
      
     <button class="rounded" @onclick="Submit" disabled="@disableSubmit">Submit</button>
     <button class="rounded" @onclick="Clean">Clean</button>
-    <label style="color:@wordCountColor;">Word Count: @wordCount/@Helper.TextMaxLength</label>
+    <label style="color:@wordCountColor;">Word Count: @wordCount/@Helper.TextMaxLength | </label>
     <label style="color:@charCountColor;">Character Count: @charCount/@Helper.TextAreaMaxLength</label>
     @if(_textData.GetText() != null)
     {
