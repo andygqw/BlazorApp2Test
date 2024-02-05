@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
-using System.IO;
 
 namespace BlazorApp2Test.FileAccess
 {
