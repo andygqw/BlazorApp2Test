@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.Json;
 using BlazorApp2Test.Models;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace BlazorApp2Test.Data
 {
@@ -86,6 +87,23 @@ namespace BlazorApp2Test.Data
             {
                 throw new Exception("Delete Memo which doesn't exist");
             }
+        }
+
+        public async Task SaveMemoImage(IBrowserFile selectedFile)
+        {
+            var fileExtension = Path.GetExtension(selectedFile.Name).ToLowerInvariant();
+
+            if (!Helper.AllowedExtensions.Contains(fileExtension))
+            {
+                throw new Exception("File type is not supported.");
+            }
+
+            var path = Path.Combine(Helper.MemoImgset, selectedFile.Name);
+
+            // Save the file to the server's local folder
+            await using FileStream fs = new(path, FileMode.Create);
+            await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
+            fs.Close();
         }
     }
 }

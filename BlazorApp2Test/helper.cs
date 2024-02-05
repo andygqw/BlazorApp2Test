@@ -23,6 +23,8 @@ namespace BlazorApp2Test
         public const int TextMaxLength = 1400;
         public const int TextAreaMaxLength = 15000;
         public const int FileMaxSize = 1024 * 1024 * 30;//- 30MB
+        public static string[] AllowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
+
 
         // Error code:
         public const int ReturnGood = 40;

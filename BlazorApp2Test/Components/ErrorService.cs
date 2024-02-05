@@ -6,8 +6,8 @@
         {
         }
 
-        public event Action<string> OnShow;
-        public event Action OnClose;
+        public event Action<string>? OnShow;
+        public event Action? OnClose;
 
         public void ShowModal(string message)
         {

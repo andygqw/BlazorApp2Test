@@ -10,6 +10,7 @@
 @inject IJSRuntime JSRuntime
 @inject MemoData _memoData
 @inject NavigationManager Navigation
+@inject ErrorService _errorService
 
 @inherits Component
 
@@ -74,11 +75,6 @@
         </div>
     }
 </div>
-
-@if(ErrMsg != null)
-{
-    <div class="alert-danger">@ErrMsg</div>
-}
 
 <div class="memo-modal" id="addModal" style="@($"display: {(showAddModal ? "block" : "none")}")">
     <div class="memo-modal-content text-center fw-bold">
@@ -150,9 +146,7 @@
     private ElementReference previewImageElem;
 
     // Image preview
-    private string currentImg;
-
-    private string ErrMsg;
+    private string? currentImg;
 
     protected override async Task OnInitializedAsync()
     {
@@ -162,7 +156,14 @@
 
     private async Task LoadData()
     {
-        memoList = await _memoData.LoadMemos();
+        try
+        {
+            memoList = await _memoData.LoadMemos();
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal("Load memos error:" + ex.Message);
+        }
     }
 
     private async Task SubmitHandler()
@@ -173,16 +174,8 @@
             {
                 //NOTE: potential error - if image name exists
 
-                // Determine the path to save the file
-                var path = Path.Combine(Helper.MemoImgset, selectedFile.Name);
+                await _memoData.SaveMemoImage(selectedFile);
                 newMemo.Image = Path.Combine(Helper.MemoImgget, selectedFile.Name);
-
-                // Save the file to the server's local folder
-                await using FileStream fs = new(path, FileMode.Create);
-
-                await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
-
-                fs.Close();
             }
             newMemo.Time = DateTime.Now;
 
@@ -191,7 +184,7 @@
 
         }catch(Exception ex)
         {
-            ErrMsg = ex.Message;
+            _errorService.ShowModal("Save memos error:" + ex.Message);
         }
 
         CloseModal();
@@ -211,7 +204,7 @@
         }
         catch (Exception ex)
         {
-            ErrMsg = ex.Message;
+            _errorService.ShowModal("Delete memos error:" + ex.Message);
         }
         finally
         {
