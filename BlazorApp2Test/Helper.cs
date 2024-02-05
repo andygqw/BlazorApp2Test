@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-
-
-namespace BlazorApp2Test
+﻿namespace BlazorApp2Test
 {
     public class Helper
     {
