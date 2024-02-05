@@ -162,7 +162,7 @@
         }
         catch (Exception ex)
         {
-            _errorService.ShowModal("Load memos error:" + ex.Message);
+            _errorService.ShowModal("Load memos error: " + ex.Message);
         }
     }
 
@@ -184,7 +184,7 @@
 
         }catch(Exception ex)
         {
-            _errorService.ShowModal("Save memos error:" + ex.Message);
+            _errorService.ShowModal("Save memos error: " + ex.Message);
         }
 
         CloseModal();
@@ -204,7 +204,7 @@
         }
         catch (Exception ex)
         {
-            _errorService.ShowModal("Delete memos error:" + ex.Message);
+            _errorService.ShowModal("Delete memos error: " + ex.Message);
         }
         finally
         {
