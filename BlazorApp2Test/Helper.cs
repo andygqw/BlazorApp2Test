@@ -13,8 +13,6 @@
 
         public const string MemoJSONset = "wwwroot/Memos/memos.JSON";
 
-        public const string FileTransfer_DeleteAll = "INTRACOMMAND_DELETE_ALL_CODE_$51L#(D";
-
 
         // Limits:
         public const int TextMaxLength = 1400;
