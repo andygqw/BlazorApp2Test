@@ -5,6 +5,8 @@
         // File:
         internal const string UploadFolderPath = "wwwroot/UploadFile";
         internal const string DownloadPath = "UploadFile/@filename";
+        internal const string UploadFolder = "/files";
+        internal const string WebConfigFile = "web.config";
 
         // Memo:
         internal const string MemoImgset = "wwwroot/Memos";

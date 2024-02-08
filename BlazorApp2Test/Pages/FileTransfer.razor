@@ -47,10 +47,13 @@
                     <p class="pt-2">Current downloadable files:</p>
                     @foreach (var file in fileList)
                     {
-                        <p>
-                            <a href="UploadFile/@file" download>@file</a> <label>@_file.GetFileSize(file)</label>
-                            <button class="rounded" @onclick="() => ShowDeleteConfirmation(file)">delete @file</button>
-                        </p>
+                        @if (file != Helper.WebConfigFile)
+                        {
+                            <p>
+                                <a href="UploadFile/@file" download>@file</a> <label>@_file.GetFileSize(file)</label>
+                                <button class="rounded" @onclick="() => ShowDeleteConfirmation(file)">delete @file</button>
+                            </p>
+                        }
                     }
 
                     <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
@@ -60,6 +63,7 @@
                     <p class="pt-2">Currently no downloadable files on server</p>
                 }
             </div>
+            If browser can't find file, try click <a href=@Helper.UploadFolder>here</a>.
         </div>
     </div>
 }
