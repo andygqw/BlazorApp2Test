@@ -1,6 +1,7 @@
 ﻿@inject NavigationManager _navigationManager
 @inject PasswordService _passwordService
 @inject ErrorService _errorService
+@inject RenderService _renderService
 
 @inherits LayoutComponentBase
 
@@ -62,6 +63,7 @@
             {
                 await _passwordService.CheckPassword(password);
                 password = "";
+                _renderService.TriggerEvent();
             }
         }
         catch (Exception ex)

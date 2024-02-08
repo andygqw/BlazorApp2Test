@@ -12,6 +12,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<TextData>(); 
 builder.Services.AddSingleton<MemoData>();
 builder.Services.AddSingleton<ErrorService>();
+builder.Services.AddSingleton<RenderService>();
 builder.Services.AddSingleton<FileAccesses>();
 builder.Services.AddSingleton<PasswordService>();
 

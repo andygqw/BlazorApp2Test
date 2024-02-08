@@ -11,70 +11,83 @@
 @inject MemoData _memoData
 @inject NavigationManager Navigation
 @inject ErrorService _errorService
+@inject PasswordService _passwordService
+@inject RenderService _renderService
 
 @inherits Component
 
+@implements IDisposable
+
 <PageTitle>GWTool - KisKis</PageTitle>
 
-<div class="col-12 my-5">
+@if (_passwordService.GetAuth())
+{
+    <div class="col-12 my-5">
 
-   <div class="flex-container mb-4">
-       <button class="btn btn-primary" @onclick="(_ => showAddModal = true)">
-           Add A Memo
-       </button>
-    </div>
+        <div class="flex-container mb-4">
+            <button class="btn btn-primary" @onclick="(_ => showAddModal = true)">
+                Add A Memo
+            </button>
+        </div>
 
-    @if (memoList.Count > 0)
-    {
-        <div class="memo-container">
-            <!-- Add this row container outside the loop -->
-            @foreach (var m in memoList)
-            {
-                <div class="memo-card m-3">
-                    
-                    @if (m.Image != null)
-                    {
-                        <img class="memo-img p-4" style="cursor: pointer;" src="@m.Image" @onclick="@(() => ShowImg(m.Image))"/>
-                    }
+        @if (memoList.Count > 0)
+        {
+            <div class="memo-container">
+                <!-- Add this row container outside the loop -->
+                @foreach (var m in memoList)
+                {
+                    <div class="memo-card m-3">
 
-                     <div class="memo-content p-4">
-                        <div class="flex-grow-1 d-flex align-items-center text-white">
-                           <div>
-                              <div class="section-sub-title">
-                                    @m.Name
-                              </div>
+                        @if (m.Image != null)
+                        {
+                            <img class="memo-img p-4" style="cursor: pointer;" src="@m.Image" @onclick="@(() => ShowImg(m.Image))" />
+                        }
 
-                              @if (m.Description != null)
-                              {
-                                    <div class="section-text mt-2">
-                                       @m.Description
+                        <div class="memo-content p-4">
+                            <div class="flex-grow-1 d-flex align-items-center text-white">
+                                <div>
+                                    <div class="section-sub-title">
+                                        @m.Name
                                     </div>
-                              }
-                           </div>
+
+                                    @if (m.Description != null)
+                                    {
+                                        <div class="section-text mt-2">
+                                            @m.Description
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="memo-info">
+                                <div class="pt-2">
+                                    @m.Time
+                                </div>
+                                <div>
+                                    <button class="btn btn-clear text-black" @onclick="(() => DeleteHandler(m))">
+                                        delete
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="memo-info">
-                           <div class="pt-2">
-                                 @m.Time
-                           </div>
-                           <div>
-                              <button class="btn btn-clear text-black" @onclick="(() => DeleteHandler(m))">
-                                 delete
-                              </button>
-                           </div>
-                        </div>
-                     </div>
-                </div>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="section-sub-title text-center">
-            这里空空如也哦！<br>
-            试着添加一个留言吧！
-        </div>
-    }
-</div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="section-sub-title text-center">
+                这里空空如也哦！<br>
+                试着添加一个留言吧！
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="section-sub-title text-center mt-4">
+        You do not have access to this page, try log in.
+    </div>
+}
 
 <div class="memo-modal" id="addModal" style="@($"display: {(showAddModal ? "block" : "none")}")">
     <div class="memo-modal-content text-center fw-bold">
@@ -150,6 +163,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _renderService.OnEventTriggered += () => RefreshPage();
         await LoadData();
         newMemo = new MemoModel();
     }
@@ -238,5 +252,10 @@
         showAddModal = false;
         showImgModal = false;
         showDeleteModal = false;
+    }
+
+    public void Dispose()
+    {
+        _renderService.OnEventTriggered -= () => RefreshPage();
     }
 }

@@ -9,52 +9,66 @@
 @inject ErrorService _errorService
 @inject FileAccesses _file
 @inject PasswordService _passwordService
+@inject RenderService _renderService
 
 @inherits Component
 
+@implements IDisposable
+
 <PageTitle>GWTool - File</PageTitle>
 
-<div class="row px-4">
-    <div class="col-12 col-sm-6 col-md-8 py-2">
-        <p class="section-name">File Transfer</p>
-    </div>
-</div>
 
-<div class="mx-4 pb-3 rounded">
 
-    <div class="rounded py-3 ps-2">
-        <InputFile OnChange="HandleSelection" />
-        <button class="rounded" @onclick="Upload" disabled="@(!fileSelected)">Upload</button>
-    </div>
-
-    <div class="ps-2">
-
-         @if (isUploadSuccess && selectedFile != null)
-         {
-            <p class="text-success">@selectedFile.Name uploaded successfully.</p>
-         }
-        <div class="mt-4 mb-3 ps-2 py-1 pb-2 bg-light rounded">
-
-            @if(fileList != null && fileList.Count > 0)
-            {
-                <p class="pt-2">Current downloadable files:</p>
-                @foreach (var file in fileList)
-                {
-                    <p>
-                        <a href="UploadFile/@file" download>@file</a> <label>@_file.GetFileSize(file)</label>
-                        <button class="rounded" @onclick="() => ShowDeleteConfirmation(file)">delete @file</button>
-                    </p>
-                }
-
-                <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
-            }
-            else
-            {
-                <p class="pt-2">Currently no downloadable files on server</p>
-            }
+@if (_passwordService.GetAuth())
+{
+    <div class="row px-4">
+        <div class="col-12 col-sm-6 col-md-8 py-2">
+            <p class="section-name">File Transfer</p>
         </div>
     </div>
-</div>
+
+    <div class="mx-4 pb-3 rounded">
+
+        <div class="rounded py-3 ps-2">
+            <InputFile OnChange="HandleSelection" />
+            <button class="rounded" @onclick="Upload" disabled="@(!fileSelected)">Upload</button>
+        </div>
+
+        <div class="ps-2">
+
+            @if (isUploadSuccess && selectedFile != null)
+            {
+                <p class="text-success">@selectedFile.Name uploaded successfully.</p>
+            }
+            <div class="mt-4 mb-3 ps-2 py-1 pb-2 bg-light rounded">
+
+                @if (fileList != null && fileList.Count > 0)
+                {
+                    <p class="pt-2">Current downloadable files:</p>
+                    @foreach (var file in fileList)
+                    {
+                        <p>
+                            <a href="UploadFile/@file" download>@file</a> <label>@_file.GetFileSize(file)</label>
+                            <button class="rounded" @onclick="() => ShowDeleteConfirmation(file)">delete @file</button>
+                        </p>
+                    }
+
+                    <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
+                }
+                else
+                {
+                    <p class="pt-2">Currently no downloadable files on server</p>
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="section-sub-title text-center mt-4">
+        You do not have access to this page, try log in.
+    </div>
+}
 
 <!-- Modal -->
 <div class="modal" id="deleteConfirmationModal" style="@($"display: {(DeleteConfirm ? "block" : "none")}")">
@@ -103,12 +117,10 @@
     private bool isDeleteAll = false;
     private bool isUploadSuccess = false;
 
-    // Auth:
-    private bool isAllowedView = false;
 
     protected override Task OnInitializedAsync()
     {
-        isAllowedView = _passwordService.GetAuth();
+        _renderService.OnEventTriggered += () => RefreshPage();
         GetFiles();
         return base.OnInitializedAsync();
     }
@@ -268,5 +280,10 @@
     {
         DeleteConfirm = false;
         DupConfirm = false;
+    }
+
+    public void Dispose()
+    {
+        _renderService.OnEventTriggered -= () => RefreshPage();
     }
 }
