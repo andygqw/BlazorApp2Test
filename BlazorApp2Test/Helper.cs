@@ -17,7 +17,6 @@
         // Password:
         internal const string PasswordPath = "wwwroot/Password";
 
-
         // Limits:
         internal const int TextMaxLength = 1400;
         internal const int TextAreaMaxLength = 15000;
