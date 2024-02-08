@@ -17,7 +17,10 @@
         <div style="margin-left: 10px;">
             @if (_passwordService.GetAuth())
             {
-                <div class="welcome-message text-white">Hi, @_passwordService.GetUserName()</div>
+                <div style="display: flex;">
+                    <div class="welcome-message text-white">Hi, @_passwordService.GetUserName()</div>
+                    <a href="" @onclick="_ => _passwordService.Reset()" class="text-white logout-text">log out</a>
+                </div>
             }
             else
             {
@@ -45,6 +48,12 @@
 
     private string password = "";
 
+    protected override void OnInitialized()
+    {
+        _passwordService.Reset();
+        base.OnInitialized();
+    }
+
     private async Task HandleKeyUp(KeyboardEventArgs e)
     {
         try
@@ -52,6 +61,7 @@
             if (e.Key == "Enter")
             {
                 await _passwordService.CheckPassword(password);
+                password = "";
             }
         }
         catch (Exception ex)

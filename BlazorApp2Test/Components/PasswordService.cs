@@ -9,7 +9,7 @@ namespace BlazorApp2Test.Components
         private bool isAllowed;
         private string userName;
 
-        public PasswordService() 
+        public PasswordService()
         {
             isAllowed = false;
             userName = string.Empty;
@@ -22,7 +22,7 @@ namespace BlazorApp2Test.Components
                 throw new ArgumentNullException("Password not entered");
             }
 
-            if(File.Exists(Helper.PasswordPath))
+            if (File.Exists(Helper.PasswordPath))
             {
                 var str = await File.ReadAllTextAsync(Helper.PasswordPath);
 
@@ -70,6 +70,12 @@ namespace BlazorApp2Test.Components
         internal string GetUserName()
         {
             return userName;
+        }
+
+        internal void Reset()
+        {
+            isAllowed = false;
+            userName = string.Empty;
         }
     }
 }
