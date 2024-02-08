@@ -8,6 +8,7 @@
 
 @inject ErrorService _errorService
 @inject FileAccesses _file
+@inject PasswordService _passwordService
 
 @inherits Component
 
@@ -102,8 +103,12 @@
     private bool isDeleteAll = false;
     private bool isUploadSuccess = false;
 
+    // Auth:
+    private bool isAllowedView = false;
+
     protected override Task OnInitializedAsync()
     {
+        isAllowedView = _passwordService.GetAuth();
         GetFiles();
         return base.OnInitializedAsync();
     }

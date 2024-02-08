@@ -831,3 +831,16 @@ div.dataTables_wrapper div.dataTables_paginate {
    margin-left: 20px;
    margin-right: 20px;
 }
+
+.password-input {
+   width: 200px; /* Set the width of the input field */
+   margin-right: 20px;
+   margin-top: 15px;
+}
+
+.welcome-message {
+   margin-right: 20px;
+   margin-top: 15px;
+   font-weight: 600;
+   font-size: 2rem;
+}

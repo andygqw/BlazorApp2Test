@@ -1,4 +1,6 @@
 ﻿@inject NavigationManager _navigationManager
+@inject PasswordService _passwordService
+@inject ErrorService _errorService
 
 @inherits LayoutComponentBase
 
@@ -6,10 +8,24 @@
 
 <header class="container-fluid top-banner top-banner-container">
 
-    <div class="flex-grow ms-4" style="display: flex; align-items: center;">
-        <a href="" class="app-title-text mt-2 me-3 text-white no-underline">GWTool</a>
-      <NavMenu />
+    <div class="flex-grow ms-4" style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; flex: 1;">
+            <a href="" class="app-title-text mt-2 me-3 text-white no-underline">GWTool</a>
+            <NavMenu />
+       </div>
+        
+        <div style="margin-left: 10px;">
+            @if (_passwordService.GetAuth())
+            {
+                <div class="welcome-message text-white">Hi, @_passwordService.GetUserName()</div>
+            }
+            else
+            {
+                <input class="password-input" type="password" id="passwordInput" @bind="password" @onkeyup="HandleKeyUp" />
+            }
+        </div>
    </div>
+    
 </header>
 
 <div role="main" class="bg-white px-2 pb-2 body-position container-fluid">
@@ -27,4 +43,20 @@
 
 @code {
 
+    private string password = "";
+
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        try
+        {
+            if (e.Key == "Enter")
+            {
+                await _passwordService.CheckPassword(password);
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
+    }
 }

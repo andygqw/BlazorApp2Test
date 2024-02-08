@@ -13,6 +13,7 @@ builder.Services.AddSingleton<TextData>();
 builder.Services.AddSingleton<MemoData>();
 builder.Services.AddSingleton<ErrorService>();
 builder.Services.AddSingleton<FileAccesses>();
+builder.Services.AddSingleton<PasswordService>();
 
 var app = builder.Build();
 

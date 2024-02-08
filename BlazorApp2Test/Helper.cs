@@ -1,31 +1,33 @@
 ﻿namespace BlazorApp2Test
 {
-    public class Helper
+    internal class Helper
     {
-        public const string UploadFolderPath = "wwwroot/UploadFile";
+        // File:
+        internal const string UploadFolderPath = "wwwroot/UploadFile";
+        internal const string DownloadPath = "UploadFile/@filename";
 
-        public const string DownloadPath = "UploadFile/@filename";
+        // Memo:
+        internal const string MemoImgset = "wwwroot/Memos";
+        internal const string MemoImgget = "/Memos";
 
+        internal const string MemoJSONset = "wwwroot/Memos/memos.JSON";
 
-        public const string MemoImgset = "wwwroot/Memos";
-        public const string MemoImgget = "/Memos";
-
-
-        public const string MemoJSONset = "wwwroot/Memos/memos.JSON";
+        // Password:
+        internal const string PasswordPath = "wwwroot/Password";
 
 
         // Limits:
-        public const int TextMaxLength = 1400;
-        public const int TextAreaMaxLength = 15000;
-        public const int FileMaxSize = 1024 * 1024 * 30;//- 30MB
-        public static string[] AllowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
+        internal const int TextMaxLength = 1400;
+        internal const int TextAreaMaxLength = 15000;
+        internal const int FileMaxSize = 1024 * 1024 * 30;//- 30MB
+        internal static string[] AllowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
 
 
         // Error code:
-        public const int ReturnGood = 40;
-        public const int ReturnFailed = 50;
+        internal const int ReturnGood = 40;
+        internal const int ReturnFailed = 50;
 
-        public static int CountWords(string? input)
+        internal static int CountWords(string? input)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return 0;
@@ -34,7 +36,7 @@
                                StringSplitOptions.RemoveEmptyEntries).Length;
         }
 
-        public static int CountCharacters(string? input)
+        internal static int CountCharacters(string? input)
         {
             if (input == null)
             {
