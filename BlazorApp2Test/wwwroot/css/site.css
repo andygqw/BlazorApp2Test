@@ -847,6 +847,6 @@ div.dataTables_wrapper div.dataTables_paginate {
 
 .logout-text {
    margin-top: 30px;
-   font-weight: 500;
-   font-size: 1rem;
+   font-weight: bold;
+   font-size: 16px;
 }

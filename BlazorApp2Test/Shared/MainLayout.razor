@@ -27,7 +27,9 @@
             }
             else
             {
-                <a href="" @onclick="_ => Login()" class="text-white logout-text">log in</a>
+                <div style="display: flex;">
+                    <a href="" @onclick="_ => Login()" class="text-white logout-text">log in</a>
+                </div>
             }
         </div>
     </div>
@@ -61,25 +63,6 @@
     {
         currentPath = NavigationManager.Uri;
 
-        //NavigationManager.NavigateTo("/login");
-
         NavigationManager.NavigateTo($"/login/{Uri.EscapeDataString(currentPath)}");
     }
-
-    //private async Task HandleKeyUp(KeyboardEventArgs e)
-    //{
-    //    try
-    //    {
-    //        if (e.Key == "Enter")
-    //        {
-    //            await _passwordService.CheckPassword(password);
-    //            password = "";
-    //            _renderService.TriggerEvent();
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _errorService.ShowModal(ex.Message);
-    //    }
-    //}
 }
