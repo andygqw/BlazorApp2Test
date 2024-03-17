@@ -61,9 +61,9 @@
     {
         currentPath = NavigationManager.Uri;
 
-        NavigationManager.NavigateTo("/login");
+        //NavigationManager.NavigateTo("/login");
 
-        //NavigationManager.NavigateTo($"/login/{Uri.EscapeDataString(currentPath)}");
+        NavigationManager.NavigateTo($"/login/{Uri.EscapeDataString(currentPath)}");
     }
 
     //private async Task HandleKeyUp(KeyboardEventArgs e)
