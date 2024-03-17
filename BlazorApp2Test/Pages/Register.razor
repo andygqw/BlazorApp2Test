@@ -1,0 +1,60 @@
+﻿@page "/register/{ReturnUrl}"
+
+@using BlazorApp2Test.Models;
+
+@inject UserService _userService
+@inject ErrorService _errorService
+@inject NavigationManager NavigationManager
+
+
+@inherits Component
+
+<PageTitle>GWTool - Register</PageTitle>
+
+<div class="row px-4">
+    <div class="col-12 col-sm-6 col-md-8 py-2">
+        <p class="section-name">Register: </p>
+    </div>
+</div>
+
+<div class="mx-4">
+    <EditForm Model="@registerModel" OnValidSubmit="@RegisterHere">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputText placeholder="Username" @bind-Value="registerModel.Username" class="rounded bg-light" />
+        <InputText placeholder="E-mail" @bind-Value="registerModel.Email" class="rounded bg-light" />
+        <InputText type="password" placeholder="Password" @bind-Value="registerModel.Password" class="rounded bg-light" />
+        <button class="rounded" type="submit">Submit</button>
+    </EditForm>
+    <a href="/login/@Uri.EscapeDataString(ReturnUrl)">Login here</a>
+</div>
+
+
+
+@code{
+
+    [Parameter]
+    public string ReturnUrl { get; set; }
+
+    private RegisterModel registerModel = new RegisterModel();
+
+    private async Task RegisterHere()
+    {
+        try
+        {
+            if (registerModel.Password != null && registerModel.Username != null && registerModel.Email != null)
+            {
+                await _userService.Register(registerModel);
+            }
+
+            if (_userService.GetAuth())
+            {
+                NavigationManager.NavigateTo(ReturnUrl);
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
+    }
+}

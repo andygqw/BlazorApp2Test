@@ -1,0 +1,60 @@
+﻿@page "/login/{ReturnUrl}"
+
+@using BlazorApp2Test.Models;
+
+@inject UserService _userService
+@inject ErrorService _errorService
+@inject NavigationManager NavigationManager
+
+
+@inherits Component
+
+<PageTitle>GWTool - Log in</PageTitle>
+
+<div class="row px-4">
+    <div class="col-12 col-sm-6 col-md-8 py-2">
+        <p class="section-name">Log in: </p>
+    </div>
+</div>
+
+<div class="mx-4">
+    <EditForm Model="@loginModel" OnValidSubmit="@LoginHere">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputText placeholder="Username" @bind-Value="loginModel.Username" class="rounded bg-light" />
+        <InputText type="password" placeholder="Password" @bind-Value="loginModel.Password" class="rounded bg-light" />
+        <button class="rounded" type="submit">Submit</button>
+    </EditForm>
+    <a href="/register/@Uri.EscapeDataString(ReturnUrl)">Register here</a>
+</div>
+
+
+
+@code{
+
+    [Parameter]
+    public string ReturnUrl { get; set; }
+
+    private LoginModel loginModel = new LoginModel();
+
+    private async Task LoginHere()
+    {
+        try
+        {
+            if (loginModel.Password != null && loginModel.Username != null)
+            {
+                await _userService.Login(loginModel.Username, loginModel.Password);
+            }
+
+            if (_userService.GetAuth())
+            {
+                NavigationManager.NavigateTo(ReturnUrl);
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
+    }
+
+}
