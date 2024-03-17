@@ -1,7 +1,9 @@
 ﻿@inject NavigationManager _navigationManager
-@inject PasswordService _passwordService
+@inject UserService _userService
 @inject ErrorService _errorService
 @inject RenderService _renderService
+@inject NavigationManager NavigationManager
+
 
 @inherits LayoutComponentBase
 
@@ -13,28 +15,28 @@
         <div style="display: flex; flex: 1;">
             <a href="" class="app-title-text mt-2 me-3 text-white no-underline">GWTool</a>
             <NavMenu />
-       </div>
-        
+        </div>
+
         <div style="margin-left: 10px;">
-            @if (_passwordService.GetAuth())
+            @if (_userService.GetAuth())
             {
                 <div style="display: flex;">
-                    <div class="welcome-message text-white">Hi, @_passwordService.GetUserName()</div>
-                    <a href="" @onclick="_ => _passwordService.Reset()" class="text-white logout-text">log out</a>
+                    <div class="welcome-message text-white">Hi, @_userService.GetUsername()</div>
+                    <a href="" @onclick="_ => _userService.Logout()" class="text-white logout-text">log out</a>
                 </div>
             }
             else
             {
-                <input class="password-input" type="password" id="passwordInput" @bind="password" @onkeyup="HandleKeyUp" />
+                <a href="" @onclick="_ => Login()" class="text-white logout-text">log in</a>
             }
         </div>
-   </div>
-    
+    </div>
+
 </header>
 
 <div role="main" class="bg-white px-2 pb-2 body-position container-fluid">
-   <ErrorModal />
-        @Body   
+    <ErrorModal />
+    @Body
 </div>
 
 
@@ -47,28 +49,37 @@
 
 @code {
 
-    private string password = "";
+    private string currentPath = "";
 
     protected override void OnInitialized()
     {
-        _passwordService.Reset();
+        _userService.Logout();
         base.OnInitialized();
     }
 
-    private async Task HandleKeyUp(KeyboardEventArgs e)
+    private void Login()
     {
-        try
-        {
-            if (e.Key == "Enter")
-            {
-                await _passwordService.CheckPassword(password);
-                password = "";
-                _renderService.TriggerEvent();
-            }
-        }
-        catch (Exception ex)
-        {
-            _errorService.ShowModal(ex.Message);
-        }
+        currentPath = NavigationManager.Uri;
+
+        NavigationManager.NavigateTo("/login");
+
+        //NavigationManager.NavigateTo($"/login/{Uri.EscapeDataString(currentPath)}");
     }
+
+    //private async Task HandleKeyUp(KeyboardEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (e.Key == "Enter")
+    //        {
+    //            await _passwordService.CheckPassword(password);
+    //            password = "";
+    //            _renderService.TriggerEvent();
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _errorService.ShowModal(ex.Message);
+    //    }
+    //}
 }

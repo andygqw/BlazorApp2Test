@@ -15,19 +15,22 @@ builder.Services.AddDbContext<UserDbContext>(options =>
             options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
             ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
-builder.Services.AddSingleton(ServiceProvider =>
-{
-    var dbService = ServiceProvider.GetRequiredService<UserDbContext>();
+//builder.Services.AddSingleton(ServiceProvider =>
+//{
+//    var dbService = ServiceProvider.GetRequiredService<UserDbContext>();
 
-    return new AuthService(dbService);
-});
+//    return new AuthService(dbService);
+//});
 
-builder.Services.AddSingleton(ServiceProvider =>
-{
-    var auth = ServiceProvider.GetRequiredService<AuthService>();
+//builder.Services.AddSingleton(ServiceProvider =>
+//{
+//    var auth = ServiceProvider.GetRequiredService<AuthService>();
 
-    return new UserService(auth);
-});
+//    return new UserService(auth);
+//});
+
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddSingleton<TextData>(); 
 builder.Services.AddSingleton<MemoData>();

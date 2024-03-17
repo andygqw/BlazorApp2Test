@@ -11,7 +11,7 @@
 @inject MemoData _memoData
 @inject NavigationManager Navigation
 @inject ErrorService _errorService
-@inject PasswordService _passwordService
+@inject UserService _userService
 @inject RenderService _renderService
 
 @inherits Component
@@ -20,7 +20,7 @@
 
 <PageTitle>GWTool - KisKis</PageTitle>
 
-@if (_passwordService.GetAuth())
+@if (_userService.GetAuth())
 {
     <div class="col-12 my-5">
 
