@@ -7,6 +7,7 @@ namespace BlazorApp2Test.Data
     {
 
         public DbSet<User> Users { get; set; }
+        public Dbset<Memo> Memos { get; set; }
 
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {

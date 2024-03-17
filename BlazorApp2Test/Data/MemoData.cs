@@ -6,6 +6,14 @@ namespace BlazorApp2Test.Data
 {
     public class MemoData
     {
+        private readonly UserDbContext _context;
+
+        public MemoData(UserDbContext context)
+        {
+            _context = context;
+        }
+
+
         public async Task SaveMemo(MemoModel memo)
         {
             var memos = await LoadMemos();
