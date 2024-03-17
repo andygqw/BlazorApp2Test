@@ -116,38 +116,38 @@ namespace BlazorApp2Test.Data
 
         public async Task DeleteMemo(MemoModel memo)
         {
-            var MemoList = await LoadMemos();
+            //var MemoList = await LoadMemos();
 
-            // Dunno why List.Contains() and .Remove() doesnt work
-            if (MemoList.Any(m => m.Id == memo.Id))
-            {
-                int index = MemoList.FindIndex(m => m.Id == memo.Id);
+            //// Dunno why List.Contains() and .Remove() doesnt work
+            //if (MemoList.Any(m => m.Id == memo.Id))
+            //{
+            //    int index = MemoList.FindIndex(m => m.Id == memo.Id);
 
-                MemoList.RemoveAt(index);
+            //    MemoList.RemoveAt(index);
 
-                if(MemoList.Any(m => m.Id == memo.Id))
-                {
-                    throw new Exception("Remove failed");
-                }
+            //    if(MemoList.Any(m => m.Id == memo.Id))
+            //    {
+            //        throw new Exception("Remove failed");
+            //    }
 
-                var serializedData = JsonSerializer.Serialize(MemoList);
-                await File.WriteAllTextAsync(Helper.MemoJSONset, serializedData);
+            //    var serializedData = JsonSerializer.Serialize(MemoList);
+            //    await File.WriteAllTextAsync(Helper.MemoJSONset, serializedData);
 
-                if (memo.Image != null)
-                {
-                    char separator = '\\';
-                    string[] parts = memo.Image.Split(separator);
-                    var name = parts[parts.Length - 1];
+            //    if (memo.Image != null)
+            //    {
+            //        char separator = '\\';
+            //        string[] parts = memo.Image.Split(separator);
+            //        var name = parts[parts.Length - 1];
 
-                    var filePath = Helper.MemoImgset + '/' + name;
+            //        var filePath = Helper.MemoImgset + '/' + name;
 
-                    File.Delete(filePath);
-                }
-            }
-            else
-            {
-                throw new Exception("Delete Memo which doesn't exist");
-            }
+            //        File.Delete(filePath);
+            //    }
+            //}
+            //else
+            //{
+            //    throw new Exception("Delete Memo which doesn't exist");
+            //}
         }
 
         public async Task SaveMemoImage(IBrowserFile selectedFile)
