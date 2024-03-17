@@ -1,5 +1,8 @@
 ﻿@page "/"
 
+@inject NavigationManager NavigationManager
+@inject UserService _userService
+
 
 @{
     base.BuildRenderTree(__builder);
@@ -16,6 +19,12 @@
             single user.<br />
             Please go and explore how GWTool helps you in your daily works<br /><br />
         </div>
+        @if (!_userService.GetAuth())
+        {
+            <a href="/login/@Uri.EscapeDataString(NavigationManager.Uri)">Log in to your account</a><br />
+            <div>or <br /></div>
+            <a href = "/register/@Uri.EscapeDataString(NavigationManager.Uri)">Register here</a>
+        }
         <div class="section-sub-title fw-bold mt-2">
             Thank you for visiting!<br />
         </div>
