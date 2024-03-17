@@ -148,6 +148,29 @@ namespace BlazorApp2Test.Data
             //{
             //    throw new Exception("Delete Memo which doesn't exist");
             //}
+
+            if (memo.Image != null)
+            {
+                char separator = '\\';
+                string[] parts = memo.Image.Split(separator);
+                var name = parts[parts.Length - 1];
+
+                var filePath = Helper.MemoImgset + '/' + name;
+                
+                File.Delete(filePath);
+            }
+
+            var m = await _context.Memos.FindAsync(memo.Id);
+
+            if(m != null)
+            {
+                _context.Memos.Remove(m);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("No matching memo to be deleted");
+            }
         }
 
         public async Task SaveMemoImage(IBrowserFile selectedFile)

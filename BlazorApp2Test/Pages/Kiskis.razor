@@ -190,7 +190,7 @@ else
                 //NOTE: potential error - if image name exists
 
                 await _memoData.SaveMemoImage(selectedFile);
-                newMemo.Image = Path.Combine(Helper.MemoImgget, selectedFile.Name);
+                newMemo.Image = Helper.MemoImgget + '\\' + selectedFile.Name;
             }
             newMemo.Time = DateTime.Now;
 
