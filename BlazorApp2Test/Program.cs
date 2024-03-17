@@ -20,7 +20,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 
 builder.Services.AddSingleton<TextData>(); 
-builder.Services.AddSingleton<MemoData>();
+builder.Services.AddScoped<MemoData>();
 builder.Services.AddSingleton<ErrorService>();
 builder.Services.AddSingleton<RenderService>();
 builder.Services.AddSingleton<FileAccesses>();

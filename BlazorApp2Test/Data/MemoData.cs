@@ -3,6 +3,7 @@ using System.Linq;
 using BlazorApp2Test.Models;
 using BlazorApp2Test.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp2Test.Data
 {
@@ -64,10 +65,23 @@ namespace BlazorApp2Test.Data
 
             if (_userService.GetAuth())
             {
-                var memos = await _context.Memos.Any(m => m.id == _userService.GetUserId());
+                List<MemoModel> list = new List<MemoModel>();
+
+                var memos = await _context.Memos.ToListAsync();
                 if(memos != null)
                 {
+                    foreach(var memo in memos)
+                    {
+                        MemoModel m = new MemoModel();
 
+                        m.UpdateFromRawData(memo);
+
+                        m.CreatedBy = await _userService.GetUsername(m.Id);
+
+                        list.Add(m);
+                    }
+
+                    return list;
                 }
                 else
                 {
