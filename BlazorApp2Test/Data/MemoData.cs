@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
+using System.Linq;
 using BlazorApp2Test.Models;
+using BlazorApp2Test.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace BlazorApp2Test.Data
@@ -7,10 +9,12 @@ namespace BlazorApp2Test.Data
     public class MemoData
     {
         private readonly UserDbContext _context;
+        private readonly UserService _userService;
 
-        public MemoData(UserDbContext context)
+        public MemoData(UserDbContext context, UserService s)
         {
             _context = context;
+            _userService = s;
         }
 
 
@@ -43,20 +47,38 @@ namespace BlazorApp2Test.Data
 
         public async Task<List<MemoModel>> LoadMemos()
         {
-            if (File.Exists(Helper.MemoJSONset))
+            //if (File.Exists(Helper.MemoJSONset))
+            //{
+            //    var jsonString = await File.ReadAllTextAsync(Helper.MemoJSONset);
+            //    if (string.IsNullOrWhiteSpace(jsonString))
+            //    {
+            //        return new List<MemoModel>();
+            //    }
+            //    var results = JsonSerializer.Deserialize<List<MemoModel>>(jsonString);
+            //    if(results != null)
+            //    {
+            //        return results;
+            //    }
+            //}
+            //return new List<MemoModel>();
+
+            if (_userService.GetAuth())
             {
-                var jsonString = await File.ReadAllTextAsync(Helper.MemoJSONset);
-                if (string.IsNullOrWhiteSpace(jsonString))
+                var memos = await _context.Memos.Any(m => m.id == _userService.GetUserId());
+                if(memos != null)
                 {
-                    return new List<MemoModel>();
+
                 }
-                var results = JsonSerializer.Deserialize<List<MemoModel>>(jsonString);
-                if(results != null)
+                else
                 {
-                    return results;
+                    throw new Exception("Can't retrieve memo");
                 }
+
             }
-            return new List<MemoModel>();
+            else
+            {
+                throw new Exception("Not logged in");
+            }
         }
 
         public async Task DeleteMemo(MemoModel memo)

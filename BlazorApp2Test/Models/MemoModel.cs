@@ -28,9 +28,23 @@ namespace BlazorApp2Test.Models
 
         public string? Image { get; set; }
 
+        public string? CreatedBy { get; set; }
+
+        public int UserId { get; set; }
+
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
         [DisplayName("Uploaded Time")]
         public DateTime Time { get; set; }
+
+        public void UpdateFromRawData(Memo m)
+        {
+            Id = m.id;
+            UserId = m.userId;
+            if (m.name != null) Name = m.name;
+            if (m.description != null) Description = m.description;
+            if (m.image != null) Image = m.image;
+            if (m.createTime != null) Time = m.createTime.Value;
+        }
     }
 }

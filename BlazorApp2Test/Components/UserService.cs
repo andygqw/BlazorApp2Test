@@ -10,7 +10,6 @@ namespace BlazorApp2Test.Components
 
         private User? user = null;
 
-
         public UserService(AuthService service)
         {
             _service = service;
@@ -61,6 +60,31 @@ namespace BlazorApp2Test.Components
             if(user != null)
             {
                 return user.username;
+            }
+            else
+            {
+                throw new Exception("Not log in yet");
+            }
+        }
+
+        public async Task<string> GetUsername(int id)
+        {
+            try
+            {
+                var u = await _service.GetUserById(id);
+                return u.username;
+
+            }catch(Exception ex)
+            {
+                throw new Exception("UserService: " + ex.Message);
+            }
+        }
+
+        public int GetUserId()
+        {
+            if(user != null)
+            {
+                return user.id;
             }
             else
             {

@@ -56,6 +56,20 @@ namespace BlazorApp2Test.Components
             }
         }
 
+        internal async Task<User> GetUserById(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.id == id);
+
+            if(user != null)
+            {
+                return user;
+            }
+            else
+            {
+                throw new Exception("Can't find user with this id");
+            }
+        }
+
         private string HashPassword(string password)
         {
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
