@@ -21,29 +21,48 @@ namespace BlazorApp2Test.Data
 
         public async Task SaveMemo(MemoModel memo)
         {
-            var memos = await LoadMemos();
+            //var memos = await LoadMemos();
 
-            MemoModel lastElement;
+            //MemoModel lastElement;
 
-            if (memos.Count > 0)
+            //if (memos.Count > 0)
+            //{
+            //    lastElement = new MemoModel(memos[memos.Count - 1]);
+            //}
+            //else
+            //{
+            //    lastElement = new MemoModel();
+            //    lastElement.Id = 0;
+            //}
+
+            //memo.Id = lastElement.Id + 1;
+
+            //// Add the new memo to the list
+            //memos.Add(memo);
+
+            //// Serialize and save the updated list
+            //var serializedData = JsonSerializer.Serialize(memos);
+            //await File.WriteAllTextAsync(Helper.MemoJSONset, serializedData);
+
+            Memo newMemo = new Memo();
+
+            if (_userService.GetAuth())
             {
-                lastElement = new MemoModel(memos[memos.Count - 1]);
+                newMemo.userId = _userService.GetUserId();
+                newMemo.createTime = DateTime.Now;
+                if (memo.Name != null) newMemo.name = memo.Name;
+                if (memo.Description != null) newMemo.description = memo.Description;
+                if (memo.Image != null) newMemo.image = memo.Image;
             }
             else
             {
-                lastElement = new MemoModel();
-                lastElement.Id = 0;
+                throw new Exception("Memo: Failed to get user info");
             }
 
-            memo.Id = lastElement.Id + 1;
 
-            // Add the new memo to the list
-            memos.Add(memo);
+            _context.Memos.Add(newMemo);
 
-            // Serialize and save the updated list
-            var serializedData = JsonSerializer.Serialize(memos);
-            await File.WriteAllTextAsync(Helper.MemoJSONset, serializedData);
-
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<MemoModel>> LoadMemos()
