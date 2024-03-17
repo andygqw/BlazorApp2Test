@@ -172,7 +172,10 @@ else
     {
         try
         {
-            memoList = await _memoData.LoadMemos();
+            if (_userService.GetAuth())
+            {
+                memoList = await _memoData.LoadMemos();
+            }
         }
         catch (Exception ex)
         {
