@@ -1,6 +1,7 @@
 using BlazorApp2Test.Components;
 using BlazorApp2Test.Data;
 using BlazorApp2Test.FileAccess;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -9,12 +10,23 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+builder.Services.AddDbContext<UserDbContext>(options =>
+            options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+            ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+
+builder.Services.AddSingleton<UserService>(ServiceProvider =>
+{
+    var dbService = ServiceProvider.GetRequiredService<UserDbContext>();
+
+    return new UserService(dbService);
+});
+
 builder.Services.AddSingleton<TextData>(); 
 builder.Services.AddSingleton<MemoData>();
 builder.Services.AddSingleton<ErrorService>();
 builder.Services.AddSingleton<RenderService>();
 builder.Services.AddSingleton<FileAccesses>();
-builder.Services.AddSingleton<PasswordService>();
 
 var app = builder.Build();
 
