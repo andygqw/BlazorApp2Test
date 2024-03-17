@@ -76,7 +76,7 @@ namespace BlazorApp2Test.Data
 
                         m.UpdateFromRawData(memo);
 
-                        m.CreatedBy = await _userService.GetUsername(m.Id);
+                        m.CreatedBy = await _userService.GetUsername(m.UserId);
 
                         list.Add(m);
                     }

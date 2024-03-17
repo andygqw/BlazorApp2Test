@@ -66,7 +66,7 @@ namespace BlazorApp2Test.Components
             }
             else
             {
-                throw new Exception("Can't find user with this id");
+                throw new Exception("Can't find user with this " + id);
             }
         }
 
