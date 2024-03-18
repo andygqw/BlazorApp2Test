@@ -21,6 +21,7 @@ builder.Services.AddScoped<UserService>();
 
 builder.Services.AddSingleton<TextData>(); 
 builder.Services.AddScoped<MemoData>();
+builder.Services.AddScoped<ReplyData>();
 builder.Services.AddSingleton<ErrorService>();
 builder.Services.AddSingleton<RenderService>();
 builder.Services.AddSingleton<FileAccesses>();
