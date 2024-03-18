@@ -1,19 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Text.Json;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using BlazorApp2Test.Models;
+using BlazorApp2Test.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp2Test.Data
 {
-    public class ReplyData : Controller
+    public class ReplyData
     {
-        // GET: /<controller>/
-        public IActionResult Index()
+        private readonly UserDbContext _context;
+        private readonly UserService _userService;
+
+        public ReplyData(UserDbContext context, UserService s)
         {
-            return View();
+            _context = context;
+            _userService = s;
+        }
+
+
+        public List<ReplyModel> GetReplies(int memoId)
+        {
+            var list = _context.Replies.Where(r => r.memoId == memoId).ToList();
+
+            List<ReplyModel> result = new List<ReplyModel>();
+
+            if(list != null)
+            {
+                foreach(var rep in list)
+                {
+                    ReplyModel newReply = new ReplyModel();
+
+                    newReply.UpdateFromRawData(rep);
+
+                    result.Add(newReply);
+                }
+            }
+
+            return result;
+        }
+
+        public async Task AddReply(ReplyModel model)
+        {
+            if(!string.IsNullOrEmpty(model.Content))
+            {
+                Reply rep = new Reply();
+
+                rep.userId = _userService.GetUserId();
+                rep.memoId = model.MemoId;
+                rep.content = model.Content;
+                rep.replyId = model.ReplyId;
+                rep.create_time = DateTime.Now;
+
+                _context.Replies.Add(rep);
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException("AddReply: Invalid Replay passed in");
+            }
+        }
+
+        public async Task DeleteReply(int id)
+        {
+            var r = await _context.Replies.FindAsync(id);
+
+            if(r != null)
+            {
+                _context.Replies.Remove(r);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Can't find the reply to be deleted");
+            }
         }
     }
 }
