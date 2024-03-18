@@ -19,7 +19,6 @@ namespace BlazorApp2Test.Data
             _replyData = r;
         }
 
-
         public async Task SaveMemo(MemoModel memo)
         {
             Memo newMemo = new Memo();
@@ -59,6 +58,8 @@ namespace BlazorApp2Test.Data
                         m.UpdateFromRawData(memo);
 
                         m.CreatedBy = await _userService.GetUsername(m.UserId);
+
+                        m.Replies = await _replyData.GetReplies(m.Id);
 
                         list.Add(m);
                     }

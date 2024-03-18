@@ -54,6 +54,14 @@
                                     {
                                         <pre class="section-text mt-2 text-white">@m.Description</pre>
                                     }
+
+                                    @if(m.Replies.Count != 0)
+                                    {
+                                        foreach(var r in m.Replies)
+                                        {
+                                            <p>@r.CreatedBy replied: @r.Content</p>
+                                        }
+                                    }
                                 </div>
                             </div>
                             <div class="memo-info">

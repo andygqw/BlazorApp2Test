@@ -15,6 +15,7 @@ namespace BlazorApp2Test.Models
             Description = model.Description;
             Image = model.Image;
             Time = model.Time;
+            Replies = new List<ReplyModel>();
         }
 
         public int Id { get; set; }
@@ -31,6 +32,8 @@ namespace BlazorApp2Test.Models
         public string? CreatedBy { get; set; }
 
         public int UserId { get; set; }
+
+        public List<ReplyModel> Replies { get; set; }
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]

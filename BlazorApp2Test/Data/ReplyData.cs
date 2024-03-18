@@ -18,8 +18,7 @@ namespace BlazorApp2Test.Data
             _userService = s;
         }
 
-
-        public List<ReplyModel> GetReplies(int memoId)
+        public async Task<List<ReplyModel>> GetReplies(int memoId)
         {
             var list = _context.Replies.Where(r => r.memoId == memoId).ToList();
 
@@ -32,6 +31,8 @@ namespace BlazorApp2Test.Data
                     ReplyModel newReply = new ReplyModel();
 
                     newReply.UpdateFromRawData(rep);
+
+                    newReply.CreatedBy = await _userService.GetUsername(newReply.UserId);
 
                     result.Add(newReply);
                 }
