@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using System.Linq;
+﻿using System.Linq;
 using BlazorApp2Test.Models;
 using BlazorApp2Test.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -11,11 +10,13 @@ namespace BlazorApp2Test.Data
     {
         private readonly UserDbContext _context;
         private readonly UserService _userService;
+        private readonly ReplyData _replyData;
 
-        public MemoData(UserDbContext context, UserService s)
+        public MemoData(UserDbContext context, UserService s, ReplyData r)
         {
             _context = context;
             _userService = s;
+            _replyData = r;
         }
 
 

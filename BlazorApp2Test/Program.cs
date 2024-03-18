@@ -19,9 +19,9 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 
-builder.Services.AddSingleton<TextData>(); 
-builder.Services.AddScoped<MemoData>();
+builder.Services.AddSingleton<TextData>();
 builder.Services.AddScoped<ReplyData>();
+builder.Services.AddScoped<MemoData>();
 builder.Services.AddSingleton<ErrorService>();
 builder.Services.AddSingleton<RenderService>();
 builder.Services.AddSingleton<FileAccesses>();
