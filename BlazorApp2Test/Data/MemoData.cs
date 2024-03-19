@@ -114,6 +114,17 @@ namespace BlazorApp2Test.Data
 
             if(m != null)
             {
+                var r = await _context.Replies.Where(i => i.memoId == m.id).ToListAsync();
+
+                if(r != null)
+                {
+                    foreach(var d in r)
+                    {
+                        _context.Replies.Remove(d);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                
                 _context.Memos.Remove(m);
                 await _context.SaveChangesAsync();
             }
