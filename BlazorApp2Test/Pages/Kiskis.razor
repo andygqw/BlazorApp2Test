@@ -139,7 +139,7 @@ else
     <img src="@currentImg" class="modal-img" />
 </div>
 
-<div class="modal" style="@($"display: {(showDeleteModal ? "block" : "none")}")" @onclick="CloseModal">
+<div class="modal" style="@($"display: {(showDeleteModal ? "block" : "none")}")">
     <div class="modal-content text-center fw-bold">
         <span class="close" @onclick="CloseModal">&times;</span>
         <div class="mb-2 mx-4">

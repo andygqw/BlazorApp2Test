@@ -48,7 +48,9 @@ namespace BlazorApp2Test.Data
             {
                 List<MemoModel> list = new List<MemoModel>();
 
-                var memos = await _context.Memos.ToListAsync();
+                var memos = await _context.Memos
+                                        .OrderByDescending(m => m.id)
+                                        .ToListAsync();
                 if(memos != null)
                 {
                     foreach(var memo in memos)
