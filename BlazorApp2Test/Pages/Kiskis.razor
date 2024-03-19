@@ -251,8 +251,19 @@ else
 
     private void DeleteHandler(MemoModel memo)
     {
-        newMemo = memo;
-        showDeleteModal = true;
+        try
+        {
+            if (memo.UserId != _userService.GetUserId())
+            {
+                throw new Exception("You don't have permission to delete memos don't belong to you.");
+            }
+            newMemo = memo;
+            showDeleteModal = true;
+
+        }catch(Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
     }
 
     private async Task DeleteMemo()
@@ -272,7 +283,7 @@ else
         }
     }
 
-    // Reply:
+    #region Reply features
     private void AddReplyHandler(int memoId)
     {
         newReply = new ReplyModel();
@@ -306,6 +317,7 @@ else
         newReply.ReplyId = model.Id;
         showReplyModal = true;
     }
+    #endregion Reply features
 
     private async Task ShowPreview(InputFileChangeEventArgs e)
     {
