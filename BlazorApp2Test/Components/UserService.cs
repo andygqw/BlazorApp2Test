@@ -17,13 +17,18 @@ namespace BlazorApp2Test.Components
 
         public async Task Register(RegisterModel model)
         {
-            if(await _service.RegisterUser(model.Username, model.Password, model.Email))
+            if(model.Username != null 
+                && model.Password != null 
+                && model.Email != null)
             {
-                user = await _service.AuthenticateUser(model.Username, model.Password);
-            }
-            else
-            {
-                throw new Exception("Create User failed");
+                if (await _service.RegisterUser(model.Username, model.Password, model.Email))
+                {
+                    user = await _service.AuthenticateUser(model.Username, model.Password);
+                }
+                else
+                {
+                    throw new Exception("Create User failed");
+                }
             }
         }
 
