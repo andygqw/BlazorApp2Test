@@ -9,6 +9,7 @@
 
 @inject IJSRuntime JSRuntime
 @inject MemoData _memoData
+@inject ReplyData _replyData
 @inject NavigationManager Navigation
 @inject ErrorService _errorService
 @inject UserService _userService
@@ -65,13 +66,15 @@
                                     }
                                 }
 
-                                <button></button>
                             </div>
                             <div class="memo-info">
                                 <div class="pt-2">
                                     @m.Time by @m.CreatedBy
                                 </div>
                                 <div>
+                                    <button class="btn btn-clear text-black" @onclick="() => AddReplyHandler(m.Id)">
+                                        reply
+                                    </button>
                                     <button class="btn btn-clear text-black" @onclick="(() => DeleteHandler(m))">
                                         delete
                                     </button>
@@ -125,7 +128,7 @@ else
                 </div>
                 <img style="max-width:200px;max-height:200px" @ref="previewImageElem" />
             </div>
-            
+
             <button class="btn btn-secondary" @onclick="@CloseModal">Cancel</button>
             <button type="submit" class="btn btn-primary">Submit</button>
         </EditForm>
@@ -133,7 +136,7 @@ else
 </div>
 
 <div class="modal" style="@($"display: {(showImgModal ? "block" : "none")}")" @onclick="CloseModal">
-    <img src="@currentImg"class="modal-img"/>
+    <img src="@currentImg" class="modal-img" />
 </div>
 
 <div class="modal" style="@($"display: {(showDeleteModal ? "block" : "none")}")" @onclick="CloseModal">
@@ -143,11 +146,31 @@ else
             Do you really want to delete this memo?<br />
             This can't be undo.
         </div>
-        
+
         <div>
             <button class="btn btn-secondary rounded-2" @onclick="@CloseModal">Cancel</button>
             <button @onclick="DeleteMemo" class="btn btn-danger">Yes</button>
         </div>
+    </div>
+</div>
+
+<div class="modal" style="@($"display: {(showReplyModal ? "block" : "none")}")" @onclick="CloseModal">
+    <div class="modal-content text-center fw-bold">
+        <span class="close" @onclick="CloseModal">&times;</span>
+        <EditForm Model="newReply" OnValidSubmit="AddReply">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="name">Title</label>
+                    <InputText @bind-Value="newReply.Content" class="form-control" />
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" @onclick="@CloseModal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
     </div>
 </div>
 
@@ -157,10 +180,13 @@ else
 
     private MemoModel newMemo = new MemoModel();
 
+    private ReplyModel newReply = new ReplyModel();
+
     //Modal switch
     private bool showAddModal = false;
     private bool showImgModal = false;
     private bool showDeleteModal = false;
+    private bool showReplyModal = false;
 
     //File upload and img preview:
     private IBrowserFile? selectedFile;
@@ -208,7 +234,8 @@ else
             await _memoData.SaveMemo(newMemo);
             memoList = await _memoData.LoadMemos();
 
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             _errorService.ShowModal("Save memos error: " + ex.Message);
         }
@@ -239,6 +266,20 @@ else
         }
     }
 
+    // Reply:
+    private void AddReplyHandler(int memoId)
+    {
+        newReply = new ReplyModel();
+        newReply.MemoId = memoId;
+        newReply.UserId = _userService.GetUserId();
+        showReplyModal = true;
+    }
+
+    private async Task AddReply()
+    {
+        await _replyData.AddReply(newReply);
+    }
+
     private async Task ShowPreview(InputFileChangeEventArgs e)
     {
         await JSRuntime.InvokeVoidAsync("previewImage", inputFile!.Element, previewImageElem);
@@ -264,6 +305,7 @@ else
         showAddModal = false;
         showImgModal = false;
         showDeleteModal = false;
+        showReplyModal = false;
     }
 
     public void Dispose()

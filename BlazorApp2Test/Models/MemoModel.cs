@@ -6,7 +6,10 @@ namespace BlazorApp2Test.Models
 {
     public class MemoModel
     {
-        public MemoModel() { }
+        public MemoModel()
+        {
+            Replies = new List<ReplyModel>();
+        }
 
         public MemoModel(MemoModel model)
         {

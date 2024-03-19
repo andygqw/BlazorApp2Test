@@ -47,7 +47,10 @@ namespace BlazorApp2Test.Data
             {
                 Reply rep = new Reply();
 
-                rep.userId = _userService.GetUserId();
+                if (model.UserId == null)
+                    rep.userId = _userService.GetUserId();
+                else
+                    rep.userId = model.UserId.Value;
                 rep.memoId = model.MemoId;
                 rep.content = model.Content;
                 rep.replyId = model.ReplyId;
