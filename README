@@ -2,5 +2,7 @@ It's a .NET core blazor web application. Aiming simple tools that could be helpf
 
 TODO:
 
-Memo reply feature
-Encrpt page
+file access within accounts
+edit profile within accounts
+email auto reply
+about me
