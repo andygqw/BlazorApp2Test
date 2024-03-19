@@ -32,7 +32,7 @@ namespace BlazorApp2Test.Data
 
                     newReply.UpdateFromRawData(rep);
 
-                    newReply.CreatedBy = await _userService.GetUsername(newReply.UserId);
+                    newReply.CreatedBy = await _userService.GetUsername(rep.userId);
 
                     result.Add(newReply);
                 }

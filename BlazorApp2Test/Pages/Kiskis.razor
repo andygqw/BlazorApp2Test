@@ -154,7 +154,7 @@ else
     </div>
 </div>
 
-<div class="modal" style="@($"display: {(showReplyModal ? "block" : "none")}")" @onclick="CloseModal">
+<div class="modal" style="@($"display: {(showReplyModal ? "block" : "none")}")">
     <div class="modal-content text-center fw-bold">
         <span class="close" @onclick="CloseModal">&times;</span>
         <EditForm Model="newReply" OnValidSubmit="AddReply">
@@ -163,7 +163,7 @@ else
 
             <div class="col-12">
                 <div class="form-group">
-                    <label for="name">Title</label>
+                    <label for="name">Reply:</label>
                     <InputText @bind-Value="newReply.Content" class="form-control" />
                 </div>
             </div>
@@ -277,7 +277,19 @@ else
 
     private async Task AddReply()
     {
-        await _replyData.AddReply(newReply);
+        try
+        {
+            await _replyData.AddReply(newReply);
+            memoList = await _memoData.LoadMemos();
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
+        finally
+        {
+            CloseModal();
+        }
     }
 
     private async Task ShowPreview(InputFileChangeEventArgs e)
