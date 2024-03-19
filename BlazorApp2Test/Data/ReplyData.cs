@@ -34,6 +34,11 @@ namespace BlazorApp2Test.Data
 
                     newReply.CreatedBy = await _userService.GetUsername(rep.userId);
 
+                    if(rep.replyId != null)
+                    {
+                        newReply.RepliedBy = await GetReplyAuthorById(rep.replyId.Value);
+                    }
+
                     result.Add(newReply);
                 }
             }
@@ -78,6 +83,20 @@ namespace BlazorApp2Test.Data
             else
             {
                 throw new Exception("Can't find the reply to be deleted");
+            }
+        }
+
+        public async Task<string> GetReplyAuthorById(int id)
+        {
+            var r = await _context.Replies.FindAsync(id);
+
+            if(r != null)
+            {
+                return await _userService.GetUsername(r.userId);
+            }
+            else
+            {
+                throw new Exception("ReplayData: can't find user with id " + id);
             }
         }
     }

@@ -62,10 +62,16 @@
                                 {
                                     foreach (var r in m.Replies)
                                     {
-                                        <p>@r.CreatedBy replied: @r.Content</p>
+                                        if (r.ReplyId == null)
+                                        {
+                                            <p @onclick="() => ReplyToReplyHandler(r)">@r.CreatedBy replied: @r.Content</p>
+                                        }
+                                        else
+                                        {
+                                            <p @onclick="() => ReplyToReplyHandler(r)">@r.CreatedBy replied to @r.RepliedBy: @r.Content</p>
+                                        }
                                     }
                                 }
-
                             </div>
                             <div class="memo-info">
                                 <div class="pt-2">
@@ -290,6 +296,15 @@ else
         {
             CloseModal();
         }
+    }
+
+    private void ReplyToReplyHandler(ReplyModel model)
+    {
+        newReply = new ReplyModel();
+        newReply.UserId = _userService.GetUserId();
+        newReply.MemoId = model.MemoId;
+        newReply.ReplyId = model.Id;
+        showReplyModal = true;
     }
 
     private async Task ShowPreview(InputFileChangeEventArgs e)
