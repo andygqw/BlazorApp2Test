@@ -159,6 +159,12 @@ namespace BlazorApp2Test.FileAccess
         {
             List<string> files = new List<string>();
 
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), Helper.UploadFolderPath);
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
             foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
             {
                 files.Add(Path.GetFileName(file));

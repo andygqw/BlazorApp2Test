@@ -14,13 +14,10 @@
 
         internal const string MemoJSONset = "wwwroot/Memos/memos.JSON";
 
-        // Password:
-        internal const string PasswordPath = "wwwroot/Password";
-
         // Limits:
         internal const int TextMaxLength = 1400;
         internal const int TextAreaMaxLength = 15000;
-        internal const int FileMaxSize = 1024 * 1024 * 30;//- 30MB
+        internal const int FileMaxSize = 1024 * 1024 * 64;//- MB
         internal static string[] AllowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
 
 
