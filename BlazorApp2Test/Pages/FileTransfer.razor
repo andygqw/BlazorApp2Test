@@ -165,6 +165,7 @@ else
                 throw new Exception("Something wrong with file selection");
             }
 
+            //TODO:
             foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
             {
                 if (Path.GetFileName(f) == selectedFile.Name)
@@ -187,7 +188,7 @@ else
         }
         catch (Exception ex)
         {
-            _errorService.ShowModal(ex.Message);
+            _errorService.ShowModal(ex.InnerException?.Message);
         }
     }
 

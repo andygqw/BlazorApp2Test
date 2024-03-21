@@ -24,7 +24,7 @@ builder.Services.AddScoped<ReplyData>();
 builder.Services.AddScoped<MemoData>();
 builder.Services.AddSingleton<ErrorService>();
 builder.Services.AddSingleton<RenderService>();
-builder.Services.AddSingleton<FileAccesses>();
+builder.Services.AddScoped<FileAccesses>();
 
 var app = builder.Build();
 

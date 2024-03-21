@@ -1,12 +1,19 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using BlazorApp2Test.Components;
+using BlazorApp2Test.Data;
+using BlazorApp2Test.Models;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace BlazorApp2Test.FileAccess
 {
     internal class FileAccesses
     {
-        public FileAccesses()
-        {
+        private readonly UserDbContext _context;
+        private readonly UserService _userService;
 
+        public FileAccesses(UserDbContext context, UserService s)
+        {
+            _context = context;
+            _userService = s;
         }
 
         public async Task<int> UploadFile(IBrowserFile selectedFile, bool Rep)
@@ -26,8 +33,11 @@ namespace BlazorApp2Test.FileAccess
                 throw new IOException("Something wrong uploading file to the server: 0 byte");
             }
 
-            // Check file path exists
+            var id = _userService.GetUserId();
+
+            // Check user file path exists
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), Helper.UploadFolderPath);
+            filePath = Path.Combine(filePath, id.ToString());
             if (!Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
@@ -130,6 +140,23 @@ namespace BlazorApp2Test.FileAccess
             await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
 
             fs.Close();
+
+            // DB operation:
+            UserFile fi = new UserFile();
+
+            fi.userId = id;
+            fi.fileName = fileName;
+            fi.filePath = filePath;
+            fi.createTime = DateTime.Now;
+
+
+            if(_context.Files != null)
+            {
+                _context.Files.Add(fi);
+            }
+
+            await _context.SaveChangesAsync();
+
 
             return Helper.ReturnGood;
         }
