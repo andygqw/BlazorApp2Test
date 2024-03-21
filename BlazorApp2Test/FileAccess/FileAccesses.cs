@@ -173,7 +173,9 @@ namespace BlazorApp2Test.FileAccess
         {
             if(fName != null)
             {
-                var filePath = Path.Combine(Helper.UploadFolderPath, fName);
+                var filePath = Path.Combine(Helper.UploadFolderPath,
+                                        _userService.GetUserId().ToString());
+                filePath = Path.Combine(filePath, fName);
                 System.IO.File.Delete(filePath);
             }
             else
@@ -184,7 +186,9 @@ namespace BlazorApp2Test.FileAccess
 
         public void DeleteAllFiles()
         {
-            foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+            var filePath = Path.Combine(Helper.UploadFolderPath,
+                                        _userService.GetUserId().ToString());
+            foreach (var file in Directory.GetFiles(filePath))
             {
                 DeleteFile(Path.GetFileName(file));
             }
