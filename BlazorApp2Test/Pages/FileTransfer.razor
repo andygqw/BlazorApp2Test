@@ -133,9 +133,13 @@ else
     {
         try
         {
-            fileList = _file.GetAllFileNames();
+            if (_userService.GetAuth())
+            {
+                fileList = _file.GetAllFileNames(_userService.GetUserId());
+            }
 
-        }catch(Exception ex)
+        }
+        catch(Exception ex)
         {
             _errorService.ShowModal(ex.Message);
         }

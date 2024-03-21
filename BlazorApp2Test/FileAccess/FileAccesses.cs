@@ -50,7 +50,7 @@ namespace BlazorApp2Test.FileAccess
                 if (fileName.Contains("."))
                 {
 
-                    foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+                    foreach (var f in Directory.GetFiles(filePath))
                     {
                         if (Path.GetFileName(f) == fileName)
                         {
@@ -75,7 +75,7 @@ namespace BlazorApp2Test.FileAccess
                     while (cont)
                     {
                         cont = false;
-                        foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+                        foreach (var f in Directory.GetFiles(filePath))
                         {
                             if (Path.GetFileName(f) == fileName)
                             {
@@ -109,7 +109,7 @@ namespace BlazorApp2Test.FileAccess
                     while (cont)
                     {
                         cont = false;
-                        foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+                        foreach (var f in Directory.GetFiles(filePath))
                         {
                             if (Path.GetFileName(f) == fileName)
                             {
@@ -142,20 +142,20 @@ namespace BlazorApp2Test.FileAccess
             fs.Close();
 
             // DB operation:
-            UserFile fi = new UserFile();
+            //UserFile fi = new UserFile();
 
-            fi.userId = id;
-            fi.fileName = fileName;
-            fi.filePath = filePath;
-            fi.createTime = DateTime.Now;
+            //fi.userId = id;
+            //fi.fileName = fileName;
+            //fi.filePath = filePath;
+            //fi.createTime = DateTime.Now;
 
 
-            if(_context.Files != null)
-            {
-                _context.Files.Add(fi);
-            }
+            //if(_context.Files != null)
+            //{
+            //    _context.Files.Add(fi);
+            //}
 
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
 
 
             return Helper.ReturnGood;
@@ -182,17 +182,18 @@ namespace BlazorApp2Test.FileAccess
             }
         }
 
-        public List<string> GetAllFileNames()
+        public List<string> GetAllFileNames(int id)
         {
             List<string> files = new List<string>();
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), Helper.UploadFolderPath);
+            filePath = Path.Combine(filePath, id.ToString());
             if (!Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
             }
 
-            foreach (var file in Directory.GetFiles(Helper.UploadFolderPath))
+            foreach (var file in Directory.GetFiles(filePath))
             {
                 files.Add(Path.GetFileName(file));
             }
@@ -202,7 +203,8 @@ namespace BlazorApp2Test.FileAccess
 
         public string GetFileSize(string fName)
         {
-            var filePath = Path.Combine(Helper.UploadFolderPath, fName);
+            var filePath = Path.Combine(Helper.UploadFolderPath, _userService.GetUserId().ToString());
+            filePath = Path.Combine(filePath, fName);
             var fileInfo = new FileInfo(filePath);
             if (fileInfo.Exists)
             {
