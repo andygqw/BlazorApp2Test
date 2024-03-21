@@ -170,7 +170,8 @@ else
             }
 
             //TODO:
-            foreach (var f in Directory.GetFiles(Helper.UploadFolderPath))
+            var filePath = Path.Combine(Helper.UploadFolderPath, _userService.GetUserId().ToString());
+            foreach (var f in Directory.GetFiles(filePath))
             {
                 if (Path.GetFileName(f) == selectedFile.Name)
                 {
