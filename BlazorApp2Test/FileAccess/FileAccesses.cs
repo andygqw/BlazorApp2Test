@@ -43,6 +43,14 @@ namespace BlazorApp2Test.FileAccess
                 Directory.CreateDirectory(filePath);
             }
 
+            var list = Directory.GetFiles(filePath);
+
+            if(list.Length > Helper.MaxFileUpload)
+            {
+                throw new Exception("You exceeds the limit of " + Helper.MaxFileUpload
+                                    + "files");
+            }
+
             var fileName = selectedFile.Name;
 
             if (!Rep)
@@ -50,7 +58,7 @@ namespace BlazorApp2Test.FileAccess
                 if (fileName.Contains("."))
                 {
 
-                    foreach (var f in Directory.GetFiles(filePath))
+                    foreach (var f in list)
                     {
                         if (Path.GetFileName(f) == fileName)
                         {
@@ -75,7 +83,7 @@ namespace BlazorApp2Test.FileAccess
                     while (cont)
                     {
                         cont = false;
-                        foreach (var f in Directory.GetFiles(filePath))
+                        foreach (var f in list)
                         {
                             if (Path.GetFileName(f) == fileName)
                             {
@@ -109,7 +117,7 @@ namespace BlazorApp2Test.FileAccess
                     while (cont)
                     {
                         cont = false;
-                        foreach (var f in Directory.GetFiles(filePath))
+                        foreach (var f in list)
                         {
                             if (Path.GetFileName(f) == fileName)
                             {
