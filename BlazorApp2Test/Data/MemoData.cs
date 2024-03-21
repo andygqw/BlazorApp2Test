@@ -36,8 +36,11 @@ namespace BlazorApp2Test.Data
                 throw new Exception("Memo: Failed to get user info");
             }
 
-
-            _context.Memos.Add(newMemo);
+            if(_context.Memos != null)
+            {
+                _context.Memos.Add(newMemo);
+            }
+            
 
             await _context.SaveChangesAsync();
         }
