@@ -20,30 +20,37 @@ namespace BlazorApp2Test.Data
 
         public async Task<List<ReplyModel>> GetReplies(int memoId)
         {
-            var list = _context.Replies.Where(r => r.memoId == memoId).ToList();
-
-            List<ReplyModel> result = new List<ReplyModel>();
-
-            if(list != null)
+            if(_context.Replies != null)
             {
-                foreach(var rep in list)
+                var list = _context.Replies.Where(r => r.memoId == memoId).ToList();
+
+                List<ReplyModel> result = new List<ReplyModel>();
+
+                if (list != null)
                 {
-                    ReplyModel newReply = new ReplyModel();
-
-                    newReply.UpdateFromRawData(rep);
-
-                    newReply.CreatedBy = await _userService.GetUsername(rep.userId);
-
-                    if(rep.replyId != null)
+                    foreach (var rep in list)
                     {
-                        newReply.RepliedBy = await GetReplyAuthorById(rep.replyId.Value);
+                        ReplyModel newReply = new ReplyModel();
+
+                        newReply.UpdateFromRawData(rep);
+
+                        newReply.CreatedBy = await _userService.GetUsername(rep.userId);
+
+                        if (rep.replyId != null)
+                        {
+                            newReply.RepliedBy = await GetReplyAuthorById(rep.replyId.Value);
+                        }
+
+                        result.Add(newReply);
                     }
-
-                    result.Add(newReply);
                 }
-            }
 
-            return result;
+                return result;
+            }
+            else
+            {
+                throw new Exception("Something wrong with db Replies");
+            }
         }
 
         public async Task AddReply(ReplyModel model)
@@ -61,7 +68,10 @@ namespace BlazorApp2Test.Data
                 rep.replyId = model.ReplyId;
                 rep.create_time = DateTime.Now;
 
-                _context.Replies.Add(rep);
+                if(_context.Replies != null)
+                {
+                    _context.Replies.Add(rep);
+                }
 
                 await _context.SaveChangesAsync();
             }
@@ -73,30 +83,44 @@ namespace BlazorApp2Test.Data
 
         public async Task DeleteReply(int id)
         {
-            var r = await _context.Replies.FindAsync(id);
-
-            if(r != null)
+           if(_context.Replies != null)
             {
-                _context.Replies.Remove(r);
-                await _context.SaveChangesAsync();
+                var r = await _context.Replies.FindAsync(id);
+
+                if (r != null)
+                {
+                    _context.Replies.Remove(r);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Can't find the reply to be deleted");
+                }
             }
             else
             {
-                throw new Exception("Can't find the reply to be deleted");
+                throw new Exception("Something wrong with db Replies");
             }
         }
 
         public async Task<string> GetReplyAuthorById(int id)
         {
-            var r = await _context.Replies.FindAsync(id);
-
-            if(r != null)
+            if(_context.Replies != null)
             {
-                return await _userService.GetUsername(r.userId);
+                var r = await _context.Replies.FindAsync(id);
+
+                if (r != null)
+                {
+                    return await _userService.GetUsername(r.userId);
+                }
+                else
+                {
+                    throw new Exception("ReplayData: can't find user with id " + id);
+                }
             }
             else
             {
-                throw new Exception("ReplayData: can't find user with id " + id);
+                throw new Exception("Something wrong with db Replies");
             }
         }
     }
