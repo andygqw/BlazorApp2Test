@@ -1,6 +1,7 @@
 ﻿using BlazorApp2Test.Data;
 using BlazorApp2Test.Models;
 using System;
+using System.Xml.Linq;
 
 namespace BlazorApp2Test.Components
 {
@@ -20,8 +21,8 @@ namespace BlazorApp2Test.Components
 
         public async Task Register(RegisterModel model)
         {
-            if(model.Username != null 
-                && model.Password != null 
+            if (model.Username != null
+                && model.Password != null
                 && model.Email != null)
             {
                 if (await _service.RegisterUser(model.Username, model.Password, model.Email))
@@ -40,7 +41,8 @@ namespace BlazorApp2Test.Components
             try
             {
                 user = await _service.AuthenticateUser(username, password);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception("User Auth: " + ex.Message);
             }
@@ -53,7 +55,7 @@ namespace BlazorApp2Test.Components
 
         public bool GetAuth()
         {
-            if(user == null)
+            if (user == null)
             {
                 return false;
             }
@@ -65,7 +67,7 @@ namespace BlazorApp2Test.Components
 
         public string GetUsername()
         {
-            if(user != null)
+            if (user != null)
             {
                 return user.username;
             }
@@ -82,7 +84,8 @@ namespace BlazorApp2Test.Components
                 var u = await _service.GetUserById(id);
                 return u.username;
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception("UserService: " + ex.Message);
             }
@@ -90,7 +93,7 @@ namespace BlazorApp2Test.Components
 
         public int GetUserId()
         {
-            if(user != null)
+            if (user != null)
             {
                 return user.id;
             }
@@ -100,69 +103,90 @@ namespace BlazorApp2Test.Components
             }
         }
 
-        public async Task UpdateUsername(int id, string name)
-        {
-            if(_context.Users != null)
-            {
-                var user  = await _context.Users.FindAsync(id);
-
-                if(user != null)
-                {
-                    user.username = name;
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    throw new Exception("UpdateUser: Can't find this user");
-                }
-            }
-            else
-            {
-                throw new Exception("Something wrong with db Users");
-            }
-        }
-
-        public async Task UpdateEmail(int id, string email)
+        public async Task UpdateUsername(string name)
         {
             if (_context.Users != null)
             {
-                var user = await _context.Users.FindAsync(id);
-
                 if (user != null)
                 {
-                    user.email = email;
-                    await _context.SaveChangesAsync();
+                    var u = await _context.Users.FindAsync(user.id);
+
+                    if (u != null)
+                    {
+                        u.username = name;
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("UpdateUser: Can't find this user");
+                    }
                 }
                 else
                 {
-                    throw new Exception("UpdateUser: Can't find this user");
+                    throw new Exception("Not Logged in");
                 }
             }
             else
             {
-                throw new Exception("Something wrong with db Users");
+                throw new Exception("Something wrong with db Users or not logged in");
             }
         }
 
-        public async Task UpdatePassword(int id, string password)
+        public async Task UpdateEmail(string email)
         {
             if (_context.Users != null)
             {
-                var user = await _context.Users.FindAsync(id);
-
                 if (user != null)
                 {
-                    user.password = _service.HashPassword(password);
-                    await _context.SaveChangesAsync();
+                    var u = await _context.Users.FindAsync(user.id);
+
+                    if (u != null)
+                    {
+                        u.email = email;
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("UpdateUser: Can't find this user");
+                    }
                 }
                 else
                 {
-                    throw new Exception("UpdateUser: Can't find this user");
+                    throw new Exception("Not Logged in");
                 }
             }
             else
             {
-                throw new Exception("Something wrong with db Users");
+                throw new Exception("Something wrong with db Users or not logged in");
+            }
+        }
+
+        public async Task UpdatePassword(string password)
+        {
+            if (_context.Users != null)
+            {
+                if (user != null)
+                {
+                    var u = await _context.Users.FindAsync(user.id);
+
+                    if (u != null)
+                    {
+                        u.password = _service.HashPassword(password);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("UpdateUser: Can't find this user");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Not Logged in");
+                }
+            }
+            else
+            {
+                throw new Exception("Something wrong with db Users or not logged in");
             }
         }
     }
