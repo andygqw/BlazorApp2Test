@@ -51,31 +51,37 @@ namespace BlazorApp2Test.Data
             {
                 List<MemoModel> list = new List<MemoModel>();
 
-                var memos = await _context.Memos
+                if(_context.Memos != null)
+                {
+                    var memos = await _context.Memos
                                         .OrderByDescending(m => m.id)
                                         .ToListAsync();
-                if(memos != null)
-                {
-                    foreach(var memo in memos)
+                    if (memos != null)
                     {
-                        MemoModel m = new MemoModel();
+                        foreach (var memo in memos)
+                        {
+                            MemoModel m = new MemoModel();
 
-                        m.UpdateFromRawData(memo);
+                            m.UpdateFromRawData(memo);
 
-                        m.CreatedBy = await _userService.GetUsername(m.UserId);
+                            m.CreatedBy = await _userService.GetUsername(m.UserId);
 
-                        m.Replies = await _replyData.GetReplies(m.Id);
+                            m.Replies = await _replyData.GetReplies(m.Id);
 
-                        list.Add(m);
+                            list.Add(m);
+                        }
+
+                        return list;
                     }
-
-                    return list;
+                    else
+                    {
+                        throw new Exception("Can't retrieve memo");
+                    }
                 }
                 else
                 {
-                    throw new Exception("Can't retrieve memo");
+                    throw new Exception("Something wrong with db Users");
                 }
-
             }
             else
             {
@@ -85,24 +91,31 @@ namespace BlazorApp2Test.Data
 
         public async Task EditMemo(MemoModel memo)
         {
-            var m = await _context.Memos.FindAsync(memo.Id);
-
-            if(m != null)
+            if(_context.Memos != null)
             {
-                if(m.image != null)
+                var m = await _context.Memos.FindAsync(memo.Id);
+
+                if (m != null)
                 {
-                    DeleteImg(m.image);
+                    if (m.image != null)
+                    {
+                        DeleteImg(m.image);
+                    }
+
+                    m.name = memo.Name;
+                    m.description = memo.Description;
+                    m.image = memo.Image;
+
+                    await _context.SaveChangesAsync();
                 }
-
-                m.name = memo.Name;
-                m.description = memo.Description;
-                m.image = memo.Image;
-
-                await _context.SaveChangesAsync();
+                else
+                {
+                    throw new Exception("Can't find memo to be edited");
+                }
             }
             else
             {
-                throw new Exception("Can't find memo to be edited");
+                throw new Exception("Something wrong with db Users");
             }
         }
 
@@ -113,27 +126,41 @@ namespace BlazorApp2Test.Data
                 DeleteImg(memo.Image);
             }
 
-            var m = await _context.Memos.FindAsync(memo.Id);
-
-            if(m != null)
+            if(_context.Memos != null)
             {
-                var r = await _context.Replies.Where(i => i.memoId == m.id).ToListAsync();
+                var m = await _context.Memos.FindAsync(memo.Id);
 
-                if(r != null)
+                if (m != null)
                 {
-                    foreach(var d in r)
+                    if(_context.Replies != null)
                     {
-                        _context.Replies.Remove(d);
+                        var r = await _context.Replies.Where(i => i.memoId == m.id).ToListAsync();
+
+                        if (r != null)
+                        {
+                            foreach (var d in r)
+                            {
+                                _context.Replies.Remove(d);
+                            }
+                            await _context.SaveChangesAsync();
+                        }
+
+                        _context.Memos.Remove(m);
+                        await _context.SaveChangesAsync();
                     }
-                    await _context.SaveChangesAsync();
+                    else
+                    {
+                        throw new Exception("Something wrong with db Replies");
+                    }
                 }
-                
-                _context.Memos.Remove(m);
-                await _context.SaveChangesAsync();
+                else
+                {
+                    throw new Exception("No matching memo to be deleted");
+                }
             }
             else
             {
-                throw new Exception("No matching memo to be deleted");
+                throw new Exception("Something wrong with db Users");
             }
         }
 
