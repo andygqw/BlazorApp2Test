@@ -23,19 +23,26 @@ namespace BlazorApp2Test.Components
                 throw new ArgumentException("Username, password, and email are required to have value");
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.username == uname || u.email == eml);
-            if (user != null)
+            if(_context.Users != null)
             {
-                throw new Exception("Username or email already in-use");
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.username == uname || u.email == eml);
+                if (user != null)
+                {
+                    throw new Exception("Username or email already in-use");
+                }
+
+                var hashedPassword = HashPassword(pwd);
+                user = new User { username = uname, password = hashedPassword, email = eml };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                return true;
             }
-
-            var hashedPassword = HashPassword(pwd);
-            user = new User { username = uname, password = hashedPassword, email = eml };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return true;
+            else
+            {
+                throw new Exception("Something wrong with db Users");
+            }
         }
 
         public async Task<User> AuthenticateUser(string username, string password)
@@ -45,28 +52,42 @@ namespace BlazorApp2Test.Components
                 throw new ArgumentException("Username and password must not be empty");
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.username == username);
-            if (user != null && VerifyPassword(password, user.password))
+            if(_context.Users != null)
             {
-                return user;
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.username == username);
+                if (user != null && VerifyPassword(password, user.password))
+                {
+                    return user;
+                }
+                else
+                {
+                    throw new Exception("Username and password didn't match");
+                }
             }
             else
             {
-                throw new Exception("Username and password didn't match");
+                throw new Exception("Something wrong with db Users");
             }
         }
 
         internal async Task<User> GetUserById(int id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.id == id);
-
-            if(user != null)
+            if(_context.Users != null)
             {
-                return user;
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.id == id);
+
+                if (user != null)
+                {
+                    return user;
+                }
+                else
+                {
+                    throw new Exception("Can't find user with this " + id);
+                }
             }
             else
             {
-                throw new Exception("Can't find user with this " + id);
+                throw new Exception("Something wrong with db Users");
             }
         }
 
