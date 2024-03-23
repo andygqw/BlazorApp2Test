@@ -7,12 +7,15 @@ namespace BlazorApp2Test.Components
     public class UserService
     {
         private readonly AuthService _service;
+        private readonly UserDbContext _context;
+
 
         private User? user = null;
 
-        public UserService(AuthService service)
+        public UserService(AuthService service, UserDbContext context)
         {
             _service = service;
+            _context = context;
         }
 
         public async Task Register(RegisterModel model)
@@ -94,6 +97,72 @@ namespace BlazorApp2Test.Components
             else
             {
                 throw new Exception("Not log in yet");
+            }
+        }
+
+        public async Task UpdateUsername(int id, string name)
+        {
+            if(_context.Users != null)
+            {
+                var user  = await _context.Users.FindAsync(id);
+
+                if(user != null)
+                {
+                    user.username = name;
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("UpdateUser: Can't find this user");
+                }
+            }
+            else
+            {
+                throw new Exception("Something wrong with db Users");
+            }
+        }
+
+        public async Task UpdateEmail(int id, string email)
+        {
+            if (_context.Users != null)
+            {
+                var user = await _context.Users.FindAsync(id);
+
+                if (user != null)
+                {
+                    user.email = email;
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("UpdateUser: Can't find this user");
+                }
+            }
+            else
+            {
+                throw new Exception("Something wrong with db Users");
+            }
+        }
+
+        public async Task UpdatePassword(int id, string password)
+        {
+            if (_context.Users != null)
+            {
+                var user = await _context.Users.FindAsync(id);
+
+                if (user != null)
+                {
+                    user.password = _service.HashPassword(password);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("UpdateUser: Can't find this user");
+                }
+            }
+            else
+            {
+                throw new Exception("Something wrong with db Users");
             }
         }
     }

@@ -70,7 +70,7 @@ namespace BlazorApp2Test.Components
             }
         }
 
-        private string HashPassword(string password)
+        internal string HashPassword(string password)
         {
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
 

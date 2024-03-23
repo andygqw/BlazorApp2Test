@@ -1,0 +1,25 @@
+﻿@page "/profile"
+
+@inject ErrorService _errorService
+@inject UserService _userService
+@inject RenderService _renderService
+
+
+@inherits Component
+
+
+
+
+
+
+@code {
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _renderService.OnEventTriggered += () => RefreshPage();
+
+
+    }
+}
+
