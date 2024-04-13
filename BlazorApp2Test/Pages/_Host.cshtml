@@ -8,24 +8,60 @@
 <component type="typeof(App)" render-mode="ServerPrerendered" />
 
 <script>
-    
+
+    //window.copyToClipboard = function (text) {
+
+    //    var textarea = document.createElement("textarea");
+    //    textarea.textContent = text;
+    //    textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+    //    document.body.appendChild(textarea);
+    //    textarea.select();
+    //    try {
+    //        return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+    //    }
+    //    catch (ex) {
+    //        console.warn("Copy to clipboard failed.", ex);
+    //        return false;
+    //    }
+    //    finally {
+    //        document.body.removeChild(textarea);
+    //    }
+    //}
+
     window.copyToClipboard = function (text) {
 
-        var textarea = document.createElement("textarea");
-        textarea.textContent = text;
-        textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-            return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+        if (navigator.clipboard) {
+
+            copyToClipboard = (text) => {
+
+                navigator.clipboard.writeText(text);
+            };
+
+        } else {
+
+
+            copyToClipboard = (text) => {
+
+                try {
+
+                    const input = document.createElement('input');
+                    input.setAttribute('value', text);
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                } catch (ex) {
+
+                    console.warn("Copy to clipboard failed.", ex);
+                    return false;
+                }
+                finally {
+
+                    document.body.removeChild(input);
+                }
+            }
         }
-        catch (ex) {
-            console.warn("Copy to clipboard failed.", ex);
-            return false;
-        }
-        finally {
-            document.body.removeChild(textarea);
-        }
+        copyToClipboard(text);
     }
 
     window.showModal = function (modalId) {
