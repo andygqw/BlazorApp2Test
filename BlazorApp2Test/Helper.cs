@@ -26,6 +26,9 @@
         internal const int ReturnGood = 40;
         internal const int ReturnFailed = 50;
 
+        //Global Messages
+        internal const string MSG_NOPERMISSION= "You do not have permission to access this page, try log in";
+
         internal static int CountWords(string? input)
         {
             if (string.IsNullOrWhiteSpace(input))
