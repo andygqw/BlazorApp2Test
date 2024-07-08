@@ -17,8 +17,8 @@
 *.userprefs
 
 # appsettings.json
-BlazorApp2Test/wwwroot/appsettings.json
-BlazorApp2Test/wwwroot/appsettings.Development.json
+BlazorApp2Test/appsettings.json
+BlazorApp2Test/appsettings.Development.json
 
 # Mono auto generated files
 mono_crash.*
