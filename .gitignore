@@ -16,8 +16,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-# macOS system files
-.DS_Store
+# appsettings.json
+BlazorApp2Test/wwwroot/appsettings.json
+BlazorApp2Test/wwwroot/appsettings.Development.json
 
 # Mono auto generated files
 mono_crash.*
