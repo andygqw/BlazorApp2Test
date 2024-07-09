@@ -2,6 +2,7 @@
 using BlazorApp2Test.Data;
 using Microsoft.AspNetCore.Components.Forms;
 
+using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
 using System;
@@ -30,24 +31,8 @@ namespace BlazorApp2Test.FileAccess
             _bucketName = bucketName;
         }
 
-        public async Task<int> UploadFile(Stream fileStream, string fileName, bool rep)
+        public async Task UploadFile(Stream fileStream, string fileName)
         {
-            // Check user file path exists
-            // var filePath = Path.Combine(Directory.GetCurrentDirectory(), Helper.UploadFolderPath);
-            // filePath = Path.Combine(filePath, id.ToString());
-            // if (!Directory.Exists(filePath))
-            // {
-            //     Directory.CreateDirectory(filePath);
-            // }
-
-            // var list = Directory.GetFiles(filePath);
-
-            // if(list.Length > Helper.MaxFileUpload)
-            // {
-            //     throw new Exception("You exceeds the limit of " + Helper.MaxFileUpload
-            //                         + "files");
-            // }
-
             var id = _userService.GetUserId();
             var key = $"{id}/{fileName}"; 
 
@@ -55,107 +40,10 @@ namespace BlazorApp2Test.FileAccess
             {
                 BucketName = _bucketName,
                 Key = key,
-                InputStream = fileStream
+                InputStream = fileStream,
+                DisablePayloadSigning = true
             };
-            await _s3Client.PutObjectAsync(putRequest);          
-
-            // if (!Rep)
-            // {
-            //     if (fileName.Contains("."))
-            //     {
-
-            //         foreach (var f in list)
-            //         {
-            //             if (Path.GetFileName(f) == fileName)
-            //             {
-            //                 char separator = '.';
-            //                 string[] parts = fileName.Split(separator);
-            //                 parts[parts.Length - 2] = parts[parts.Length - 2] + "(1)";
-            //                 fileName = "";
-            //                 foreach (var part in parts)
-            //                 {
-            //                     fileName += part;
-            //                     fileName += ".";
-            //                 }
-            //                 fileName = fileName.Substring(0, fileName.Length - 1);
-            //                 break;
-            //             }
-            //         }
-
-            //         int i = 2;
-
-            //         bool cont = true;
-
-            //         while (cont)
-            //         {
-            //             cont = false;
-            //             foreach (var f in list)
-            //             {
-            //                 if (Path.GetFileName(f) == fileName)
-            //                 {
-            //                     char separator = '.';
-            //                     string[] parts = fileName.Split(separator);
-
-            //                     separator = '(';
-            //                     string[] parts2 = parts[parts.Length - 2].Split(separator);
-            //                     parts[parts.Length - 2] = parts2[0] + "(" + i.ToString() + ")";
-            //                     fileName = "";
-            //                     foreach (var part in parts)
-            //                     {
-            //                         fileName += part;
-            //                         fileName += ".";
-            //                     }
-            //                     fileName = fileName.Substring(0, fileName.Length - 1);
-
-            //                     cont = true;
-            //                 }
-            //             }
-            //             i++;
-            //         }
-            //     }
-            //     else
-            //     {
-
-            //         int i = 2;
-
-            //         bool cont = true;
-
-            //         while (cont)
-            //         {
-            //             cont = false;
-            //             foreach (var f in list)
-            //             {
-            //                 if (Path.GetFileName(f) == fileName)
-            //                 {
-            //                     char separator = '(';
-            //                     string[] parts = fileName.Split(separator);
-            //                     if (parts.Length == 1)
-            //                     {
-            //                         fileName += "(1)";
-            //                     }
-            //                     else
-            //                     {
-            //                         parts[0] += "(" + i.ToString() + ")";
-            //                         fileName = parts[0];
-            //                     }
-
-            //                     cont = true;
-            //                 }
-            //             }
-            //             i++;
-            //         }
-            //     }
-            // }
-
-            // filePath = Path.Combine(filePath, fileName);
-
-            // await using FileStream fs = new(filePath, FileMode.Create);
-
-            // await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
-
-            //fs.Close();
-
-            return Helper.ReturnGood;
+            await _s3Client.PutObjectAsync(putRequest);
         }
 
         public void DeleteFile(string fName)
@@ -197,13 +85,15 @@ namespace BlazorApp2Test.FileAccess
 
         public string GeneratePreSignedURL(string fileName)
         {
-            //var key = $"{_userService.GetUserId()}/{fileName}";
+            AWSConfigsS3.UseSignatureVersion4 = true;
             var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
                 Key = fileName,
-                Expires = DateTime.UtcNow.AddMinutes(15)
+                Verb = HttpVerb.GET,
+                Expires = DateTime.UtcNow.AddMinutes(30)
             };
+
             return _s3Client.GetPreSignedURL(request);
         }
 

@@ -165,7 +165,7 @@ else
         {
             fileSelected = false;
 
-            if (selectedFiles == null || selectedFiles.Count() > 0)
+            if (selectedFiles == null || selectedFiles.Count() <= 0)
             {
                 throw new Exception("Something wrong with file selection");
             }
@@ -183,20 +183,15 @@ else
                 }
 
                 using var stream = file.OpenReadStream();
-                if(await _file.UploadFile(stream, file.Name, true) == Helper.ReturnGood)
-                {
-                    isUploadSuccess = true;
-                    GetFiles();
-                    RefreshPage();
-                }
-                else
-                {
-                    isUploadSuccess = false;
-                }
+                await _file.UploadFile(stream, file.Name);
+                isUploadSuccess = true;
+                await GetFiles();
+                RefreshPage();
             }
         }
         catch (Exception ex)
         {
+            isUploadSuccess = false;
             _errorService.ShowModal(ex.Message);
         }
     }
