@@ -19,7 +19,6 @@
 <PageTitle>GWTool - File</PageTitle>
 
 
-
 @if (_userService.GetAuth())
 {
     <div class="row px-4">
@@ -31,7 +30,7 @@
     <div class="mx-4 pb-3 rounded">
 
         <div class="rounded py-3 ps-2">
-            <InputFile OnChange="HandleSelection" />
+            <InputFile OnChange="HandleSelection" multiple />
             <button class="rounded" @onclick="Upload" disabled="@(!fileSelected)">Upload</button>
         </div>
 
@@ -173,10 +172,11 @@ else
 
                 using var stream = file.OpenReadStream(Helper.FileMaxSize);
                 await _file.UploadFile(stream, file.Name);
-                isUploadSuccess = true;
-                await GetFiles();
-                RefreshPage();
             }
+
+            isUploadSuccess = true;
+            await GetFiles();
+            RefreshPage();
         }
         catch (Exception ex)
         {
