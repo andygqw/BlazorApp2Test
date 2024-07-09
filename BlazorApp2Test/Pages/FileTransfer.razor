@@ -181,7 +181,7 @@ else
                     throw new IOException("Something wrong uploading file to the server: 0 byte");
                 }
 
-                using var stream = file.OpenReadStream();
+                using var stream = file.OpenReadStream(Helper.FileMaxSize);
                 await _file.UploadFile(stream, file.Name);
                 isUploadSuccess = true;
                 await GetFiles();
