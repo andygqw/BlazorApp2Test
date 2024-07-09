@@ -1,26 +1,19 @@
 ﻿using BlazorApp2Test.Components;
-using BlazorApp2Test.Data;
-using Microsoft.AspNetCore.Components.Forms;
 
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace BlazorApp2Test.FileAccess
 {
     internal class FileAccesses
     {
-        private readonly UserDbContext _context;
         private readonly UserService _userService;
         private readonly AmazonS3Client _s3Client;
         private readonly string _bucketName;
 
-        public FileAccesses(UserDbContext context, UserService s, string accessKey, string secretKey, string serviceUrl, string bucketName )
+        public FileAccesses(UserService s, string accessKey, string secretKey, string serviceUrl, string bucketName )
         {
-            _context = context;
             _userService = s;
             
             var config = new AmazonS3Config

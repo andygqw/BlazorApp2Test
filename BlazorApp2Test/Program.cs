@@ -25,7 +25,6 @@ builder.Services.AddScoped<MemoData>();
 builder.Services.AddSingleton<ErrorService>();
 builder.Services.AddSingleton<RenderService>();
 builder.Services.AddScoped<FileAccesses>(sp => new FileAccesses(
-    sp.GetRequiredService<UserDbContext>(),
     sp.GetRequiredService<UserService>(),
     builder.Configuration["CloudflareR2:AccessKey"],
     builder.Configuration["CloudflareR2:SecretKey"],
