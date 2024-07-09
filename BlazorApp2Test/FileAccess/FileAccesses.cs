@@ -80,7 +80,11 @@ namespace BlazorApp2Test.FileAccess
             };
             var response = await _s3Client.ListObjectsV2Async(request);
 
-            return response.S3Objects.Select(item => item.Key).ToList();
+            return response.S3Objects
+                    .Select(item => item.Key.Split('/'))
+                    .Where(parts => parts.Length > 1)
+                    .Select(parts => parts[1])
+                    .ToList();
         }
 
         public string GeneratePreSignedURL(string fileName)
@@ -89,7 +93,7 @@ namespace BlazorApp2Test.FileAccess
             var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
-                Key = fileName,
+                Key = $"{_userService.GetUserId()}/{fileName}",
                 Verb = HttpVerb.GET,
                 Expires = DateTime.UtcNow.AddMinutes(30)
             };
