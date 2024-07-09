@@ -158,18 +158,6 @@ namespace BlazorApp2Test.FileAccess
             return Helper.ReturnGood;
         }
 
-        public async Task<ListObjectsV2Response> ListUserFilesAsync()
-        {
-            var userId = _userService.GetUserId();
-            var request = new ListObjectsV2Request
-            {
-                BucketName = _bucketName,
-                Prefix = $"{userId}/"
-            };
-
-            return await _s3Client.ListObjectsV2Async(request);
-        }
-
         public void DeleteFile(string fName)
         {
             if(fName != null)
@@ -195,23 +183,28 @@ namespace BlazorApp2Test.FileAccess
             }
         }
 
-        public List<string> GetAllFileNames(int id)
+        public async Task<List<String>> ListUserFilesAsync()
         {
-            List<string> files = new List<string>();
-
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), Helper.UploadFolderPath);
-            filePath = Path.Combine(filePath, id.ToString());
-            if (!Directory.Exists(filePath))
+            var request = new ListObjectsV2Request
             {
-                Directory.CreateDirectory(filePath);
-            }
+                BucketName = _bucketName,
+                Prefix = $"{_userService.GetUserId()}/"
+            };
+            var response = await _s3Client.ListObjectsV2Async(request);
 
-            foreach (var file in Directory.GetFiles(filePath))
+            return response.S3Objects.Select(item => item.Key).ToList();
+        }
+
+        public string GeneratePreSignedURL(string fileName)
+        {
+            //var key = $"{_userService.GetUserId()}/{fileName}";
+            var request = new GetPreSignedUrlRequest
             {
-                files.Add(Path.GetFileName(file));
-            }
-
-            return files;
+                BucketName = _bucketName,
+                Key = fileName,
+                Expires = DateTime.UtcNow.AddMinutes(15)
+            };
+            return _s3Client.GetPreSignedURL(request);
         }
 
         public string GetFileSize(string fName)

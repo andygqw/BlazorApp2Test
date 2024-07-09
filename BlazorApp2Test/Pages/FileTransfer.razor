@@ -36,9 +36,9 @@
 
         <div class="ps-2">
 
-            @if (isUploadSuccess && selectedFile != null)
+            @if (isUploadSuccess && selectedFiles != null)
             {
-                <p class="text-success">@selectedFile.Name uploaded successfully.</p>
+                <p class="text-success">Uploaded successfully.</p>
             }
             <div class="mt-4 mb-3 ps-2 py-1 pb-2 bg-light rounded">
 
@@ -47,13 +47,10 @@
                     <p class="pt-2">Current downloadable files:</p>
                     @foreach (var file in fileList)
                     {
-                        @if (file != Helper.WebConfigFile)
-                        {
-                            <p>
-                                <a href="UploadFile/@_userService.GetUserId()/@file" download>@file</a> <label>@_file.GetFileSize(file)</label>
-                                <button class="rounded" @onclick="() => ShowDeleteConfirmation(file)">delete @file</button>
-                            </p>
-                        }
+                        <li>
+                            @file
+                            <a href="@GetDownloadLink(file)" target="_blank">Download</a>
+                        </li>
                     }
 
                     <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
@@ -96,7 +93,7 @@ else
    </div>
 </div>
 
-<div class="modal" id="fileNameDupModal" style="@($"display: {(DupConfirm ? "block" : "none")}")">
+@* <div class="modal" id="fileNameDupModal" style="@($"display: {(DupConfirm ? "block" : "none")}")">
    <div class="modal-content text-center fw-bold">
       <span class="close" @onclick="CloseModal">&times;</span>
       <div class="mb-2 mx-4">
@@ -107,7 +104,7 @@ else
             <button class="btn btn-danger" @onclick="RepHandler">Yes</button>
       </div>
    </div>
-</div>
+</div> *@
 
 @code {
     private List<string>? fileList;
@@ -122,20 +119,19 @@ else
     private bool isUploadSuccess = false;
 
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         _renderService.OnEventTriggered += () => RefreshPage();
-        GetFiles();
-        return base.OnInitializedAsync();
+        await GetFiles();
     }
 
-    private void GetFiles()
+    private async Task GetFiles()
     {
         try
         {
             if (_userService.GetAuth())
             {
-                fileList = _file.GetAllFileNames(_userService.GetUserId());
+                fileList = await _file.ListUserFilesAsync();
             }
 
         }
@@ -143,6 +139,11 @@ else
         {
             _errorService.ShowModal(ex.Message);
         }
+    }
+
+    private string GetDownloadLink(string fileName)
+    {
+        return _file.GeneratePreSignedURL(fileName);
     }
 
     private void HandleSelection(InputFileChangeEventArgs e)
@@ -204,7 +205,7 @@ else
     {
         try
         {
-            if (selectedFile == null)
+            @* if (selectedFile == null)
             {
                 throw new Exception("Something wrong with file selection");
             }
@@ -213,7 +214,7 @@ else
             await _file.UploadFile(selectedFile, false);
             fileSelected = false;
             GetFiles();
-            RefreshPage();
+            RefreshPage(); *@
 
         }catch(Exception ex)
         {
@@ -225,7 +226,7 @@ else
     {
         try
         {
-            if (selectedFile == null)
+            @* if (selectedFile == null)
             {
                 throw new Exception("Something wrong with file selection");
             }
@@ -234,7 +235,7 @@ else
             await _file.UploadFile(selectedFile, true);
             fileSelected = false;
             GetFiles();
-            RefreshPage();
+            RefreshPage(); *@
 
         }catch(Exception ex)
         {
