@@ -111,7 +111,7 @@ else
 
 @code {
     private List<string>? fileList;
-    private IBrowserFile? selectedFile;
+    private IReadOnlyList<IBrowserFile>? selectedFiles;
     private bool fileSelected = false;
     private string? aimed_file = null;
 
@@ -147,8 +147,8 @@ else
 
     private void HandleSelection(InputFileChangeEventArgs e)
     {
-        selectedFile = e.File;
-        if (selectedFile != null)
+        selectedFiles = e.GetMultipleFiles();
+        if (selectedFiles != null && selectedFiles.Count() > 0)
         {
             fileSelected = true;
         }
@@ -164,31 +164,34 @@ else
         {
             fileSelected = false;
 
-            if (selectedFile == null)
+            if (selectedFiles == null || selectedFiles.Count() > 0)
             {
                 throw new Exception("Something wrong with file selection");
             }
 
-            //TODO:
-            var filePath = Path.Combine(Helper.UploadFolderPath, _userService.GetUserId().ToString());
-            foreach (var f in Directory.GetFiles(filePath))
+            foreach (var file in selectedFiles)
             {
-                if (Path.GetFileName(f) == selectedFile.Name)
-                {
-                    DupConfirm = true;
-                    return;
-                }
-            }
+                if(file.Size > Helper.FileMaxSize){
 
-            if(await _file.UploadFile(selectedFile, true) == Helper.ReturnGood)
-            {
-                isUploadSuccess = true;
-                GetFiles();
-                RefreshPage();
-            }
-            else
-            {
-                isUploadSuccess = false;
+                    throw new IOException("Selected file exceeds limit of " + Helper.FileMaxSize / (1024 * 1024) + "MB");
+                }
+
+                if (file.Size == 0)
+                {
+                    throw new IOException("Something wrong uploading file to the server: 0 byte");
+                }
+
+                using var stream = file.OpenReadStream();
+                if(await _file.UploadFile(stream, file.Name, true) == Helper.ReturnGood)
+                {
+                    isUploadSuccess = true;
+                    GetFiles();
+                    RefreshPage();
+                }
+                else
+                {
+                    isUploadSuccess = false;
+                }
             }
         }
         catch (Exception ex)

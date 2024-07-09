@@ -30,140 +30,144 @@ namespace BlazorApp2Test.FileAccess
             _bucketName = bucketName;
         }
 
-        public async Task<int> UploadFile(IBrowserFile selectedFile, bool Rep)
+        public async Task<int> UploadFile(Stream fileStream, string fileName, bool rep)
         {
-            if (selectedFile == null)
-            {
-                throw new ArgumentException("Selected file does not exist");
-            }
+            // Check user file path exists
+            // var filePath = Path.Combine(Directory.GetCurrentDirectory(), Helper.UploadFolderPath);
+            // filePath = Path.Combine(filePath, id.ToString());
+            // if (!Directory.Exists(filePath))
+            // {
+            //     Directory.CreateDirectory(filePath);
+            // }
 
-            if (selectedFile.Size > Helper.FileMaxSize)
-            {
-                throw new IOException("Selected file exceeds limit of " + Helper.FileMaxSize / (1024 * 1024) + "MB");
-            }
+            // var list = Directory.GetFiles(filePath);
 
-            if (selectedFile.Size == 0)
-            {
-                throw new IOException("Something wrong uploading file to the server: 0 byte");
-            }
+            // if(list.Length > Helper.MaxFileUpload)
+            // {
+            //     throw new Exception("You exceeds the limit of " + Helper.MaxFileUpload
+            //                         + "files");
+            // }
 
             var id = _userService.GetUserId();
+            var key = $"{id}/{fileName}"; 
 
-            // Check user file path exists
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), Helper.UploadFolderPath);
-            filePath = Path.Combine(filePath, id.ToString());
-            if (!Directory.Exists(filePath))
+            var putRequest = new PutObjectRequest
             {
-                Directory.CreateDirectory(filePath);
-            }
+                BucketName = _bucketName,
+                Key = key,
+                InputStream = fileStream
+            };
+            await _s3Client.PutObjectAsync(putRequest);          
 
-            var list = Directory.GetFiles(filePath);
+            // if (!Rep)
+            // {
+            //     if (fileName.Contains("."))
+            //     {
 
-            if(list.Length > Helper.MaxFileUpload)
-            {
-                throw new Exception("You exceeds the limit of " + Helper.MaxFileUpload
-                                    + "files");
-            }
+            //         foreach (var f in list)
+            //         {
+            //             if (Path.GetFileName(f) == fileName)
+            //             {
+            //                 char separator = '.';
+            //                 string[] parts = fileName.Split(separator);
+            //                 parts[parts.Length - 2] = parts[parts.Length - 2] + "(1)";
+            //                 fileName = "";
+            //                 foreach (var part in parts)
+            //                 {
+            //                     fileName += part;
+            //                     fileName += ".";
+            //                 }
+            //                 fileName = fileName.Substring(0, fileName.Length - 1);
+            //                 break;
+            //             }
+            //         }
 
-            var fileName = selectedFile.Name;
+            //         int i = 2;
 
-            if (!Rep)
-            {
-                if (fileName.Contains("."))
-                {
+            //         bool cont = true;
 
-                    foreach (var f in list)
-                    {
-                        if (Path.GetFileName(f) == fileName)
-                        {
-                            char separator = '.';
-                            string[] parts = fileName.Split(separator);
-                            parts[parts.Length - 2] = parts[parts.Length - 2] + "(1)";
-                            fileName = "";
-                            foreach (var part in parts)
-                            {
-                                fileName += part;
-                                fileName += ".";
-                            }
-                            fileName = fileName.Substring(0, fileName.Length - 1);
-                            break;
-                        }
-                    }
+            //         while (cont)
+            //         {
+            //             cont = false;
+            //             foreach (var f in list)
+            //             {
+            //                 if (Path.GetFileName(f) == fileName)
+            //                 {
+            //                     char separator = '.';
+            //                     string[] parts = fileName.Split(separator);
 
-                    int i = 2;
+            //                     separator = '(';
+            //                     string[] parts2 = parts[parts.Length - 2].Split(separator);
+            //                     parts[parts.Length - 2] = parts2[0] + "(" + i.ToString() + ")";
+            //                     fileName = "";
+            //                     foreach (var part in parts)
+            //                     {
+            //                         fileName += part;
+            //                         fileName += ".";
+            //                     }
+            //                     fileName = fileName.Substring(0, fileName.Length - 1);
 
-                    bool cont = true;
+            //                     cont = true;
+            //                 }
+            //             }
+            //             i++;
+            //         }
+            //     }
+            //     else
+            //     {
 
-                    while (cont)
-                    {
-                        cont = false;
-                        foreach (var f in list)
-                        {
-                            if (Path.GetFileName(f) == fileName)
-                            {
-                                char separator = '.';
-                                string[] parts = fileName.Split(separator);
+            //         int i = 2;
 
-                                separator = '(';
-                                string[] parts2 = parts[parts.Length - 2].Split(separator);
-                                parts[parts.Length - 2] = parts2[0] + "(" + i.ToString() + ")";
-                                fileName = "";
-                                foreach (var part in parts)
-                                {
-                                    fileName += part;
-                                    fileName += ".";
-                                }
-                                fileName = fileName.Substring(0, fileName.Length - 1);
+            //         bool cont = true;
 
-                                cont = true;
-                            }
-                        }
-                        i++;
-                    }
-                }
-                else
-                {
+            //         while (cont)
+            //         {
+            //             cont = false;
+            //             foreach (var f in list)
+            //             {
+            //                 if (Path.GetFileName(f) == fileName)
+            //                 {
+            //                     char separator = '(';
+            //                     string[] parts = fileName.Split(separator);
+            //                     if (parts.Length == 1)
+            //                     {
+            //                         fileName += "(1)";
+            //                     }
+            //                     else
+            //                     {
+            //                         parts[0] += "(" + i.ToString() + ")";
+            //                         fileName = parts[0];
+            //                     }
 
-                    int i = 2;
+            //                     cont = true;
+            //                 }
+            //             }
+            //             i++;
+            //         }
+            //     }
+            // }
 
-                    bool cont = true;
+            // filePath = Path.Combine(filePath, fileName);
 
-                    while (cont)
-                    {
-                        cont = false;
-                        foreach (var f in list)
-                        {
-                            if (Path.GetFileName(f) == fileName)
-                            {
-                                char separator = '(';
-                                string[] parts = fileName.Split(separator);
-                                if (parts.Length == 1)
-                                {
-                                    fileName += "(1)";
-                                }
-                                else
-                                {
-                                    parts[0] += "(" + i.ToString() + ")";
-                                    fileName = parts[0];
-                                }
+            // await using FileStream fs = new(filePath, FileMode.Create);
 
-                                cont = true;
-                            }
-                        }
-                        i++;
-                    }
-                }
-            }
+            // await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
 
-            filePath = Path.Combine(filePath, fileName);
-
-            await using FileStream fs = new(filePath, FileMode.Create);
-
-            await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
-
-            fs.Close();
+            //fs.Close();
 
             return Helper.ReturnGood;
+        }
+
+        public async Task<ListObjectsV2Response> ListUserFilesAsync()
+        {
+            var userId = _userService.GetUserId();
+            var request = new ListObjectsV2Request
+            {
+                BucketName = _bucketName,
+                Prefix = $"{userId}/"
+            };
+
+            return await _s3Client.ListObjectsV2Async(request);
         }
 
         public void DeleteFile(string fName)
