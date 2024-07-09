@@ -70,32 +70,29 @@ namespace BlazorApp2Test.FileAccess
 
         public async Task DeleteAllFiles()
         {
-            // Iterate over the contents of the bucket and delete all objects.
             var request = new ListObjectsV2Request
             {
                 BucketName = _bucketName,
+                Prefix = $"{_userService.GetUserId()}/"
+            };
+            var response = await _s3Client.ListObjectsV2Async(request);
+
+            if (response.S3Objects.Count == 0)
+            {
+                throw new Exception("No files found to delete");
+            }
+
+            var deleteObjectsRequest = new DeleteObjectsRequest
+            {
+                BucketName = _bucketName
             };
 
-            try
+            foreach (var s3Object in response.S3Objects)
             {
-                ListObjectsV2Response response;
-
-                do
-                {
-                    response = await _s3Client.ListObjectsV2Async(request);
-                    response.S3Objects
-                        .ForEach(async obj => await _s3Client.DeleteObjectAsync(_bucketName, obj.Key));
-
-                    // If the response is truncated, set the request ContinuationToken
-                    // from the NextContinuationToken property of the response.
-                    request.ContinuationToken = response.NextContinuationToken;
-                }
-                while (response.IsTruncated);
+                deleteObjectsRequest.AddKey(s3Object.Key);
             }
-            catch (AmazonS3Exception ex)
-            {
-                throw new Exception($"Error deleting objects: {ex.Message}");
-            }
+
+            await _s3Client.DeleteObjectsAsync(deleteObjectsRequest);
         }
 
         public async Task<List<S3Object>> ListUserFilesAsync()
@@ -106,7 +103,7 @@ namespace BlazorApp2Test.FileAccess
                 Prefix = $"{_userService.GetUserId()}/"
             };
             var response = await _s3Client.ListObjectsV2Async(request);
-            
+
             return response.S3Objects.Select(item => new S3Object
                     {
                         Key = Path.GetFileName(item.Key),
