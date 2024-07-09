@@ -95,9 +95,13 @@ namespace BlazorApp2Test.FileAccess
                 BucketName = _bucketName,
                 Key = $"{_userService.GetUserId()}/{fileName}",
                 Verb = HttpVerb.GET,
-                Expires = DateTime.UtcNow.AddMinutes(30)
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                ResponseHeaderOverrides = new ResponseHeaderOverrides
+                {
+                    ContentDisposition = $"attachment; filename=\"{fileName}\""
+                }
             };
-
+            
             return _s3Client.GetPreSignedURL(request);
         }
 

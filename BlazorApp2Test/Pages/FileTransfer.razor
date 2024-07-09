@@ -47,8 +47,10 @@
                     <p class="pt-2">Current downloadable files:</p>
                     @foreach (var file in fileList)
                     {
-                        <a href="@GetDownloadLink(file)" target="_blank">@file</a>
-                        <button class="rounded" @onclick="() => ShowDeleteConfirmation(file)">delete @file</button>
+                        <p>
+                            <a href="@GetDownloadLink(file)" target="_blank">@file</a>
+                            <button class="rounded" @onclick="() => ShowDeleteConfirmation(file)">delete @file</button>
+                        </p>
                     }
 
                     <button class="my-3 mx-1 rounded" @onclick="DeleteAll">Delete All</button>
