@@ -1,0 +1,13 @@
+
+<div class="loading-layer" style="display:@Display">
+    <div class="spinner"></div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    private string Display => IsLoading ? "block" : "none";
+}
