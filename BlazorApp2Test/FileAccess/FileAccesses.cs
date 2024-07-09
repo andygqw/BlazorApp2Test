@@ -98,7 +98,7 @@ namespace BlazorApp2Test.FileAccess
             }
         }
 
-        public async Task<List<String>> ListUserFilesAsync()
+        public async Task<List<S3Object>> ListUserFilesAsync()
         {
             var request = new ListObjectsV2Request
             {
@@ -106,12 +106,12 @@ namespace BlazorApp2Test.FileAccess
                 Prefix = $"{_userService.GetUserId()}/"
             };
             var response = await _s3Client.ListObjectsV2Async(request);
-
-            return response.S3Objects
-                    .Select(item => item.Key.Split('/'))
-                    .Where(parts => parts.Length > 1)
-                    .Select(parts => parts[1])
-                    .ToList();
+            
+            return response.S3Objects.Select(item => new S3Object
+                    {
+                        Key = Path.GetFileName(item.Key),
+                        Size = item.Size
+                    }).ToList();
         }
 
         public string GeneratePreSignedURL(string fileName)
@@ -132,39 +132,25 @@ namespace BlazorApp2Test.FileAccess
             return _s3Client.GetPreSignedURL(request);
         }
 
-        public string GetFileSize(string fName)
+        public string GetFileSize(long bytes)
         {
-            // var filePath = Path.Combine(Helper.UploadFolderPath, _userService.GetUserId().ToString());
-            // filePath = Path.Combine(filePath, fName);
-            // var fileInfo = new FileInfo(filePath);
-            // if (fileInfo.Exists)
-            // {
-            //     // Size in bytes
-            //     long bytes = fileInfo.Length;
-
-            //     // Convert size to more readable format
-            //     if (bytes < 1024)
-            //     {
-            //         return bytes + " Bytes";
-            //     }
-            //     else if (bytes < 1024 * 1024)
-            //     {
-            //         return (bytes / 1024.0).ToString("0.00") + " KB";
-            //     }
-            //     else if (bytes < 1024 * 1024 * 1024)
-            //     {
-            //         return (bytes / (1024.0 * 1024.0)).ToString("0.00") + " MB";
-            //     }
-            //     else
-            //     {
-            //         return (bytes / (1024.0 * 1024.0 * 1024.0)).ToString("0.00") + " GB";
-            //     }
-            // }
-            // else
-            // {
-            //     throw new Exception("Something happened during get file info: " + fName);
-            // }
-            return "";
+            // Convert size to more readable format
+            if (bytes < 1024)
+            {
+                return bytes + " Bytes";
+            }
+            else if (bytes < 1024 * 1024)
+            {
+                return (bytes / 1024.0).ToString("0.00") + " KB";
+            }
+            else if (bytes < 1024 * 1024 * 1024)
+            {
+                return (bytes / (1024.0 * 1024.0)).ToString("0.00") + " MB";
+            }
+            else
+            {
+                return (bytes / (1024.0 * 1024.0 * 1024.0)).ToString("0.00") + " GB";
+            }
         }
     }
 }

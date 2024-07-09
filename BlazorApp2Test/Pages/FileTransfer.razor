@@ -5,6 +5,7 @@
 @using BlazorApp2Test.FileAccess
 @using Blazored.Modal
 @using System
+@using Amazon.S3.Model
 
 @inject ErrorService _errorService
 @inject FileAccesses _file
@@ -48,8 +49,8 @@
                     @foreach (var file in fileList)
                     {
                         <p>
-                            <a href="@GetDownloadLink(file)" target="_blank">@file</a>
-                            <button class="rounded" @onclick="() => ShowDeleteConfirmation(file)">delete @file</button>
+                            <a href="@GetDownloadLink(file.Key)" target="_blank">@file.Key</a> <label>@_file.GetFileSize(file.Size)</label>
+                            <button class="rounded" @onclick="() => ShowDeleteConfirmation(file.Key)">delete @file.Key</button>
                         </p>
                     }
 
@@ -106,7 +107,7 @@ else
 </div> *@
 
 @code {
-    private List<string>? fileList;
+    private List<S3Object>? fileList;
     private IReadOnlyList<IBrowserFile>? selectedFiles;
     private bool fileSelected = false;
     private string? aimed_file = null;
