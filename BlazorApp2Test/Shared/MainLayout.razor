@@ -22,7 +22,7 @@
             {
                 <div style="display: flex;">
                     <div class="welcome-message text-white">Hi, @_userService.GetUsername()</div>
-                    <a href="" @onclick="_ => _userService.Logout()" class="text-white logout-text">log out</a>
+                    <a href="" @onclick="Logout" class="text-white logout-text">log out</a>
                 </div>
             }
             else
@@ -63,6 +63,12 @@
     {
         currentPath = NavigationManager.Uri;
 
-        NavigationManager.NavigateTo($"/login/{Uri.EscapeDataString(currentPath)}");
+        _navigationManager.NavigateTo($"/login/{Uri.EscapeDataString(currentPath)}");
+    }
+
+    private void Logout()
+    {
+        _userService.Logout();
+        _navigationManager.NavigateTo(_navigationManager.Uri, forceLoad: true);
     }
 }
