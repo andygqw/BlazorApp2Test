@@ -68,8 +68,9 @@
             </div>
         </div>
     }
-
 </div>
+
+<Loading IsLoading="@isLoading" />
 
 @code {
 
@@ -86,7 +87,7 @@
     private string wordCountColor => wordCount > Helper.TextMaxLength ? "red" : "green";
     private string charCountColor => charCount > Helper.TextAreaMaxLength ? "red" : "green";
 
-
+    private bool isLoading = false;
 
     private void Change()
     {

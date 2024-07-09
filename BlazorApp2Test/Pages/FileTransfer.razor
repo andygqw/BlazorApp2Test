@@ -113,6 +113,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        isLoading = false;
         _renderService.OnEventTriggered += () => RefreshPage();
         await GetFiles();
     }
@@ -222,6 +223,7 @@ else
         }
         catch (Exception ex)
         {
+            isLoading = false;
             _errorService.ShowModal(ex.Message);
         }
     }
@@ -240,6 +242,7 @@ else
         }
         catch (Exception ex)
         {
+            isLoading = false;
             _errorService.ShowModal(ex.Message);
         }
     }

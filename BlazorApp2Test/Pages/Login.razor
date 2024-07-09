@@ -28,7 +28,7 @@
     <a href="/register/@Uri.EscapeDataString(ReturnUrl)">Register here</a>
 </div>
 
-
+<Loading IsLoading="@isLoading" />
 
 @code{
 
@@ -37,10 +37,13 @@
 
     private LoginModel loginModel = new LoginModel();
 
+    private bool isLoading = false;
+
     private async Task LoginHere()
     {
         try
         {
+            isLoading = true;
             if (loginModel.Password != null && loginModel.Username != null)
             {
                 await _userService.Login(loginModel.Username, loginModel.Password);
@@ -53,8 +56,8 @@
         }
         catch (Exception ex)
         {
+            isLoading = false;
             _errorService.ShowModal(ex.Message);
         }
     }
-
 }

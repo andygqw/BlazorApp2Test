@@ -60,6 +60,9 @@
     <button class="rounded" @onclick="RefreshPage">Refresh</button>
 </div>
 
+<Loading IsLoading="@isLoading" />
+
+
 @code {
 
     private string? text;
@@ -72,6 +75,8 @@
     private bool disableSubmit = false;
 
     private bool copied = false;
+
+    private bool isLoading = false;
 
     private void Submit()
     {

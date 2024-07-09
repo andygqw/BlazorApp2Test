@@ -180,6 +180,8 @@ else
     </div>
 </div>
 
+<Loading IsLoading="@isLoading" />
+
 @code {
 
     private List<MemoModel> memoList = new List<MemoModel>();
@@ -202,8 +204,11 @@ else
     // Image preview
     private string? currentImg;
 
+    private bool isLoading = false;
+
     protected override async Task OnInitializedAsync()
     {
+        isLoading = false;
         _renderService.OnEventTriggered += () => RefreshPage();
         await LoadData();
         newMemo = new MemoModel();
