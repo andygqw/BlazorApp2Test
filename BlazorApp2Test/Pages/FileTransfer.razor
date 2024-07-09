@@ -44,7 +44,7 @@
 
                 @if (fileList != null && fileList.Count > 0)
                 {
-                    <p class="pt-2">Current downloadable files:</p>
+                    <p class="pt-2">Current downloadable files (@fileList.Count()):</p>
                     @foreach (var file in fileList)
                     {
                         <p>
@@ -160,6 +160,15 @@ else
             if (selectedFiles == null || selectedFiles.Count() <= 0)
             {
                 throw new Exception("Something wrong with file selection");
+            }
+
+            // Calculate the number of files stored
+            int curNum = 0;
+            if(fileList != null) curNum = fileList.Count();
+
+            if(curNum + selectedFiles.Count() > Helper.MaxFileUpload){
+
+                throw new Exception("You uploaded more files than maximum number of files limit(" + Helper.MaxFileUpload + " files)");
             }
 
             isLoading = true;
