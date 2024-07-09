@@ -1,7 +1,5 @@
 ﻿using BlazorApp2Test.Data;
 using BlazorApp2Test.Models;
-using System;
-using System.Xml.Linq;
 
 namespace BlazorApp2Test.Components
 {

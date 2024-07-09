@@ -1,7 +1,12 @@
 ﻿using BlazorApp2Test.Components;
 using BlazorApp2Test.Data;
-using BlazorApp2Test.Models;
 using Microsoft.AspNetCore.Components.Forms;
+
+using Amazon.S3;
+using Amazon.S3.Model;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace BlazorApp2Test.FileAccess
 {
@@ -9,11 +14,20 @@ namespace BlazorApp2Test.FileAccess
     {
         private readonly UserDbContext _context;
         private readonly UserService _userService;
+        private readonly AmazonS3Client _s3Client;
+        private readonly string _bucketName;
 
-        public FileAccesses(UserDbContext context, UserService s)
+        public FileAccesses(UserDbContext context, UserService s, string accessKey, string secretKey, string serviceUrl, string bucketName )
         {
             _context = context;
             _userService = s;
+            
+            var config = new AmazonS3Config
+            {
+                ServiceURL = serviceUrl
+            };
+            _s3Client = new AmazonS3Client(accessKey, secretKey, config);
+            _bucketName = bucketName;
         }
 
         public async Task<int> UploadFile(IBrowserFile selectedFile, bool Rep)
@@ -148,23 +162,6 @@ namespace BlazorApp2Test.FileAccess
             await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
 
             fs.Close();
-
-            // DB operation:
-            //UserFile fi = new UserFile();
-
-            //fi.userId = id;
-            //fi.fileName = fileName;
-            //fi.filePath = filePath;
-            //fi.createTime = DateTime.Now;
-
-
-            //if(_context.Files != null)
-            //{
-            //    _context.Files.Add(fi);
-            //}
-
-            //await _context.SaveChangesAsync();
-
 
             return Helper.ReturnGood;
         }
