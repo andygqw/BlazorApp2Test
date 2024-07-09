@@ -46,28 +46,55 @@ namespace BlazorApp2Test.FileAccess
             await _s3Client.PutObjectAsync(putRequest);
         }
 
-        public void DeleteFile(string fName)
+        public async Task DeleteFile(string fileName)
         {
-            if(fName != null)
+            try
             {
-                var filePath = Path.Combine(Helper.UploadFolderPath,
-                                        _userService.GetUserId().ToString());
-                filePath = Path.Combine(filePath, fName);
-                System.IO.File.Delete(filePath);
+                var deleteObjectRequest = new DeleteObjectRequest
+                {
+                    BucketName = _bucketName,
+                    Key = $"{_userService.GetUserId()}/{fileName}"
+                };
+
+                await _s3Client.DeleteObjectAsync(deleteObjectRequest);
             }
-            else
+            catch (AmazonS3Exception e)
             {
-                throw new Exception("File name doesn exist in current directory");
+                throw new Exception($"Error encountered on server: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Unknown encountered on server: {e.Message}");
             }
         }
 
-        public void DeleteAllFiles()
+        public async Task DeleteAllFiles()
         {
-            var filePath = Path.Combine(Helper.UploadFolderPath,
-                                        _userService.GetUserId().ToString());
-            foreach (var file in Directory.GetFiles(filePath))
+            // Iterate over the contents of the bucket and delete all objects.
+            var request = new ListObjectsV2Request
             {
-                DeleteFile(Path.GetFileName(file));
+                BucketName = _bucketName,
+            };
+
+            try
+            {
+                ListObjectsV2Response response;
+
+                do
+                {
+                    response = await _s3Client.ListObjectsV2Async(request);
+                    response.S3Objects
+                        .ForEach(async obj => await _s3Client.DeleteObjectAsync(_bucketName, obj.Key));
+
+                    // If the response is truncated, set the request ContinuationToken
+                    // from the NextContinuationToken property of the response.
+                    request.ContinuationToken = response.NextContinuationToken;
+                }
+                while (response.IsTruncated);
+            }
+            catch (AmazonS3Exception ex)
+            {
+                throw new Exception($"Error deleting objects: {ex.Message}");
             }
         }
 
@@ -95,48 +122,49 @@ namespace BlazorApp2Test.FileAccess
                 BucketName = _bucketName,
                 Key = $"{_userService.GetUserId()}/{fileName}",
                 Verb = HttpVerb.GET,
-                Expires = DateTime.UtcNow.AddMinutes(30),
+                Expires = DateTime.UtcNow.AddMinutes(Helper.R2_URL_EXPIRE_TIME),
                 ResponseHeaderOverrides = new ResponseHeaderOverrides
                 {
                     ContentDisposition = $"attachment; filename=\"{fileName}\""
                 }
             };
-            
+
             return _s3Client.GetPreSignedURL(request);
         }
 
         public string GetFileSize(string fName)
         {
-            var filePath = Path.Combine(Helper.UploadFolderPath, _userService.GetUserId().ToString());
-            filePath = Path.Combine(filePath, fName);
-            var fileInfo = new FileInfo(filePath);
-            if (fileInfo.Exists)
-            {
-                // Size in bytes
-                long bytes = fileInfo.Length;
+            // var filePath = Path.Combine(Helper.UploadFolderPath, _userService.GetUserId().ToString());
+            // filePath = Path.Combine(filePath, fName);
+            // var fileInfo = new FileInfo(filePath);
+            // if (fileInfo.Exists)
+            // {
+            //     // Size in bytes
+            //     long bytes = fileInfo.Length;
 
-                // Convert size to more readable format
-                if (bytes < 1024)
-                {
-                    return bytes + " Bytes";
-                }
-                else if (bytes < 1024 * 1024)
-                {
-                    return (bytes / 1024.0).ToString("0.00") + " KB";
-                }
-                else if (bytes < 1024 * 1024 * 1024)
-                {
-                    return (bytes / (1024.0 * 1024.0)).ToString("0.00") + " MB";
-                }
-                else
-                {
-                    return (bytes / (1024.0 * 1024.0 * 1024.0)).ToString("0.00") + " GB";
-                }
-            }
-            else
-            {
-                throw new Exception("Something happened during get file info: " + fName);
-            }
+            //     // Convert size to more readable format
+            //     if (bytes < 1024)
+            //     {
+            //         return bytes + " Bytes";
+            //     }
+            //     else if (bytes < 1024 * 1024)
+            //     {
+            //         return (bytes / 1024.0).ToString("0.00") + " KB";
+            //     }
+            //     else if (bytes < 1024 * 1024 * 1024)
+            //     {
+            //         return (bytes / (1024.0 * 1024.0)).ToString("0.00") + " MB";
+            //     }
+            //     else
+            //     {
+            //         return (bytes / (1024.0 * 1024.0 * 1024.0)).ToString("0.00") + " GB";
+            //     }
+            // }
+            // else
+            // {
+            //     throw new Exception("Something happened during get file info: " + fName);
+            // }
+            return "";
         }
     }
 }

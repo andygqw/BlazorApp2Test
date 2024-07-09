@@ -60,7 +60,6 @@
                     <p class="pt-2">Currently no downloadable files on server</p>
                 }
             </div>
-            If browser can't find file, try click <a href=@Helper.UploadFolder>here</a>.
         </div>
     </div>
 }
@@ -250,7 +249,7 @@ else
         DeleteConfirm = true;
     }
 
-    private void ConfirmDelete()
+    private async Task ConfirmDelete()
     {
         try
         {
@@ -259,8 +258,8 @@ else
                 throw new Exception("File aimed failed");
             }
             CloseModal();
-            _file.DeleteFile(aimed_file);
-            GetFiles();
+            await _file.DeleteFile(aimed_file);
+            await GetFiles();
             RefreshPage();
         }
         catch (Exception ex)
@@ -269,14 +268,14 @@ else
         }
     }
 
-    private void ConfirmDeleteAll()
+    private async Task ConfirmDeleteAll()
     {
         try
         {
             CloseModal();
             aimed_file = null;
-            _file.DeleteAllFiles();
-            GetFiles();
+            await _file.DeleteAllFiles();
+            await GetFiles();
             RefreshPage();
         }
         catch (Exception ex)
