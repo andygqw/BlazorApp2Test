@@ -2,8 +2,6 @@ using BlazorApp2Test.Components;
 using BlazorApp2Test.Data;
 using BlazorApp2Test.FileAccess;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +12,6 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddDbContext<UserDbContext>(options =>
             options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
             ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
-
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
@@ -41,7 +38,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 
 app.UseHttpsRedirection();
 

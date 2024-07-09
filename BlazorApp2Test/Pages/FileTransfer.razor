@@ -93,6 +93,8 @@ else
    </div>
 </div>
 
+<Loading IsLoading="@isLoading" />
+
 
 @code {
     private List<S3Object>? fileList;
@@ -105,6 +107,8 @@ else
     private bool DupConfirm = false;
     private bool isDeleteAll = false;
     private bool isUploadSuccess = false;
+
+    private bool isLoading = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -158,6 +162,8 @@ else
                 throw new Exception("Something wrong with file selection");
             }
 
+            isLoading = true;
+
             foreach (var file in selectedFiles)
             {
                 if(file.Size > Helper.FileMaxSize){
@@ -177,9 +183,11 @@ else
             isUploadSuccess = true;
             await GetFiles();
             RefreshPage();
+            isLoading = false;
         }
         catch (Exception ex)
         {
+            isLoading = false;
             isUploadSuccess = false;
             _errorService.ShowModal(ex.Message);
         }
@@ -206,9 +214,11 @@ else
                 throw new Exception("File aimed failed");
             }
             CloseModal();
+            isLoading = true;
             await _file.DeleteFile(aimed_file);
             await GetFiles();
             RefreshPage();
+            isLoading = false;
         }
         catch (Exception ex)
         {
@@ -221,10 +231,12 @@ else
         try
         {
             CloseModal();
+            isLoading = true;
             aimed_file = null;
             await _file.DeleteAllFiles();
             await GetFiles();
             RefreshPage();
+            isLoading = false;
         }
         catch (Exception ex)
         {
