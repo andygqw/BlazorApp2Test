@@ -97,36 +97,6 @@ namespace BlazorApp2Test.Data
             }
         }
 
-        public async Task EditMemo(MemoModel memo)
-        {
-            if(_context.Memos != null)
-            {
-                var m = await _context.Memos.FindAsync(memo.Id);
-
-                if (m != null)
-                {
-                    if (m.image != null)
-                    {
-                        DeleteImg(m.image);
-                    }
-
-                    m.name = memo.Name;
-                    m.description = memo.Description;
-                    m.image = memo.Image;
-
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    throw new Exception("Can't find memo to be edited");
-                }
-            }
-            else
-            {
-                throw new Exception("Something wrong with db Users");
-            }
-        }
-
         public async Task DeleteMemo(MemoModel memo)
         {
             if(memo.Image != null)
