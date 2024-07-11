@@ -30,7 +30,6 @@
 
         internal string? GetText()
         {
-
             if (text != null && text.Trim().Length > 0)
             {
                 return text;

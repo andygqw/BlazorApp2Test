@@ -58,7 +58,6 @@
         <button type="button" class="rounded me-1" @onclick="CopyTextToClipboard">Copy</button>
     }
 
-    <button class="rounded" @onclick="RefreshPage">Refresh</button>
 </div>
 
 <Loading IsLoading="@isLoading" />
@@ -83,13 +82,14 @@
     {
         try
         {
-            if (text == null)
+            if (text == null || text.Trim().Length <= 0)
             {
                 throw new IOException("No input detected");
 
             }
             _textData.CleanText();
             _textData.AssignText(text);
+            copied = false;
         }
         catch(Exception ex)
         {
