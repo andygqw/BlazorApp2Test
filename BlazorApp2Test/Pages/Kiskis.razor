@@ -208,23 +208,26 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        isLoading = false;
         _renderService.OnEventTriggered += () => RefreshPage();
         await LoadData();
         newMemo = new MemoModel();
+        isLoading = false;
     }
 
     private async Task LoadData()
     {
         try
         {
+            isLoading = true;
             if (_userService.GetAuth())
             {
                 memoList = await _memoData.LoadMemos();
             }
+            isLoading = false;
         }
         catch (Exception ex)
         {
+            isLoading = false;
             _errorService.ShowModal("Load memos error: " + ex.Message);
         }
     }
@@ -233,6 +236,9 @@ else
     {
         try
         {
+            showAddModal = false;
+            isLoading = true;
+
             if (selectedFile != null)
             {
 
@@ -243,14 +249,16 @@ else
 
             await _memoData.SaveMemo(newMemo);
             memoList = await _memoData.LoadMemos();
-
         }
         catch (Exception ex)
         {
             _errorService.ShowModal("Save memos error: " + ex.Message);
         }
+        finally{
 
-        CloseModal();
+            isLoading = false;
+            CloseModal();
+        }
     }
 
     private void DeleteHandler(MemoModel memo)
@@ -274,10 +282,13 @@ else
     {
         try
         {
+            isLoading = true;
             await _memoData.DeleteMemo(newMemo);
+            isLoading = false;
         }
         catch (Exception ex)
         {
+            isLoading = false;
             _errorService.ShowModal("Delete memos error: " + ex.Message);
         }
         finally
