@@ -71,6 +71,11 @@ namespace BlazorApp2Test.Data
 
                             m.Replies = await _replyData.GetReplies(m.Id);
 
+                            if(m.Image != null){
+
+                                m.Image = _file.GeneratePreSignedURLForMemoImg(m.Image);
+                            }
+
                             list.Add(m);
                         }
 
@@ -167,30 +172,24 @@ namespace BlazorApp2Test.Data
             }
         }
 
-        public async Task SaveMemoImage(IBrowserFile selectedFile)
+        public async Task SaveMemoImage(IBrowserFile file)
         {
-            var fileExtension = Path.GetExtension(selectedFile.Name).ToLowerInvariant();
-
-            if (!Helper.AllowedExtensions.Contains(fileExtension))
+            if (file != null)
             {
-                throw new Exception("File type is not supported.");
-            }
+                using var stream = file.OpenReadStream(Helper.FileMaxSize);
+                await _file.UploadMemoImg(stream, file.Name);
 
-            using var stream = selectedFile.OpenReadStream(Helper.FileMaxSize);
-            await _file.UploadMemoImg(stream, selectedFile.Name);
+            }else{
+
+                throw new Exception("MemoData.SaveMemoImg: file == null");
+            }
         }
 
-        private void DeleteImg(string path)
+        private async void DeleteImg(string path)
         {
             if (!string.IsNullOrEmpty(path))
             {
-                char separator = '\\';
-                string[] parts = path.Split(separator);
-                var name = parts[parts.Length - 1];
-
-                var filePath = Helper.MemoImgset + '/' + name;
-
-                File.Delete(filePath);
+                await _file.DeleteMemoImg(path);
             }
         }
     }

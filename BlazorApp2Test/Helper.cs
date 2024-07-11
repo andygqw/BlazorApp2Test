@@ -6,10 +6,6 @@
         internal const int R2_URL_EXPIRE_TIME = 30; //minutes
         internal const string R2_MEMO_FOLDER = "memoImg";
 
-        // Memo:
-        internal const string MemoImgset = "wwwroot/Memos";
-        internal const string MemoImgget = "/Memos";
-
 
         // Limits:
         internal const int TextMaxLength = 1400;

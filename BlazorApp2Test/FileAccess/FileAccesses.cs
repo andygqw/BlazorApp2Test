@@ -39,20 +39,6 @@ namespace BlazorApp2Test.FileAccess
             await _s3Client.PutObjectAsync(putRequest);
         }
 
-        public async Task UploadMemoImg(Stream fileStream, string fileName)
-        {
-            var key = $"{Helper.R2_MEMO_FOLDER}/{fileName}";
-
-            var putRequest = new PutObjectRequest
-            {
-                BucketName = _bucketName,
-                Key = key,
-                InputStream = fileStream,
-                DisablePayloadSigning = true// Required for Cloudflare R2
-            };
-            await _s3Client.PutObjectAsync(putRequest);
-        }
-
         public async Task DeleteFile(string fileName)
         {
             try
@@ -131,6 +117,56 @@ namespace BlazorApp2Test.FileAccess
                 {
                     ContentDisposition = $"attachment; filename=\"{fileName}\""
                 }
+            };
+
+            return _s3Client.GetPreSignedURL(request);
+        }
+
+        public async Task UploadMemoImg(Stream fileStream, string fileName)
+        {
+            var key = $"{Helper.R2_MEMO_FOLDER}/{fileName}";
+
+            var putRequest = new PutObjectRequest
+            {
+                BucketName = _bucketName,
+                Key = key,
+                InputStream = fileStream,
+                DisablePayloadSigning = true// Required for Cloudflare R2
+            };
+            await _s3Client.PutObjectAsync(putRequest);
+        }
+
+        public async Task DeleteMemoImg(string fileName)
+        {
+            try
+            {
+                var deleteObjectRequest = new DeleteObjectRequest
+                {
+                    BucketName = _bucketName,
+                    Key = $"{Helper.R2_MEMO_FOLDER}/{fileName}"
+                };
+
+                await _s3Client.DeleteObjectAsync(deleteObjectRequest);
+            }
+            catch (AmazonS3Exception e)
+            {
+                throw new Exception($"Error encountered on server: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Unknown encountered on server: {e.Message}");
+            }
+        }
+
+        public string GeneratePreSignedURLForMemoImg(string fileName)
+        {
+            AWSConfigsS3.UseSignatureVersion4 = true;
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = _bucketName,
+                Key = $"{Helper.R2_MEMO_FOLDER}/{fileName}",
+                Verb = HttpVerb.GET,
+                Expires = DateTime.UtcNow.AddMinutes(Helper.R2_URL_EXPIRE_TIME)
             };
 
             return _s3Client.GetPreSignedURL(request);

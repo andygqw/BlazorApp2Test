@@ -237,7 +237,7 @@ else
             {
 
                 await _memoData.SaveMemoImage(selectedFile);
-                newMemo.Image = Helper.MemoImgget + '\\' + selectedFile.Name;
+                newMemo.Image = selectedFile.Name;
             }
             newMemo.Time = DateTime.Now;
 
