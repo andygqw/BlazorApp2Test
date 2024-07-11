@@ -30,24 +30,6 @@
 
             copyToClipboard = (text) => {
 
-                @* try {
-
-                    const input = document.createElement('input');
-                    input.setAttribute('value', text);
-                    document.body.appendChild(input);
-                    input.select();
-                    document.execCommand('copy');
-
-                } catch (ex) {
-
-                    console.warn("Copy to clipboard failed.", ex);
-                    return false;
-                }
-                finally {
-
-                    document.body.removeChild(input);
-                } *@
-
                 var textarea = document.createElement("textarea");
                 textarea.textContent = text;
                 textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
