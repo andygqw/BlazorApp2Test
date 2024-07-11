@@ -4,12 +4,12 @@
     {
         // File:
         internal const int R2_URL_EXPIRE_TIME = 30; //minutes
+        internal const string R2_MEMO_FOLDER = "memoImg";
 
         // Memo:
         internal const string MemoImgset = "wwwroot/Memos";
         internal const string MemoImgget = "/Memos";
 
-        internal const string MemoJSONset = "wwwroot/Memos/memos.JSON";
 
         // Limits:
         internal const int TextMaxLength = 1400;
@@ -20,8 +20,7 @@
 
 
         // Error code:
-        internal const int ReturnGood = 40;
-        internal const int ReturnFailed = 50;
+    
 
         //Global Messages
         internal const string MSG_NOPERMISSION= "You do not have permission to access this page, try log in";

@@ -18,7 +18,6 @@ builder.Services.AddScoped<UserService>();
 
 builder.Services.AddSingleton<TextData>();
 builder.Services.AddScoped<ReplyData>();
-builder.Services.AddScoped<MemoData>();
 builder.Services.AddSingleton<ErrorService>();
 builder.Services.AddSingleton<RenderService>();
 builder.Services.AddScoped<FileAccesses>(sp => new FileAccesses(
@@ -28,6 +27,7 @@ builder.Services.AddScoped<FileAccesses>(sp => new FileAccesses(
     builder.Configuration["CloudflareR2:ServiceUrl"],
     builder.Configuration["CloudflareR2:BucketName"]
 ));
+builder.Services.AddScoped<MemoData>();
 
 var app = builder.Build();
 

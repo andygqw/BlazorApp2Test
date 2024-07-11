@@ -6,7 +6,7 @@ using Amazon.S3.Model;
 
 namespace BlazorApp2Test.FileAccess
 {
-    internal class FileAccesses
+    public class FileAccesses
     {
         private readonly UserService _userService;
         private readonly AmazonS3Client _s3Client;
@@ -28,6 +28,20 @@ namespace BlazorApp2Test.FileAccess
         {
             var id = _userService.GetUserId();
             var key = $"{id}/{fileName}"; 
+
+            var putRequest = new PutObjectRequest
+            {
+                BucketName = _bucketName,
+                Key = key,
+                InputStream = fileStream,
+                DisablePayloadSigning = true// Required for Cloudflare R2
+            };
+            await _s3Client.PutObjectAsync(putRequest);
+        }
+
+        public async Task UploadMemoImg(Stream fileStream, string fileName)
+        {
+            var key = $"{Helper.R2_MEMO_FOLDER}/{fileName}";
 
             var putRequest = new PutObjectRequest
             {

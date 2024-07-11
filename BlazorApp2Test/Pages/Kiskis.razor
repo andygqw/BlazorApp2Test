@@ -235,7 +235,6 @@ else
         {
             if (selectedFile != null)
             {
-                //NOTE: potential error - if image name exists
 
                 await _memoData.SaveMemoImage(selectedFile);
                 newMemo.Image = Helper.MemoImgget + '\\' + selectedFile.Name;

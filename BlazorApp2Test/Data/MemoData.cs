@@ -3,6 +3,7 @@ using BlazorApp2Test.Models;
 using BlazorApp2Test.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
+using BlazorApp2Test.FileAccess;
 
 namespace BlazorApp2Test.Data
 {
@@ -11,12 +12,14 @@ namespace BlazorApp2Test.Data
         private readonly UserDbContext _context;
         private readonly UserService _userService;
         private readonly ReplyData _replyData;
+        private readonly FileAccesses _file;
 
-        public MemoData(UserDbContext context, UserService s, ReplyData r)
+        public MemoData(UserDbContext context, UserService s, ReplyData r, FileAccesses f)
         {
             _context = context;
             _userService = s;
             _replyData = r;
+            _file = f;
         }
 
         public async Task SaveMemo(MemoModel memo)
@@ -173,12 +176,8 @@ namespace BlazorApp2Test.Data
                 throw new Exception("File type is not supported.");
             }
 
-            var path = Path.Combine(Helper.MemoImgset, selectedFile.Name);
-
-            // Save the file to the server's local folder
-            await using FileStream fs = new(path, FileMode.Create);
-            await selectedFile.OpenReadStream(selectedFile.Size).CopyToAsync(fs);
-            fs.Close();
+            using var stream = selectedFile.OpenReadStream(Helper.FileMaxSize);
+            await _file.UploadMemoImg(stream, selectedFile.Name);
         }
 
         private void DeleteImg(string path)
