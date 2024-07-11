@@ -15,7 +15,15 @@
 
             copyToClipboard = (text) => {
 
-                navigator.clipboard.writeText(text);
+                try{
+
+                    navigator.clipboard.writeText(text);
+
+                }catch (ex){
+
+                    console.warn("Copy to clipbaord error: ", ex);
+                    return false;
+                }
             };
 
         } else {
