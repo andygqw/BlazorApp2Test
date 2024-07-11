@@ -33,28 +33,18 @@
 
                 try {
 
-                    console.log("Get in manual");
                     const input = document.createElement('input');
-                    console.log("Done create input");
                     input.setAttribute('value', text);
-                    console.log("Done set attribute");
                     document.body.appendChild(input);
-                    console.log("Done append child");
                     input.select();
-                    console.log("Done select");
                     document.execCommand('copy');
-                    console.log("Done exeCommand");
-                    document.body.removeChild(input);
-                    console.log("Done remove");
                 } catch (ex) {
 
-                    console.log("Get in catch");
                     console.warn("Copy to clipboard failed.", ex);
                     return false;
                 }
                 finally {
 
-                    console.log("Get in finally");
                     document.body.removeChild(input);
                 }
             }
