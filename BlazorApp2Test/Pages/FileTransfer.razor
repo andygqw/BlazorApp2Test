@@ -48,7 +48,7 @@
                     @foreach (var file in fileList)
                     {
                         <p>
-                            <a href="@GetDownloadLink(file.Key)" target="_blank">@file.Key</a> <label>@_file.GetFileSize(file.Size)</label>
+                            <a href="@GetDownloadLink(file.Key)">@file.Key</a> <label>@_file.GetFileSize(file.Size)</label>
                             <button class="rounded" @onclick="() => ShowDeleteConfirmation(file.Key)">delete @file.Key</button>
                         </p>
                     }
