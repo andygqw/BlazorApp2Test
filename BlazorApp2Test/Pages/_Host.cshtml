@@ -18,6 +18,7 @@
                 try{
 
                     navigator.clipboard.writeText(text);
+                    console.log("Get in navi");
 
                 }catch (ex){
 
@@ -32,6 +33,7 @@
 
                 try {
 
+                    console.log("Get in manual");
                     const input = document.createElement('input');
                     input.setAttribute('value', text);
                     document.body.appendChild(input);
