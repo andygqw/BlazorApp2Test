@@ -9,6 +9,7 @@ namespace BlazorApp2Test.Models
         public string password { get; set; }
         public DateTime registrationTime { get; set; }
         public string? notes;
+        public bool memo;
 
         public User()
         {
@@ -16,6 +17,7 @@ namespace BlazorApp2Test.Models
             username = string.Empty;
             password = string.Empty;
             registrationTime = DateTime.MinValue;
+            memo = false;
         }
     }
 }

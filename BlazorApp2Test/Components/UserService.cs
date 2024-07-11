@@ -101,6 +101,17 @@ namespace BlazorApp2Test.Components
             }
         }
 
+        public bool GetMemoAccess(){
+
+            if(user != null){
+                
+                return user.memo;
+            }else{
+
+                throw new Exception("Not log in yet");
+            }
+        }
+
         public async Task UpdateUsername(string name)
         {
             if (_context.Users != null)
