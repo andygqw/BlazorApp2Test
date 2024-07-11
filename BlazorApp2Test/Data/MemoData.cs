@@ -73,7 +73,7 @@ namespace BlazorApp2Test.Data
 
                             if(m.Image != null){
 
-                                m.Image = _file.GeneratePreSignedURLForMemoImg(m.Image);
+                                m.ImageUrl = _file.GeneratePreSignedURLForMemoImg(m.Image);
                             }
 
                             list.Add(m);
