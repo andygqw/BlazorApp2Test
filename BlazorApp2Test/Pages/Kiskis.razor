@@ -39,7 +39,7 @@
                 {
                     <div class="memo-card m-3">
 
-                        @if (m.Image != null)
+                        @if (m.ImageUrl != null)
                         {
                             <img class="memo-img p-4" style="cursor: pointer;" src="@m.ImageUrl" @onclick="@(() => ShowImg(m.ImageUrl))" />
                         }

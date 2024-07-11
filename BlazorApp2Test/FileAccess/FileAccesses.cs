@@ -124,7 +124,7 @@ namespace BlazorApp2Test.FileAccess
 
         public async Task UploadMemoImg(Stream fileStream, string fileName)
         {
-            var key = $"{Helper.R2_MEMO_FOLDER}/{fileName}";
+            var key = $"{Helper.R2_MEMO_FOLDER}/{_userService.GetUserId()}/{fileName}";
 
             var putRequest = new PutObjectRequest
             {
@@ -143,7 +143,7 @@ namespace BlazorApp2Test.FileAccess
                 var deleteObjectRequest = new DeleteObjectRequest
                 {
                     BucketName = _bucketName,
-                    Key = $"{Helper.R2_MEMO_FOLDER}/{fileName}"
+                    Key = $"{Helper.R2_MEMO_FOLDER}/{_userService.GetUserId()}/{fileName}"
                 };
 
                 await _s3Client.DeleteObjectAsync(deleteObjectRequest);
@@ -164,7 +164,7 @@ namespace BlazorApp2Test.FileAccess
             var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
-                Key = $"{Helper.R2_MEMO_FOLDER}/{fileName}",
+                Key = $"{Helper.R2_MEMO_FOLDER}/{_userService.GetUserId()}/{fileName}",
                 Verb = HttpVerb.GET,
                 Expires = DateTime.UtcNow.AddMinutes(Helper.R2_URL_EXPIRE_TIME)
             };
