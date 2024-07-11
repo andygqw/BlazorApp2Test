@@ -34,7 +34,7 @@ namespace BlazorApp2Test.FileAccess
                 BucketName = _bucketName,
                 Key = key,
                 InputStream = fileStream,
-                DisablePayloadSigning = true
+                DisablePayloadSigning = true// Required for Cloudflare R2
             };
             await _s3Client.PutObjectAsync(putRequest);
         }
