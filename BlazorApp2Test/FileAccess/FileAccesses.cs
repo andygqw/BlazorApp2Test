@@ -158,13 +158,14 @@ namespace BlazorApp2Test.FileAccess
             }
         }
 
-        public string GeneratePreSignedURLForMemoImg(string fileName)
+        public string GeneratePreSignedURLForMemoImg(string fileName, int id)
         {
+            Console.WriteLine("---------" + $"{Helper.R2_MEMO_FOLDER}/{id}/{fileName}");
             AWSConfigsS3.UseSignatureVersion4 = true;
             var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
-                Key = $"{Helper.R2_MEMO_FOLDER}/{_userService.GetUserId()}/{fileName}",
+                Key = $"{Helper.R2_MEMO_FOLDER}/{id}/{fileName}",
                 Verb = HttpVerb.GET,
                 Expires = DateTime.UtcNow.AddMinutes(Helper.R2_URL_EXPIRE_TIME)
             };
