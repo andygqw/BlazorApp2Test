@@ -105,7 +105,7 @@ namespace BlazorApp2Test.Components
 
             if(user != null){
                 
-                return user.memo;
+                return user.can_access_memo;
             }
 
             return false;
