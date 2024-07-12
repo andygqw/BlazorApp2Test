@@ -20,6 +20,7 @@
 
         //Global Messages
         internal const string MSG_NOPERMISSION= "You do not have permission to access this page, try log in";
+        internal const string MSG_NO_MEMO_PERMISSION = "Sorry, you don't have permission to view this, try other features";
 
         internal static int CountWords(string? input)
         {

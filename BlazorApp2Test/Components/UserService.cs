@@ -106,10 +106,9 @@ namespace BlazorApp2Test.Components
             if(user != null){
                 
                 return user.memo;
-            }else{
-
-                throw new Exception("Not log in yet");
             }
+
+            return false;
         }
 
         public async Task UpdateUsername(string name)

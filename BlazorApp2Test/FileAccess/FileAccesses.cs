@@ -160,7 +160,6 @@ namespace BlazorApp2Test.FileAccess
 
         public string GeneratePreSignedURLForMemoImg(string fileName, int id)
         {
-            Console.WriteLine("---------" + $"{Helper.R2_MEMO_FOLDER}/{id}/{fileName}");
             AWSConfigsS3.UseSignatureVersion4 = true;
             var request = new GetPreSignedUrlRequest
             {

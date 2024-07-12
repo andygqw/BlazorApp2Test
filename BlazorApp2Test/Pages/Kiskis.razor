@@ -21,7 +21,7 @@
 
 <PageTitle>GWTool - KisKis</PageTitle>
 
-@if (_userService.GetAuth())
+@if (_userService.GetMemoAccess())
 {
     <div class="col-12 my-5">
 
@@ -103,7 +103,14 @@
 else
 {
     <div class="section-sub-title text-center mt-4">
-        @Helper.MSG_NOPERMISSION
+        @if(!_userService.GetAuth()){
+
+            @Helper.MSG_NOPERMISSION;
+        }
+        else{
+
+            @Helper.MSG_NO_MEMO_PERMISSION;
+        }
     </div>
 }
 
