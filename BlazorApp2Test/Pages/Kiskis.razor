@@ -216,7 +216,11 @@ else
     protected override async Task OnInitializedAsync()
     {
         _renderService.OnEventTriggered += () => RefreshPage();
-        await LoadData();
+        if(_userService.GetMemoAccess()){
+
+            await LoadData();
+        }
+
         newMemo = new MemoModel();
         isLoading = false;
     }
