@@ -32,7 +32,7 @@ namespace BlazorApp2Test.Components
                 }
 
                 var hashedPassword = HashPassword(pwd);
-                user = new User { username = uname, password = hashedPassword, email = eml };
+                user = new User { username = uname, password = hashedPassword, email = eml, registrationTime = DateTime.Now };
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
