@@ -51,7 +51,7 @@
 
     @if (copied == true)
     {
-        <button type="button" class="rounded btn-secondary-active me-1" color="green" @onclick="CopyTextToClipboard">Copied!</button>
+        <button type="button" class="rounded btn-secondary-active me-1" color="green" @onclick="() => copied = false">Copied!</button>
     }
     else
     {
