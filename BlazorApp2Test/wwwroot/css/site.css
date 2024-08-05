@@ -526,60 +526,6 @@ table th, table td {
     background-color: #e9ecef;
 }
 
-/* ------------------ telerik grid override ------------------ */
-.k-grid.row-pointer .k-table-row:hover {
-    cursor: pointer;
-}
-
-.k-grid.rounded .k-grid-header, .k-grid.rounded .k-grid-aria-root, .k-grid.rounded .k-grid-toolbar {
-    border-top-left-radius: 10px !important;
-    border-top-right-radius: 10px !important;
-}
-
-.k-grid.rounded .k-grid-pager {
-    border-bottom-right-radius: 10px !important;
-    border-bottom-left-radius: 10px !important;
-}
-
-.no-scroll .k-grid-content {
-    overflow-y: hidden;
-}
-
-.no-scroll .k-grid-header {
-    padding-right: 0 !important;
-}
-
-.no-scroll .k-grid-header-wrap {
-    border-width: 0px !important;
-}
-
-/* ------------------ telerik tab override ------------------ */
-.k-tabstrip.rounded {
-    margin-right: calc(-.5 * var(--bs-gutter-x));
-    margin-left: calc(-.5 * var(--bs-gutter-x));
-}
-
-    .k-tabstrip.rounded .k-tabstrip-item {
-        border-top-left-radius: 10px !important;
-        border-top-right-radius: 10px !important;
-    }
-
-    .k-tabstrip.rounded .k-tabstrip-content {
-        border-bottom-left-radius: 10px !important;
-        border-bottom-right-radius: 10px !important;
-    }
-
-/* ------------------ telerik list styles ------------------ */
-.k-listview-item:last-child .border-secondary {
-    opacity: 0;
-}
-
-/* ------------------ telerik tooltip styles ------------------ */
-
-/*.k-tooltip-content {
-    color: white;
-}*/
-
 /* ------------------ data tables override ------------------ */
 /*.dataTable td a {
   background: #42C6BF;
@@ -883,4 +829,13 @@ div.dataTables_wrapper div.dataTables_paginate {
    margin-top: 30px;
    font-weight: bold;
    font-size: 16px;
+}
+
+.link-like {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.link-like:hover {
+    text-decoration: none;
 }
