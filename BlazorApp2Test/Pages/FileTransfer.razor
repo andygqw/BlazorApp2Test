@@ -18,7 +18,6 @@
 
 <PageTitle>GWTool - File</PageTitle>
 
-
 @if (_userService.GetAuth())
 {
     <div class="row px-4">
@@ -60,7 +59,7 @@
                     <p class="pt-2">Currently no downloadable files on server</p>
                 }
             </div>
-            Note that if newly uploaded file name is duplicated with a file on server, old file will be overwritten by new one.
+            By uploading a file on this page, you agree to the <a @onclick="() => showAgreementModal = true">term of use</a>.
         </div>
     </div>
 }
@@ -95,6 +94,10 @@ else
 
 <Loading IsLoading="@isLoading" />
 
+@if (showAgreementModal)
+{
+    <UserAgreementModal OnAgreement="HandleAgreement" />
+}
 
 @code {
     private List<S3Object>? fileList;
@@ -109,12 +112,18 @@ else
     private bool isUploadSuccess = false;
 
     private bool isLoading = false;
+    private bool showAgreementModal = false;
 
     protected override async Task OnInitializedAsync()
     {
         isLoading = false;
         _renderService.OnEventTriggered += () => RefreshPage();
         await GetFiles();
+    }
+    
+    private void HandleAgreement(bool agreed)
+    {
+        showAgreementModal = false;
     }
 
     private async Task GetFiles()

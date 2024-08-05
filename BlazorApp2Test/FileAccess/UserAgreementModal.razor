@@ -1,0 +1,41 @@
+@code {
+    [Parameter]
+    public EventCallback<bool> OnAgreement { get; set; }
+}
+
+<div class="modal" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">File Upload Agreement</h5>
+                <button type="button" class="close" @onclick="() => OnAgreement.InvokeAsync(false)">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>By uploading a file on this page, you agree to the following:</p>
+                <ul>
+                    <li>This site doesn't take responsibility for securing your stored file.</li>
+                    <li>Any file uploaded to this site is stored in Cloudflare's R2 service and is not encrypted.</li>
+                    <li>The file is automatically deleted after 60 days, so don't treat this as a permanent storage solution.</li>
+                    <li>The purpose of this service is for file transfer only.</li>
+                    <li>Note that if newly uploaded file name is duplicated with a existing file, existing file will be replaced by new one.</li>
+                    <!-- Add any additional clauses as needed -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
