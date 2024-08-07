@@ -20,7 +20,7 @@
         <div style="margin-left: 10px;">
             @if (_userService.GetAuth())
             {
-                <div style="display: flex;">
+                <div class="welcome-section" style="display: flex;">
                     <div class="welcome-message text-white">Hi, @_userService.GetUsername()</div>
                     <a href="" @onclick="Logout" class="text-white logout-text">log out</a>
                 </div>

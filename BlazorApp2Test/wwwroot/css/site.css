@@ -438,15 +438,19 @@ a.btn.btn-dark {
     outline-color: #ced4da;
 }
 
+.navbar-phone {
+    display: flex !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+}
 .navbar-nav {
     background: #efefef;
     border-radius: 6px;
-
 }
-
 .nav-item-margin {
     margin-right: 1.5rem;
 }
+
 .move-left{
 
     margin-right: -29px;
@@ -855,11 +859,17 @@ div.dataTables_wrapper div.dataTables_paginate {
     }
 
     .app-title-text {
-        font-size: 1.5rem;
+        font-size: 2rem;
+        align-content: flex-end;
     }
 
     .app-title-sub-text {
         font-size: 1rem;
+    }
+    
+    .logout-text {
+        margin-top: 30px;
+        font-weight: bold;
     }
 
     /*.top-banner {*/
@@ -870,14 +880,19 @@ div.dataTables_wrapper div.dataTables_paginate {
     /*    padding-top: 20vh; !* Adjust padding for mobile *!*/
     /*}*/
 
+    .navbar-phone {
+        width: auto;
+        align-content: center;
+    }
+    
     .navbar-nav {
         flex-direction: column;
-        width: 40%;
+        width: auto;
         justify-content: center;
     }
 
-    .navbar-nav .nav-item {
-        width: 40%;
+    .nav-item {
+        width: 50%;
     }
     
     .nav-item-margin {
@@ -887,6 +902,15 @@ div.dataTables_wrapper div.dataTables_paginate {
 
     .navbar-nav .nav-link {
         text-align: center;
+    }
+    
+    .welcome-section {
+        flex-direction: column;
+    }
+
+    .welcome-message {
+        font-weight: 300;
+        font-size: 1.5rem;
     }
 
     .memo-card {
