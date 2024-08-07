@@ -443,6 +443,10 @@ a.btn.btn-dark {
     border-radius: 6px;
 
 }
+
+.nav-item-margin {
+    margin-right: 1.5rem;
+}
 .move-left{
 
     margin-right: -29px;
@@ -838,4 +842,62 @@ div.dataTables_wrapper div.dataTables_paginate {
 }
 .link-like:hover {
     text-decoration: none;
+}
+
+/* Media queries for mobile devices */
+@media (max-width: 576px) {
+    .section-name {
+        font-size: 1.5rem;
+    }
+
+    .section-sub-title {
+        font-size: 1.2rem;
+    }
+
+    .app-title-text {
+        font-size: 1.5rem;
+    }
+
+    .app-title-sub-text {
+        font-size: 1rem;
+    }
+
+    /*.top-banner {*/
+    /*    height: 20vh; !* Reduce height for mobile *!*/
+    /*}*/
+    
+    /*.body-position {*/
+    /*    padding-top: 20vh; !* Adjust padding for mobile *!*/
+    /*}*/
+
+    .navbar-nav {
+        flex-direction: column;
+        width: 40%;
+        justify-content: center;
+    }
+
+    .navbar-nav .nav-item {
+        width: 40%;
+    }
+    
+    .nav-item-margin {
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+    }
+
+    .navbar-nav .nav-link {
+        text-align: center;
+    }
+
+    .memo-card {
+        flex-basis: 100%;
+    }
+
+    .memo-img {
+        max-width: 60%;
+    }
+
+    .modal-content, .memo-modal-content {
+        width: 90%;
+    }
 }
