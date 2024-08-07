@@ -144,6 +144,10 @@ namespace BlazorApp2Test.Data
 
         public async Task SaveMemoImage(IBrowserFile file)
         {
+            if (!Helper.AllowedImageContentTypes.Contains(file.ContentType.ToLower()))
+            {
+                throw new Exception("Please select a .png, .jpg, or .jpeg file");
+            }
             if (file != null)
             {
                 using var stream = file.OpenReadStream(Helper.FileMaxSize);
