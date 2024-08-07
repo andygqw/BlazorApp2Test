@@ -12,7 +12,7 @@
         internal const int TextAreaMaxLength = 15000;
         internal const int FileMaxSize = 1024 * 1024 * 64;//- MB
         internal const int MaxFileUpload = 15;
-        internal static string[] AllowedImageContentTypes = new string[] { "image/png", "image/jpeg", "image/jpg" };
+        internal static readonly string[] AllowedImageContentTypes = new string[] { "image/png", "image/jpeg", "image/jpg" };
 
 
         // Error code:
