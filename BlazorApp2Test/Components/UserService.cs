@@ -7,30 +7,35 @@ namespace BlazorApp2Test.Components
     {
         private readonly AuthService _service;
         private readonly UserDbContext _context;
-
+        private LogData _logData;
 
         private User? user = null;
 
-        public UserService(AuthService service, UserDbContext context)
+        public UserService(AuthService service, UserDbContext context, LogData logData)
         {
             _service = service;
             _context = context;
+            _logData = logData;
         }
 
         public async Task Register(RegisterModel model)
         {
-            if (model.Username != null
-                && model.Password != null
-                && model.Email != null)
+            try
             {
-                if (await _service.RegisterUser(model.Username, model.Password, model.Email))
+                if (model.Username != null
+                    && model.Password != null
+                    && model.Email != null)
                 {
-                    user = await _service.AuthenticateUser(model.Username, model.Password);
+                    if (await _service.RegisterUser(model.Username, model.Password, model.Email))
+                    {
+                        user = await _service.AuthenticateUser(model.Username, model.Password);
+                        await _logData.Log("Register", model.Username, null);
+                    }
                 }
-                else
-                {
-                    throw new Exception("Create User failed");
-                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 

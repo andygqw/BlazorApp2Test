@@ -3,18 +3,21 @@
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
+using BlazorApp2Test.Data;
 
 namespace BlazorApp2Test.FileAccess
 {
     public class FileAccesses
     {
         private readonly UserService _userService;
+        private readonly LogData _logData;
         private readonly AmazonS3Client _s3Client;
         private readonly string _bucketName;
 
-        public FileAccesses(UserService s, string accessKey, string secretKey, string serviceUrl, string bucketName )
+        public FileAccesses(UserService s, LogData l, string accessKey, string secretKey, string serviceUrl, string bucketName )
         {
             _userService = s;
+            _logData = l;
             
             var config = new AmazonS3Config
             {
@@ -37,19 +40,23 @@ namespace BlazorApp2Test.FileAccess
                 DisablePayloadSigning = true// Required for Cloudflare R2
             };
             await _s3Client.PutObjectAsync(putRequest);
+            await _logData.Log("Upload file", key, id);
         }
 
         public async Task DeleteFile(string fileName)
         {
             try
             {
+                var id = _userService.GetUserId();
+                var key = $"{id}/{fileName}";
                 var deleteObjectRequest = new DeleteObjectRequest
                 {
                     BucketName = _bucketName,
-                    Key = $"{_userService.GetUserId()}/{fileName}"
+                    Key = key
                 };
 
                 await _s3Client.DeleteObjectAsync(deleteObjectRequest);
+                await _logData.Log("Delete file", key, id);
             }
             catch (AmazonS3Exception e)
             {

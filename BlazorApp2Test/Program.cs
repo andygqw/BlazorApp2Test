@@ -13,6 +13,8 @@ builder.Services.AddDbContext<UserDbContext>(options =>
             options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
             ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
+builder.Services.AddScoped<LogData>();
+
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 
@@ -22,6 +24,7 @@ builder.Services.AddSingleton<ErrorService>();
 builder.Services.AddSingleton<RenderService>();
 builder.Services.AddScoped<FileAccesses>(sp => new FileAccesses(
     sp.GetRequiredService<UserService>(),
+    sp.GetRequiredService<LogData>(),
     builder.Configuration["CloudflareR2:AccessKey"],
     builder.Configuration["CloudflareR2:SecretKey"],
     builder.Configuration["CloudflareR2:ServiceUrl"],
