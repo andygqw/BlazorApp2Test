@@ -2,6 +2,6 @@ It's a .NET core blazor web application. Aiming simple tools that could be helpf
 
 TODO:
 
-edit profile within accounts
-email auto reply
-about me
+R2 path for user uploads users/id/file.txt
+Resource page
+about me page
