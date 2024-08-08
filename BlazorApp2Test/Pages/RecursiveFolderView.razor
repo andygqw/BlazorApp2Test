@@ -12,7 +12,7 @@
                 }
                 @foreach (var file in Folder.Files)
                 {
-                    <li><a href="@file.Url" target="_blank">@file.Name</a></li>
+                    <li><a href="@file.Url">@file.Name</a></li>
                 }
             </ul>
         </li>
@@ -20,6 +20,5 @@
 }
 
 @code {
-    [Parameter]
-    public FolderItem Folder { get; set; }
+    [Parameter] public FolderItem Folder { get; set; }
 }

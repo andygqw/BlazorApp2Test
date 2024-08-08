@@ -8,17 +8,29 @@
 {
     <RecursiveFolderView Folder=@rootFolder />
 }
-else
-{
-    <p>Loading...</p>
-}
+
+<Loading IsLoading="@isLoading" />
 
 @code {
+    
+    private bool isLoading = false;
     
     private FolderItem rootFolder;
 
     protected override async Task OnInitializedAsync()
     {
-        rootFolder = await _resourceService.GetFolderStructureAsync(Helper.ROOT_FOLDER);
+        try
+        {
+            isLoading = true;
+            rootFolder = await _resourceService.GetFolderStructureAsync(Helper.ROOT_FOLDER);
+        }
+        catch (Exception ex)
+        {
+            _errorService.ShowModal(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 }
