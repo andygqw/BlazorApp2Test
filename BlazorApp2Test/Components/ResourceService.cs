@@ -35,7 +35,7 @@ public class ResourceService
 
         foreach (var commonPrefix in response.CommonPrefixes)
         {
-            folder.SubFolders.Add(await GetFolderStructureAsync(commonPrefix));
+            folder.SubFolders.Add(new FolderItem { Name = GetFolderName(commonPrefix) });
         }
 
         foreach (var s3Object in response.S3Objects)
@@ -51,6 +51,13 @@ public class ResourceService
         }
 
         return folder;
+    }
+    
+    private string GetFolderName(string prefix)
+    {
+        var trimmedPrefix = prefix.TrimEnd('/');
+        var lastSlashIndex = trimmedPrefix.LastIndexOf('/');
+        return lastSlashIndex == -1 ? trimmedPrefix : trimmedPrefix.Substring(lastSlashIndex + 1);
     }
 
     private string GeneratePreSignedUrl(string key)

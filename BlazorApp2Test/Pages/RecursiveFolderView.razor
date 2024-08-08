@@ -1,18 +1,26 @@
 @using BlazorApp2Test.Models
+@inject ResourceService _resourceService
+@inject ErrorService _errorServive
+
+<Loading IsLoading="@isLoading" />
 
 @if (Folder != null)
 {
+    <div class="row px-4">
+        <div class="col-12 col-sm-6 col-md-8 py-2">
+            <p class="section-name" @onclick="() => GoBack()">@Folder.Name</p>
+        </div>
+    </div>
     <ul>
         <li>
-            <strong>@Folder.Name</strong>
             <ul>
                 @foreach (var subFolder in Folder.SubFolders)
                 {
-                    <RecursiveFolderView Folder=@subFolder />
+                    <div @onclick="() => JumpIn(subFolder.Name)">@subFolder.Name</div>
                 }
                 @foreach (var file in Folder.Files)
                 {
-                    <li><a href="@file.Url">@file.Name</a></li>
+                    <li><a href="@file.Url" target="_blank">@file.Name</a></li>
                 }
             </ul>
         </li>
@@ -20,5 +28,34 @@
 }
 
 @code {
-    [Parameter] public FolderItem Folder { get; set; }
+    
+    [Parameter]
+    public FolderItem Folder { get; set; }
+
+    private bool isLoading = false;
+
+    private async Task JumpIn(String subFolderName)
+    {
+        try
+        {
+            isLoading = true;
+            
+            var fullPrefix = $"{Folder.Name}{subFolderName}/";
+            Console.WriteLine("NExt folder: " + fullPrefix);
+            Folder = await _resourceService.GetFolderStructureAsync(fullPrefix);
+        }
+        catch (Exception ex)
+        {
+            _errorServive.ShowModal(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task GoBack()
+    {
+        
+    }
 }
