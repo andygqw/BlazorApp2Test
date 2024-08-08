@@ -10,6 +10,8 @@ namespace BlazorApp2Test.Models
         public DateTime registrationTime { get; set; }
         public string? notes;
         public bool can_access_memo { get; set; }
+        
+        public bool can_access_resource { get; set; }
 
         public User()
         {

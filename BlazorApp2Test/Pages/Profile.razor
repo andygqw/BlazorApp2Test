@@ -15,19 +15,14 @@
             <p class="section-name">Account Settings</p>
         </div>
     </div>
-
-
 }
 
 
 
 @code {
 
-
     protected override async Task OnInitializedAsync()
     {
         _renderService.OnEventTriggered += () => RefreshPage();
-
-
     }
 }

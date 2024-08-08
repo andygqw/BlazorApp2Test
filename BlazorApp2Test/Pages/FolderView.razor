@@ -1,12 +1,26 @@
 @page "/resource"
 @inject ResourceService _resourceService
 @inject ErrorService _errorService
+@inject UserService _userService
 
 @using BlazorApp2Test.Models
 
 @if (rootFolder != null)
 {
     <RecursiveFolderView Folder=@rootFolder />
+}
+else
+{
+    <div class="section-sub-title text-center mt-4">
+        @if(!_userService.GetAuth()){
+
+            @Helper.MSG_NOPERMISSION;
+        }
+        else{
+
+            @Helper.MSG_NO_MEMO_PERMISSION;
+        }
+    </div>
 }
 
 <Loading IsLoading="@isLoading" />
@@ -22,7 +36,10 @@
         try
         {
             isLoading = true;
-            rootFolder = await _resourceService.GetFolderStructureAsync(Helper.ROOT_FOLDER);
+            if (_userService.GetResourceAccess())
+            {
+                rootFolder = await _resourceService.GetFolderStructureAsync(Helper.ROOT_FOLDER);
+            }
         }
         catch (Exception ex)
         {

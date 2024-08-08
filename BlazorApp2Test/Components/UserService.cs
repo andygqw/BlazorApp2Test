@@ -116,6 +116,16 @@ namespace BlazorApp2Test.Components
             return false;
         }
 
+        public bool GetResourceAccess()
+        {
+            if (user != null)
+            {
+                return user.can_access_resource;
+            }
+
+            return false;
+        }
+
         public async Task UpdateUsername(string name)
         {
             if (_context.Users != null)
