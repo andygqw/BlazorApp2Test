@@ -8,13 +8,13 @@
 {
     <div class="row px-4">
         <div class="col-12 col-sm-6 col-md-8 py-2">
-            <div class="section-name">
-                @foreach (var path in paths)
-                {
-                    <div style="display:inline; cursor:pointer;" @onclick="() => GoBack(path[1])">@path[0]</div>
-                    <i class="oi--chevron-right"></i>
-                }
-            </div>
+            @foreach (var path in paths)
+            {
+                <div class="section-name"
+                     style="display:inline; cursor:pointer;"
+                     @onclick="() => GoBack(path[1])">@path[0]</div>
+                <i class="oi--chevron-right"></i>
+            }
         </div>
     </div>
     
