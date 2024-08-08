@@ -840,7 +840,7 @@ div.dataTables_wrapper div.dataTables_paginate {
 }
 
 .link-like {
-    color: blue;
+    color: #146588;
     text-decoration: underline;
     cursor: pointer;
 }

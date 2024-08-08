@@ -4,27 +4,31 @@
 
 <Loading IsLoading="@isLoading" />
 
+<header>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMhYaRXl1QbJZ8gjt71rtGv3P5s6k6EEh5dXSK3" crossorigin="anonymous">
+</header>
+
 @if (Folder != null)
 {
     <div class="row px-4">
         <div class="col-12 col-sm-6 col-md-8 py-2">
-            <p class="section-name" @onclick="() => GoBack()">@Folder.Name</p>
+            <p class="section-name" @onclick="() => GoBack(Folder.Name)">@Folder.Name</p>
         </div>
     </div>
-    <ul>
-        <li>
-            <ul>
-                @foreach (var subFolder in Folder.SubFolders)
-                {
-                    <div @onclick="() => JumpIn(subFolder.Name)">@subFolder.Name</div>
-                }
-                @foreach (var file in Folder.Files)
-                {
-                    <li><a href="@file.Url" target="_blank">@file.Name</a></li>
-                }
-            </ul>
-        </li>
-    </ul>
+    
+    <div class="mx-4 pb-3 rounded">
+        @foreach (var subFolder in Folder.SubFolders)
+        {
+            <div class="link-like" @onclick="() => JumpIn(subFolder.Name)">
+                <i class="fas fa-folder"></i> @subFolder.Name
+            </div>
+        }
+        @foreach (var file in Folder.Files)
+        {
+            <i class="fas fa-file"></i> <a href="@file.Url">@file.Name</a>
+        }
+    </div>
 }
 
 @code {
@@ -41,7 +45,6 @@
             isLoading = true;
             
             var fullPrefix = $"{Folder.Name}{subFolderName}/";
-            Console.WriteLine("NExt folder: " + fullPrefix);
             Folder = await _resourceService.GetFolderStructureAsync(fullPrefix);
         }
         catch (Exception ex)
@@ -54,8 +57,32 @@
         }
     }
 
-    private async Task GoBack()
+    private async Task GoBack(String FolderName)
     {
-        
+        try
+        {
+            isLoading = true;
+            
+            String backTrack = String.Empty;
+
+            int lastSlashIndex = FolderName.LastIndexOf('/');
+            if (lastSlashIndex >= 0)
+            {
+                backTrack =  FolderName.Substring(0, lastSlashIndex + 1);
+            }
+            Console.WriteLine("Check back track: " + backTrack);
+            if (string.IsNullOrEmpty(backTrack))
+                throw new Exception("Invalid Folder");
+            
+            Folder = await _resourceService.GetFolderStructureAsync(backTrack);
+        }
+        catch (Exception ex)
+        {
+            _errorServive.ShowModal(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 }
