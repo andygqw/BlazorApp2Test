@@ -29,12 +29,15 @@ public class ResourceService
         result.Add(new String[] {words[0], words[0] + '/'});
         for (int i = 1; i < words.Length; i++)
         {
-            String[] str = new string[]
+            if (!String.IsNullOrEmpty(words[i]))
             {
-                words[i],
-                result.Last()[1] + words[i] + '/'
-            };
-            result.Add(str);
+                String[] str = new string[]
+                {
+                    words[i],
+                    result.Last()[1] + words[i] + '/'
+                };
+                result.Add(str);
+            }
         }
 
         return result;

@@ -11,7 +11,8 @@
             <div class="section-name">
                 @foreach (var path in paths)
                 {
-                    <div class="link-like" @onclick="() => GoBack(path[1])">@path[0]</div>
+                    <div style="display:inline; cursor:pointer;" @onclick="() => GoBack(path[1])">@path[0]</div>
+                    <i class="oi--chevron-right"></i>
                 }
             </div>
         </div>
@@ -71,6 +72,12 @@
             var fullPrefix = $"{Folder.Name}{subFolderName}/";
             Folder = await _resourceService.GetFolderStructureAsync(fullPrefix);
             paths = _resourceService.ParsePrefix(Folder.Name);
+            Console.WriteLine("Folder: " + Folder.Name);
+            foreach (var arr in paths)
+            {
+                Console.WriteLine("0: " + arr[0]);
+                Console.WriteLine("1: " + arr[1]);
+            }
         }
         catch (Exception ex)
         {
