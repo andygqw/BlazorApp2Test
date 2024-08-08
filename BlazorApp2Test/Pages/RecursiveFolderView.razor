@@ -8,7 +8,12 @@
 {
     <div class="row px-4">
         <div class="col-12 col-sm-6 col-md-8 py-2">
-            <p class="section-name" @onclick="() => GoBack(Folder.Name)">@Folder.Name</p>
+            <div class="section-name">
+                @foreach (var path in paths)
+                {
+                    <div class="link-like" @onclick="() => GoBack(path[1])">@path[0]</div>
+                }
+            </div>
         </div>
     </div>
     
@@ -35,7 +40,27 @@
     [Parameter]
     public FolderItem Folder { get; set; }
 
+    private List<String[]> paths;
+
     private bool isLoading = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        try
+        {
+            isLoading = true;
+            paths = _resourceService.ParsePrefix(Folder.Name);
+        }
+        catch (Exception ex)
+        {
+            _errorServive.ShowModal(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
 
     private async Task JumpIn(String subFolderName)
     {
@@ -45,6 +70,7 @@
             
             var fullPrefix = $"{Folder.Name}{subFolderName}/";
             Folder = await _resourceService.GetFolderStructureAsync(fullPrefix);
+            paths = _resourceService.ParsePrefix(Folder.Name);
         }
         catch (Exception ex)
         {
@@ -61,19 +87,9 @@
         try
         {
             isLoading = true;
-            
-            String backTrack = String.Empty;
-
-            int lastSlashIndex = FolderName.LastIndexOf('/');
-            if (lastSlashIndex >= 0)
-            {
-                backTrack =  FolderName.Substring(0, lastSlashIndex);
-            }
-            Console.WriteLine("Check back track: " + backTrack);
-            if (string.IsNullOrEmpty(backTrack))
-                throw new Exception("Invalid Folder");
-            
-            Folder = await _resourceService.GetFolderStructureAsync(backTrack);
+            Console.WriteLine("Go to: " + FolderName);
+            Folder = await _resourceService.GetFolderStructureAsync(FolderName);
+            paths = _resourceService.ParsePrefix(Folder.Name);
         }
         catch (Exception ex)
         {

@@ -21,6 +21,25 @@ public class ResourceService
         _bucketName = bucketName;
     }
 
+    public List<String[]> ParsePrefix(String full)
+    {
+        var words = full.Split('/');
+
+        List<String[]> result = new List<String[]>();
+        result.Add(new String[] {words[0], words[0] + '/'});
+        for (int i = 1; i < words.Length; i++)
+        {
+            String[] str = new string[]
+            {
+                words[i],
+                result.Last()[1] + words[i] + '/'
+            };
+            result.Add(str);
+        }
+
+        return result;
+    }
+    
     public async Task<FolderItem> GetFolderStructureAsync(string prefix)
     {
         var folder = new FolderItem { Name = prefix };
