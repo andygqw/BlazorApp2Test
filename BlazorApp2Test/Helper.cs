@@ -14,6 +14,8 @@
         internal const int MaxFileUpload = 15;
         internal static readonly string[] AllowedImageContentTypes = new string[] { "image/png", "image/jpeg", "image/jpg" };
 
+        // Folder view:
+        internal static readonly string ROOT_FOLDER =  "Resources/";
 
         // Error code:
     

@@ -30,6 +30,12 @@ builder.Services.AddScoped<FileAccesses>(sp => new FileAccesses(
     builder.Configuration["CloudflareR2:ServiceUrl"],
     builder.Configuration["CloudflareR2:BucketName"]
 ));
+builder.Services.AddScoped<ResourceService>(sp => new ResourceService(
+    builder.Configuration["CloudflareR2:AccessKey"],
+    builder.Configuration["CloudflareR2:SecretKey"],
+    builder.Configuration["CloudflareR2:ServiceUrl"],
+    builder.Configuration["CloudflareR2:BucketName"]
+));
 builder.Services.AddScoped<MemoData>();
 
 var app = builder.Build();

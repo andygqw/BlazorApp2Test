@@ -1,0 +1,25 @@
+@using BlazorApp2Test.Models
+
+@if (Folder != null)
+{
+    <ul>
+        <li>
+            <strong>@Folder.Name</strong>
+            <ul>
+                @foreach (var subFolder in Folder.SubFolders)
+                {
+                    <RecursiveFolderView Folder=@subFolder />
+                }
+                @foreach (var file in Folder.Files)
+                {
+                    <li><a href="@file.Url" target="_blank">@file.Name</a></li>
+                }
+            </ul>
+        </li>
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public FolderItem Folder { get; set; }
+}

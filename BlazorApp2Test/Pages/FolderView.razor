@@ -1,0 +1,24 @@
+@page "/resource"
+@inject ResourceService _resourceService
+@inject ErrorService _errorService
+
+@using BlazorApp2Test.Models
+
+@if (rootFolder != null)
+{
+    <RecursiveFolderView Folder=@rootFolder />
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    
+    private FolderItem rootFolder;
+
+    protected override async Task OnInitializedAsync()
+    {
+        rootFolder = await _resourceService.GetFolderStructureAsync(Helper.ROOT_FOLDER);
+    }
+}
